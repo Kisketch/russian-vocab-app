@@ -1,0 +1,71 @@
+{
+  "name": "ruvocab",
+  "version": "1.2.0",
+  "description": "走遍俄罗斯词汇卡 —— 桌面（Windows）与移动（Android）应用",
+  "author": "RuVocab",
+  "license": "MIT",
+  "private": true,
+  "main": "electron/main.js",
+  "scripts": {
+    "icons": "python tools/gen_icons.py",
+    "audio": "python tools/gen_audio.py",
+    "build:web": "python tools/build_web.py",
+    "start": "npm run build:web && electron .",
+    "dev": "cross-env RUVOCAB_DEV=1 electron .",
+    "dist:win": "npm run build:web && electron-builder --win --x64",
+    "cap:add": "npx cap add android",
+    "cap:sync": "npm run build:web && npx cap sync android",
+    "cap:open": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "cn.yuyan.ruvocab",
+    "productName": "RuVocab",
+    "copyright": "走遍俄罗斯词汇卡",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "build/icon.ico",
+      "build/icon.png"
+    ],
+    "asarUnpack": [
+      "dist/assets/audio/**"
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "RuVocab-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "走遍俄罗斯词汇卡",
+      "uninstallDisplayName": "走遍俄罗斯词汇卡"
+    }
+  },
+  "buildExtras": {
+    "note": "portable 目标在 asarUnpack 下产物异常，便携版用 zip 打包 win-unpacked（见 tools/pack_win.sh）"
+  }
+}

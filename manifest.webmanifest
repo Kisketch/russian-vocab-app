@@ -1,0 +1,22 @@
+{
+  "name": "走遍俄罗斯 · 词汇卡片",
+  "short_name": "俄语词汇卡",
+  "description": "《走遍俄罗斯》词汇学习：图文卡片、情景例句、真人发音、间隔重复复习。",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f6f8",
+  "theme_color": "#3f6f96",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "开始练习", "url": "./index.html#/quiz" },
+    { "name": "今日复习", "url": "./index.html#/review" }
+  ]
+}

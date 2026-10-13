@@ -1,0 +1,15 @@
+{
+  "appId": "cn.yuyan.ruvocab",
+  "appName": "走遍俄罗斯词汇卡",
+  "type": "project",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

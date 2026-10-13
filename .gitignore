@@ -1,0 +1,36 @@
+# ===== 依赖与构建产物（均可由 tools/ 脚本再生成）=====
+node_modules/
+dist/
+release/
+release*/
+build.log
+tools/audio_failed.json
+.build_tmp/
+
+# 二进制产物：语音、图标、安装包（生成方式见 README / BUILD.md）
+assets/audio/words/
+assets/audio/sent/
+icons/*.png
+icons/*.ico
+build/*.ico
+build/*.png
+
+# ===== 签名与本地配置（含密码，切勿提交）=====
+*.jks
+*.keystore
+ruvocab-release.jks
+android/local.properties
+
+# ===== Android：构建输出与由脚本生成的资源 =====
+android/app/build/
+android/build/
+android/.gradle/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/res/drawable*/
+android/app/src/main/res/mipmap-*/
+
+# ===== 其它 =====
+.capacitor/
+.DS_Store
+Thumbs.db

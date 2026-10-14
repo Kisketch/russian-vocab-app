@@ -1,6 +1,10 @@
 # 更新日志
 
-## v2.0.2 — 详情页滚动与变位数据修正
+## v2.0.2 — 详情页滚动与变位数据修正（GitHub Release 含三端产物）
+
+Release v2.0.2 附件：`ruvocab-2.0.2-release.apk`（26.4MB，安卓）、
+`RuVocab-2.0.2-x64.exe`（110.1MB，Windows 安装版）、`RuVocab-Portable-2.0.2.zip`（143.1MB，Windows 免安装）
+地址：https://github.com/Kisketch/russian-vocab-app/releases/tag/v2.0.2
 
 - 卡片改为「网格叠加」布局：高度随内容自适应，展开「语法详解」时卡片自动长高，不再裁掉表格
 - 语法面板内容可滚动，并加 overscroll-behavior: contain（滚到底不再带动外层页面）

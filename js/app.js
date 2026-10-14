@@ -36,6 +36,7 @@
 
   /* ---------------- 图标 ---------------- */
   var PATHS = {
+    list: '<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
     learn: '<path d="M3 5.5A1.5 1.5 0 0 1 4.5 4H10a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H4.5A1.5 1.5 0 0 1 3 16z"/><path d="M21 5.5A1.5 1.5 0 0 0 19.5 4H14a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5h6A1.5 1.5 0 0 0 21 16z"/>',
     quiz: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M5 6l1.4 1.4L8.6 5.2"/>',
     review: '<path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.8 4.4v4.6h-4.6"/><path d="M12 7.5V12l3 2"/>',
@@ -148,11 +149,12 @@
   }
 
   /* ---------------- 界面骨架状态 ---------------- */
-  var ui = { unitMode: 'card', unitId: null, idx: 0, flipped: false };
+  var ui = { unitMode: 'card', unitId: null, idx: 0, flipped: false, vocabFilter: 'all' };
   var quiz = null, review = null;
 
   var TITLES = {
     units: ['学习', '按《走遍俄罗斯》教材单元浏览单词'],
+    list: ['课本词表', '按课本课序排列 · 印刷体与手写体对照'],
     unit: ['单元学习', '单词卡片 · 翻转与例句'],
     quiz: ['练习', '四类题型即时反馈'],
     review: ['复习', '间隔重复 · 到期队列'],
@@ -236,6 +238,53 @@
         '</div>';
     });
     h += '</div></div>';
+    return h;
+  }
+
+  /* ---------------- 视图：课本词表（按课序的生词表） ---------------- */
+  function renderVocab() {
+    var f = ui.vocabFilter || 'all';
+    var learned = S.learnedIds(ALL_IDS).length;
+    var h = '';
+
+    h += '<div class="section"><div class="vlist-head">' +
+      '<div><h2>课本单词表</h2><span>按《走遍俄罗斯》第一册课序排列 · 印刷体与手写体对照 · 点击行可打开学习卡</span></div>' +
+      '<div class="vlist-progress">已标记 <b>' + learned + '</b> / ' + WORDS.length + ' 词</div>' +
+      '</div>';
+
+    h += '<div class="vchips">' +
+      '<button class="chip pick' + (f === 'all' ? ' on' : '') + '" data-act="vocab-filter" data-id="all">全部课</button>';
+    UNITS.forEach(function (u) {
+      h += '<button class="chip pick' + (f === u.id ? ' on' : '') + '" data-act="vocab-filter" data-id="' + u.id + '">第' + u.no + '课</button>';
+    });
+    h += '</div>';
+
+    var units = f === 'all' ? UNITS : UNITS.filter(function (u) { return u.id === f; });
+    units.forEach(function (u) {
+      var st = unitStat(u);
+      h += '<div class="card vlesson">' +
+        '<div class="vlesson-head">' +
+        '<span class="unit-no">' + u.no + '</span>' +
+        '<div class="unit-title"><b>第' + u.no + '课 · ' + esc(u.zh) + '</b><span>' + esc(u.ru) + ' · ' + esc(u.desc) + '</span></div>' +
+        '<span class="chip">' + st.learned + ' / ' + st.total + '</span>' +
+        '</div>' +
+        '<div class="vtable">';
+      wordsOfUnit[u.id].forEach(function (w, i) {
+        var s = S.get(w.id);
+        h += '<div class="vrow" data-act="open-word" data-unit="' + u.id + '" data-idx="' + i + '" role="button" tabindex="0">' +
+          '<span class="vnum">' + (i + 1) + '</span>' +
+          '<div class="vword"><span class="v-ru">' + esc(ruText(w)) + '</span></div>' +
+          '<span class="v-cursive">' + esc(ruText(w)) + '</span>' +
+          '<span class="v-pos">' + esc(w.pos) + '</span>' +
+          '<span class="v-zh">' + esc(w.zh) + '</span>' +
+          '<button class="mini v-speak" data-act="speak" data-text="' + esc(w.ru) + '" aria-label="朗读 ' + esc(w.ru) + '">' + ico('sound', 15) + '</button>' +
+          '<span class="v-lv ' + (s.lv ? 'chip lv' + s.lv : '') + '" title="' + S.LEVELS[s.lv].name + '">' + (s.lv ? S.LEVELS[s.lv].name : '—') + '</span>' +
+          '</div>';
+      });
+      h += '</div></div>';
+    });
+    h += '<p class="hint" style="text-align:center;margin-top:6px">行内喇叭可直接朗读；点行进入该词的学习卡（配图与例句）</p>';
+    h += '</div>';
     return h;
   }
 
@@ -446,8 +495,13 @@
     var type = pickOne(quiz.types);
     // 拼写题排除多词短语（до свидания 之类逐字母点选负担过重，且分组会泄露结构）
     if (type === 'spell' && /\s/.test(w.ru)) {
-      var alt = quiz.types.filter(function (x) { return x !== 'spell'; });
-      type = alt.length ? pickOne(alt) : 'zh2ru';
+      var pool = quiz.ids.filter(function (id) { return !/\s/.test(byId[id].ru); });
+      if (pool.length) {
+        w = byId[pool[Math.floor(Math.random() * pool.length)]];
+      } else {
+        var alt = quiz.types.filter(function (x) { return x !== 'spell'; });
+        type = alt.length ? pickOne(alt) : 'zh2ru';
+      }
     }
     var q = { w: w, type: type, options: [], answer: 0 };
     if (type === 'ru2zh') {
@@ -584,8 +638,9 @@
     $$('#tiles .tile').forEach(function (el, i) {
       el.classList.remove('used');
     });
-    // 标记已用字母（按数量）
-    var used = quiz.spell.filled.slice();
+    // 标记已用字母（按数量）。注意：filled[0] 是固定的首字母提示，不来自字母块，
+    // 不能计入占用，否则「торт / мама / папа」这类首字母重复的词会误标字母块。
+    var used = quiz.spell.filled.slice(1);
     $$('#tiles .tile').forEach(function (el) {
       var c = el.dataset.c;
       var pos = used.indexOf(c);
@@ -1008,6 +1063,7 @@
     var html = '';
     switch (key) {
       case 'units': html = renderUnits(); break;
+      case 'list': html = renderVocab(); break;
       case 'unit': html = renderUnit(seg[1]); key = 'unit'; break;
       case 'quiz': html = renderQuiz(); break;
       case 'review': html = renderReview(); break;
@@ -1053,6 +1109,13 @@
         var st = S.get(id); st.book = false; st.fav = false; st.manual = false; S.save(); toast('已移出生词本'); render(); break;
       }
       case 'nav-unit': moveCard(+v.d); break;
+      case 'open-word':
+        if (e.target.closest('[data-act="speak"]')) return;
+        ui.unitMode = 'card'; ui.idx = +v.idx; ui.flipped = false;
+        RVAudio.prefetch(wordsOfUnit[v.unit].map(function (w) { return w.id; }));
+        go('#/unit/' + v.unit); break;
+      case 'vocab-filter':
+        ui.vocabFilter = v.id; render(); break;
       case 'open-unit':
         if (e.target.closest('[data-act="fav"],[data-act="speak"]')) return;
         ui.idx = 0; ui.flipped = false;
@@ -1310,6 +1373,8 @@
 
   /* 初始化 */
   function boot() {
+    // 导航/标签栏图标（data-ico → 内联 SVG）
+    $$('[data-ico]').forEach(function (s) { s.innerHTML = ico(s.dataset.ico, 20); });
     if (!location.hash) location.hash = '#/units';
     render();
     window.addEventListener('hashchange', render);

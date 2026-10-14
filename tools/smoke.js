@@ -193,6 +193,18 @@ async function nav(hash) {
   assert(view().includes('polyline') || $$('.bars .bar').length > 0, '图表绘制成功');
   assert(view().includes('正确率'), '统计页含正确率指标');
 
+  console.log('— 课本词表 —');
+  await nav('#/list');
+  assert($$('.vrow').length === 173, '课本词表 173 行（实际 ' + $$('.vrow').length + '）');
+  assert($$('.v-cursive').length === 173, '词表含手写体对照（实际 ' + $$('.v-cursive').length + '）');
+  click($('.vchips [data-act="vocab-filter"][data-id="u01"]'));
+  await tick();
+  assert($$('.vrow').length === 10, '第 1 课词表 10 行（实际 ' + $$('.vrow').length + '）');
+  click($$('.vrow')[0]);
+  await tick();
+  assert(win.location.hash === '#/unit/u01', '点词行跳转到对应课的学习卡');
+  await nav('#/list');
+
   console.log('— 设置与持久化 —');
   await nav('#/settings');
   assert($('[data-act="export-json"]') !== null, '设置页渲染导出/清空控件');

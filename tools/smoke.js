@@ -22,8 +22,8 @@ win.fetch = (u) => {
   if (fs.existsSync(p)) return Promise.resolve({ ok: true, json: () => JSON.parse(fs.readFileSync(p, 'utf8')) });
   return Promise.reject(new Error('404 ' + u));
 };
-['js/data.js', 'js/scenes.js', 'js/store.js', 'js/audio.js', 'js/grammar.js', 'js/app.js'].forEach(f => {
-  try { win.eval(fs.readFileSync(path.join(root, f), 'utf8')); }
+['js/data.js', 'js/scenes.js', 'js/store.js', 'js/audio.js', 'js/grammar_data.js', 'js/grammar.js', 'js/app.js'].forEach(f => {
+  try { win.eval(fs.existsSync(path.join(root, f)) ? fs.readFileSync(path.join(root, f), 'utf8') : ''); }
   catch (e) { errors.push('执行 ' + f + ' 出错: ' + e.message); }
 });
 

@@ -1,0 +1,278 @@
+{
+  "results": [
+    {
+      "name": "首屏引导（RV_DATA+视图渲染）",
+      "pass": true,
+      "detail": "3ms | DOM 0ms / Load 0ms"
+    },
+    {
+      "name": "词条数 = 173",
+      "pass": true,
+      "detail": "实际 173"
+    },
+    {
+      "name": "单元数 = 15",
+      "pass": true
+    },
+    {
+      "name": "情景插画 ≥ 20",
+      "pass": true,
+      "detail": "实际 21"
+    },
+    {
+      "name": "内置词典 > 500",
+      "pass": true,
+      "detail": "实际 1824"
+    },
+    {
+      "name": "词条字段完整",
+      "pass": true
+    },
+    {
+      "name": "语法数据加载（file:// fetch grammar.json）",
+      "pass": true,
+      "detail": "grammar=173"
+    },
+    {
+      "name": "音频 manifest fetch 符合预期（file:→禁止 / http:→可用）",
+      "pass": true,
+      "detail": "协议 file: → fail:Failed to fetch"
+    },
+    {
+      "name": "MP3 fetch 符合预期（file:→禁止，由 <audio> 通道承担播放）",
+      "pass": true,
+      "detail": "fail:Failed to fetch"
+    },
+    {
+      "name": "音频元素可加载 MP3（桌面播放通道）",
+      "pass": true,
+      "detail": "canplay"
+    },
+    {
+      "name": "单元总览渲染",
+      "pass": true,
+      "detail": "0ms"
+    },
+    {
+      "name": "单元学习卡渲染",
+      "pass": true,
+      "detail": "29ms"
+    },
+    {
+      "name": "卡片正面显示俄语",
+      "pass": true,
+      "detail": "университет"
+    },
+    {
+      "name": "情景插画注入卡片",
+      "pass": true,
+      "detail": "节点 1"
+    },
+    {
+      "name": "定制配图路径正确",
+      "pass": true,
+      "detail": "file:///C:/Users/Lgnatius/WorkBuddy/2026-10-13-23-05-38/russian-vocab/dist/assets/img/w023.jpg"
+    },
+    {
+      "name": "点击翻转至背面",
+      "pass": true
+    },
+    {
+      "name": "背面显示汉语释义",
+      "pass": true
+    },
+    {
+      "name": "列表模式展示本课词",
+      "pass": true,
+      "detail": "行数 12"
+    },
+    {
+      "name": "手动标记掌握度=4",
+      "pass": true,
+      "detail": "词 w023 实际 4"
+    },
+    {
+      "name": "收藏生效",
+      "pass": true
+    },
+    {
+      "name": "练习设置页渲染",
+      "pass": true,
+      "detail": "14ms"
+    },
+    {
+      "name": "默认四种题型选中",
+      "pass": true,
+      "detail": "实际 4"
+    },
+    {
+      "name": "进入答题界面",
+      "pass": true
+    },
+    {
+      "name": "完成练习题流程",
+      "pass": true,
+      "detail": "完成 10 题"
+    },
+    {
+      "name": "出现选择题型",
+      "pass": true
+    },
+    {
+      "name": "出现拼写题型",
+      "pass": true
+    },
+    {
+      "name": "出现听力题型",
+      "pass": true
+    },
+    {
+      "name": "练习结算页",
+      "pass": true
+    },
+    {
+      "name": "拼写题渲染字母槽",
+      "pass": true,
+      "detail": "槽数 7"
+    },
+    {
+      "name": "定位拼写目标词",
+      "pass": true,
+      "detail": "祖母；外祖母 → бабушка"
+    },
+    {
+      "name": "拼写判题正确",
+      "pass": true
+    },
+    {
+      "name": "复习会话渲染卡片",
+      "pass": true
+    },
+    {
+      "name": "自评面板出现",
+      "pass": true
+    },
+    {
+      "name": "评“清楚”掌握度提升",
+      "pass": true,
+      "detail": "1→2"
+    },
+    {
+      "name": "生词本渲染",
+      "pass": true,
+      "detail": "5ms"
+    },
+    {
+      "name": "收藏页签可切换",
+      "pass": true
+    },
+    {
+      "name": "统计页渲染",
+      "pass": true,
+      "detail": "11ms"
+    },
+    {
+      "name": "统计指标卡 = 7",
+      "pass": true,
+      "detail": "实际 7"
+    },
+    {
+      "name": "统计图表 ≥ 4",
+      "pass": true,
+      "detail": "实际 4"
+    },
+    {
+      "name": "词典页搜索框",
+      "pass": true
+    },
+    {
+      "name": "变形反查 работаю→работать",
+      "pass": true,
+      "detail": "[\"работать\"]"
+    },
+    {
+      "name": "中文检索 大学→университет",
+      "pass": true,
+      "detail": "[\"университет\",\"факультет\",\"аудитория\",\"преподаватель\",\"студент\"]"
+    },
+    {
+      "name": "语法专题集合",
+      "pass": true,
+      "detail": "数量 6"
+    },
+    {
+      "name": "知识总结渲染",
+      "pass": true,
+      "detail": "10ms"
+    },
+    {
+      "name": "知识条目 ≥ 5",
+      "pass": true,
+      "detail": "实际 7"
+    },
+    {
+      "name": "课本词表渲染",
+      "pass": true,
+      "detail": "37ms"
+    },
+    {
+      "name": "词表行数 = 173",
+      "pass": true,
+      "detail": "实际 173"
+    },
+    {
+      "name": "第1课筛选=10",
+      "pass": true,
+      "detail": "实际 10"
+    },
+    {
+      "name": "设置页渲染",
+      "pass": true,
+      "detail": "8ms"
+    },
+    {
+      "name": "音频索引覆盖 173 词",
+      "pass": true,
+      "detail": "实际 173"
+    },
+    {
+      "name": "进度写入 localStorage",
+      "pass": true
+    },
+    {
+      "name": "冷重载完成",
+      "pass": true,
+      "detail": "132ms | 脚本 3ms | 布局 1ms | 样式 2ms | 堆 3/5.8MB | 节点 11956 | 监听器 147"
+    },
+    {
+      "name": "冷重载后语法数据仍可用（内嵌生效）",
+      "pass": true,
+      "detail": "grammar=173"
+    }
+  ],
+  "perf": {
+    "firstRenderMs": 3,
+    "navigation": {
+      "dom": null,
+      "load": null
+    },
+    "memBase": 10000000,
+    "memAfter": 10000000,
+    "memBaseMB": 9.5,
+    "memAfterMB": 9.5,
+    "reloadMs": 132,
+    "scriptDurationMs": 3,
+    "layoutMs": 1,
+    "recalcMs": 2,
+    "heapUsedMB": 3,
+    "heapTotalMB": 5.8,
+    "listeners": 147,
+    "nodes": 11956
+  },
+  "consoleErrors": [],
+  "pageExceptions": [],
+  "netFailures": [],
+  "netBad": [],
+  "failed": 0,
+  "timedOut": false
+}

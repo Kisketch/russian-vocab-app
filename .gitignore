@@ -4,6 +4,7 @@ dist/
 release/
 release*/
 build.log
+build_*.log
 tools/audio_failed.json
 .build_tmp/
 
@@ -29,6 +30,12 @@ android/app/src/main/assets/public/
 android/app/src/main/assets/capacitor.config.json
 android/app/src/main/res/drawable*/
 android/app/src/main/res/mipmap-*/
+
+# ===== 测试与诊断产生的临时目录 =====
+# tools/e2e.mjs 与诊断脚本用 --user-data-dir 启动的 Chromium 配置目录（每次运行一个）
+.chs/
+.chs-*/
+chrome_debug.log
 
 # ===== 其它 =====
 .capacitor/

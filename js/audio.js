@@ -212,8 +212,10 @@
   }
 
   /* 预取：只预热 HTTP 缓存，不创建 Audio 元素（大量元素会占用解码器资源，
-     在部分机型上导致后续 play 失败） */
+     在部分机型上导致后续 play 失败）。
+     桌面端（file://）无 HTTP 缓存可预热且 Chromium 禁止 fetch 本地文件，直接跳过。 */
   function prefetch(ids) {
+    if (location.protocol === 'file:') return;
     (ids || []).slice(0, 20).forEach(function (id) {
       ['words', 'sent'].forEach(function (dir) {
         try {

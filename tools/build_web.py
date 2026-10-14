@@ -42,6 +42,18 @@ def main():
     for d in COPY_DIRS:
         copy_tree(os.path.join(ROOT, d), os.path.join(DIST, d))
         print("  ✓", d + "/")
+
+    # 内嵌语法数据：桌面端 file:// 下 Chromium 禁止 fetch 本地文件，
+    # 构建期把 assets/grammar.json 转成 js/grammar_data.js 全局变量（grammar.js 优先读取）
+    gpath = os.path.join(ROOT, "assets", "grammar.json")
+    if os.path.exists(gpath):
+        with open(gpath, encoding="utf-8") as fh:
+            gdata = fh.read().strip()
+        with open(os.path.join(DIST, "js", "grammar_data.js"), "w", encoding="utf-8", newline="\n") as fh:
+            fh.write("/* 构建期自动生成：assets/grammar.json 的内嵌副本（桌面端 file:// 无法 fetch） */\n")
+            fh.write("window.RV_GRAMMAR_DATA = " + gdata + ";\n")
+        print("  ✓ js/grammar_data.js（内嵌语法数据 %.0f KB）" % (len(gdata.encode('utf-8')) / 1024))
+
     # 冒烟测试脚本不进入发布包
     smoke = os.path.join(DIST, "js", "smoke.js")
     if os.path.exists(smoke):

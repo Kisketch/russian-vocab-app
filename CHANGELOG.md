@@ -1,5 +1,14 @@
 # 更新日志
 
+## v2.0.3 — 桌面端语法功能修复（真实渲染端到端测试通过）
+
+- **修复桌面端语法功能整体失效**：桌面（Electron/文件协议）下 Chromium 禁止 fetch 本地文件，
+  grammar.json 加载静默失败 → 语法专题页空白、卡片「语法详解」缺失、词典变形反查无结果。
+  现构建期把语法数据内嵌为 js/grammar_data.js，加载不再依赖 fetch（PWA/在线环境保留 fetch 回退）
+- 音频预取在文件协议下跳过（此前每次进入单元/练习会发起约 40 次注定失败的 fetch）
+- 新增桌面级端到端测试 tools/e2e.mjs（CDP 驱动真实 Chromium、file:// 与桌面加载方式一致）：
+  53 项检查全部通过；冷重载 143ms、JS 堆 3.1MB、0 运行时错误
+
 ## v2.0.2 — 详情页滚动与变位数据修正（GitHub Release 含三端产物）
 
 Release v2.0.2 附件：`ruvocab-2.0.2-release.apk`（26.4MB，安卓）、

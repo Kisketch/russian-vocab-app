@@ -10,29 +10,39 @@
 
   (D.words || []).forEach(function (w) { wordIndex[w.ru] = w; });
 
+  function apply(g) {
+    grammar = g;
+    // 变形索引：任何格/人称形式都能反查到词条
+    Object.keys(g.words || {}).forEach(function (id) {
+      var e = g.words[id];
+      var w = (D.words || []).filter(function (x) { return x.id === id; })[0];
+      if (!w) return;
+      formIndex[w.ru] = w;
+      var gr = e.grammar || {};
+      if (gr.sg) Object.keys(gr.sg).forEach(function (k) { formIndex[gr.sg[k]] = w; });
+      if (gr.pl) Object.keys(gr.pl).forEach(function (k) { formIndex[gr.pl[k]] = w; });
+      if (gr.present) Object.keys(gr.present).forEach(function (k) { formIndex[gr.present[k]] = w; });
+      if (gr.past) Object.keys(gr.past).forEach(function (k) { formIndex[gr.past[k]] = w; });
+      if (gr.imperative) formIndex[gr.imperative] = w;
+    });
+    // 词典索引
+    (D.dict || []).forEach(function (d) {
+      var key = d.ru.toLowerCase();
+      (dictIndex[key] = dictIndex[key] || []).push(d);
+    });
+    return grammar;
+  }
+
   function load() {
+    /* 桌面端（Electron loadFile → file://）下 Chromium 禁止 fetch 本地文件，
+       因此构建期把 grammar.json 内嵌为 js/grammar_data.js 的全局变量，优先使用；
+       PWA/在线环境若无内嵌数据则回退 fetch。 */
+    if (window.RV_GRAMMAR_DATA) {
+      try { apply(window.RV_GRAMMAR_DATA); return Promise.resolve(grammar); } catch (e) { }
+    }
     try {
       return fetch('assets/grammar.json').then(function (r) { return r.json(); }).then(function (g) {
-        grammar = g;
-        // 变形索引：任何格/人称形式都能反查到词条
-        Object.keys(g.words || {}).forEach(function (id) {
-          var e = g.words[id];
-          var w = (D.words || []).filter(function (x) { return x.id === id; })[0];
-          if (!w) return;
-          formIndex[w.ru] = w;
-          var gr = e.grammar || {};
-          if (gr.sg) Object.keys(gr.sg).forEach(function (k) { formIndex[gr.sg[k]] = w; });
-          if (gr.pl) Object.keys(gr.pl).forEach(function (k) { formIndex[gr.pl[k]] = w; });
-          if (gr.present) Object.keys(gr.present).forEach(function (k) { formIndex[gr.present[k]] = w; });
-          if (gr.past) Object.keys(gr.past).forEach(function (k) { formIndex[gr.past[k]] = w; });
-          if (gr.imperative) formIndex[gr.imperative] = w;
-        });
-        // 词典索引
-        (D.dict || []).forEach(function (d) {
-          var key = d.ru.toLowerCase();
-          (dictIndex[key] = dictIndex[key] || []).push(d);
-        });
-        return grammar;
+        return apply(g);
       });
     } catch (e) {
       return Promise.reject(e);

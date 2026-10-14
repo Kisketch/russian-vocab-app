@@ -257,11 +257,14 @@ input, select, textarea { font: inherit; color: inherit; }
 .progress-line { height: 5px; border-radius: 999px; background: var(--border); overflow: hidden; margin-bottom: 16px; }
 .progress-line i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .4s var(--ease); }
 
-.flashcard { perspective: 1600px; height: 430px; margin-bottom: 16px; }
-.flashcard-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .62s var(--ease); }
+.flashcard { perspective: 1600px; margin-bottom: 16px; }
+.flashcard-inner {
+  display: grid;                /* 两面同格叠加：高度取内容较高的一面，展开语法详解时卡片自动长高 */
+  transform-style: preserve-3d; transition: transform .62s var(--ease);
+}
 .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
 .face {
-  position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  grid-area: 1 / 1; position: relative; backface-visibility: hidden; -webkit-backface-visibility: hidden;
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
   box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column;
 }
@@ -323,7 +326,11 @@ input, select, textarea { font: inherit; color: inherit; }
 .gram-panel > summary::-webkit-details-marker { display: none; }
 .gram-panel > summary::after { content: '▾'; margin-left: auto; color: var(--muted); font-size: 11px; }
 .gram-panel[open] > summary::after { content: '▴'; }
-.gram-panel .gram-body { padding: 0 12px 12px; }
+.gram-panel .gram-body {
+  padding: 0 12px 12px;
+  max-height: 46vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;   /* 面板内滚到底不再带动外层页面 */
+}
 .gram-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .gram-table th, .gram-table td { border: 1px solid var(--border); padding: 5px 8px; text-align: left; background: #fff; }
 .gram-table th { background: var(--surface-2); font-weight: 600; font-size: 12px; color: var(--text-2); }
@@ -659,7 +666,7 @@ input[type=text] {
   .view { padding-bottom: 88px; }
   .topbar-inner { padding-top: 12px; padding-bottom: 12px; }
   .toast { bottom: 78px; }
-  .flashcard { height: 400px; }
+  /* 卡片高度自适应（v2.0.2），不再固定 400px */
   .ru { font-size: 32px; }
   .q-main { font-size: 32px; }
   .options { grid-template-columns: 1fr; }

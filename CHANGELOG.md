@@ -2,10 +2,17 @@
 
 ## v2.0.3 — 桌面端语法功能修复（真实渲染端到端测试通过）
 
-Release v2.0.3 附件：`RuVocab-2.0.3-x64.exe`（97.7MB，Windows 安装版）、
-`RuVocab-Portable-2.0.3.zip`（126.0MB，Windows 免安装）
+Release v2.0.3 附件（三端统一）：
+- 电脑：`RuVocab-2.0.3-x64.exe`（97.7MB 安装版）、`RuVocab-Portable-2.0.3.zip`（126.0MB 免安装）
+- 安卓：`走遍俄罗斯词汇卡-2.0.3-release.apk`（26.5MB 正式签名）、`-debug.apk`（27.2MB）
+- 网页版：`网页版-走遍俄罗斯词汇卡-2.0.3.zip`（19.8MB）
+- 源码归档：`ruvocab-2.0.3.bundle`（43.0MB）
+
 地址：https://github.com/Kisketch/russian-vocab-app/releases/tag/v2.0.3
-（安卓端与网页版不受本缺陷影响，维持 v2.0.2 产物）
+
+> 本缺陷仅影响电脑端（`file://` 协议）。安卓端 Capacitor 以 `https://localhost` 加载本地资源，
+> 不受 Chromium 的 `file://` fetch 限制，语法功能本就正常；安卓/网页版此次同步版本号，
+> 顺带省去一次 grammar.json 请求。APK 沿用同一签名（证书 SHA-256 未变），可覆盖安装并保留学习进度。
 
 - **修复桌面端语法功能整体失效**：桌面（Electron/文件协议）下 Chromium 禁止 fetch 本地文件，
   grammar.json 加载静默失败 → 语法专题页空白、卡片「语法详解」缺失、词典变形反查无结果。
@@ -15,6 +22,8 @@ Release v2.0.3 附件：`RuVocab-2.0.3-x64.exe`（97.7MB，Windows 安装版）�
 - 音频预取在文件协议下跳过（此前每次进入单元/练习会发起约 40 次注定失败的 fetch）
 - 新增桌面级端到端测试 tools/e2e.mjs（CDP 驱动真实 Chromium、file:// 与桌面加载方式一致）：
   53 项检查全部通过；冷重载 132ms、JS 堆 3.1MB、0 运行时错误
+- 安卓 versionCode 9 → 10、versionName 2.0.3；BUILD.md 补充「JAVA_HOME 必须为完整 JDK
+  而非 JRE」的构建陷阱说明（JRE 缺 jlink 会导致构建失败或产出旧版 APK）
 - 完整测试报告见《测试报告-电脑端-v2.0.3.md》
 
 ## v2.0.2 — 详情页滚动与变位数据修正（GitHub Release 含三端产物）

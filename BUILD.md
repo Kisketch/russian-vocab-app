@@ -121,6 +121,14 @@ export ANDROID_HOME="C:/Users/Lgnatius/AndroidBuild/android-sdk"
 ./gradlew assembleRelease    # → app/build/outputs/apk/release/app-release-unsigned.apk
 ```
 
+> ⚠️ **`JAVA_HOME` 必须指向完整 JDK，不能是 JRE。** 若系统 `java` 指向 JRE
+> （如 `Eclipse Adoptium\jre-21.0.12.101-hotspot`），构建会在
+> `:capacitor-android:compileDebugJavaWithJavac` 失败并报
+> `jlink executable ...\bin\jlink.exe does not exist` —— JRE 不含 `jlink`/`javac`。
+> 验证方法：`ls "$JAVA_HOME/bin/jlink.exe"`。**注意**：`assembleRelease` 仍可能"看似成功"，
+> 因为 Gradle 容忍该任务失败而 assets 打包照常完成，结果得到的是**旧版本号的 APK**，
+> 务必用 `aapt2 dump badging` 确认 versionCode/versionName 符合预期。
+
 #### 5. 签名 Release 版（密钥已归档在项目根目录 `ruvocab-release.jks`）
 
 ```bash

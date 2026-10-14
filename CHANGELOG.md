@@ -2,12 +2,20 @@
 
 ## v2.0.3 — 桌面端语法功能修复（真实渲染端到端测试通过）
 
+Release v2.0.3 附件：`RuVocab-2.0.3-x64.exe`（97.7MB，Windows 安装版）、
+`RuVocab-Portable-2.0.3.zip`（126.0MB，Windows 免安装）
+地址：https://github.com/Kisketch/russian-vocab-app/releases/tag/v2.0.3
+（安卓端与网页版不受本缺陷影响，维持 v2.0.2 产物）
+
 - **修复桌面端语法功能整体失效**：桌面（Electron/文件协议）下 Chromium 禁止 fetch 本地文件，
   grammar.json 加载静默失败 → 语法专题页空白、卡片「语法详解」缺失、词典变形反查无结果。
   现构建期把语法数据内嵌为 js/grammar_data.js，加载不再依赖 fetch（PWA/在线环境保留 fetch 回退）
+- 安装包排除 node_modules：asar 9157 → 557 文件（-94%）、24.6 → 14.0MB；
+  安装包 -15%、便携版 -12%
 - 音频预取在文件协议下跳过（此前每次进入单元/练习会发起约 40 次注定失败的 fetch）
 - 新增桌面级端到端测试 tools/e2e.mjs（CDP 驱动真实 Chromium、file:// 与桌面加载方式一致）：
-  53 项检查全部通过；冷重载 143ms、JS 堆 3.1MB、0 运行时错误
+  53 项检查全部通过；冷重载 132ms、JS 堆 3.1MB、0 运行时错误
+- 完整测试报告见《测试报告-电脑端-v2.0.3.md》
 
 ## v2.0.2 — 详情页滚动与变位数据修正（GitHub Release 含三端产物）
 

@@ -241,6 +241,14 @@
     return h;
   }
 
+  /* 词条配图：有定制图片用图片，否则回退到通用 SVG 插画 */
+  function sceneImg(w, altZh) {
+    if (w.img) {
+      return '<img class="scene-img" src="assets/img/' + w.id + '.jpg" alt="' + esc(altZh || w.zh) + '" loading="lazy" decoding="async">';
+    }
+    return Sc.get(w.scene);
+  }
+
   /* ---------------- 视图：课本词表（按课序的生词表） ---------------- */
   function renderVocab() {
     var f = ui.vocabFilter || 'all';
@@ -330,7 +338,7 @@
         '<div class="flashcard-inner">' +
         // 正面
         '<div class="face front">' +
-        '<div class="scene">' + Sc.get(w.scene) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
+        '<div class="scene">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
         '<div class="body-part">' +
         '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
         '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '" aria-label="朗读">' + ico('sound', 19) + '</button></div>' +
@@ -343,7 +351,7 @@
         '<div class="face back">' +
         '<div class="body-part">' +
         '<div style="display:flex;gap:12px;align-items:center">' +
-        '<div class="thumb" style="width:78px;height:58px;flex:0 0 78px">' + Sc.get(w.scene) + '</div>' +
+        '<div class="thumb" style="width:78px;height:58px;flex:0 0 78px">' + sceneImg(w) + '</div>' +
         '<div style="min-width:0">' +
         '<div class="word-row"><div class="ru" style="font-size:25px">' + esc(ruText(w)) + '</div>' +
         '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '" aria-label="朗读">' + ico('sound', 18) + '</button></div>' +
@@ -387,7 +395,7 @@
     var s = S.get(w.id);
     return '<div class="word-row-item">' +
       '<span class="row-index">' + (i + 1) + '</span>' +
-      '<div class="thumb">' + Sc.get(w.scene) + '</div>' +
+      '<div class="thumb">' + sceneImg(w) + '</div>' +
       '<div class="wr-text">' +
       '<div class="wr-ru">' + esc(ruText(w)) + ' <small>' + esc(w.pos) + '</small></div>' +
       '<div class="wr-zh">' + esc(w.zh) + ' · ' + highlight(w.ru, w.ex_ru) + '</div>' +
@@ -550,7 +558,7 @@
     h += '<div class="progress-line"><i style="width:' + pct + '%"></i></div>';
 
     if (q.type === 'spell') {
-      h += '<div class="q-scene">' + Sc.get(w.scene) + '</div>';
+      h += '<div class="q-scene">' + sceneImg(w) + '</div>';
       h += '<div class="q-prompt"><div class="q-main zh">' + esc(w.zh) + '</div><div class="q-sub">' + esc(w.pos) + ' · ' + caption(w) + '</div></div>';
       h += spellWidget(w);
     } else if (q.type === 'listen') {
@@ -564,7 +572,7 @@
         '<button class="btn sm ghost" style="margin-top:8px" data-act="speak" data-text="' + esc(w.ru) + '">' + ico('sound', 14) + ' 朗读</button></div>';
       h += optionsHtml(q);
     } else {
-      h += '<div class="q-scene">' + Sc.get(w.scene) + '</div>';
+      h += '<div class="q-scene">' + sceneImg(w) + '</div>';
       h += '<div class="q-prompt"><div class="q-main zh">' + esc(w.zh) + '</div><div class="q-sub">' + esc(w.pos) + '</div></div>';
       h += optionsHtml(q);
     }
@@ -690,7 +698,7 @@
       h += '<div class="section-head" style="margin-top:18px"><h2>错词回顾</h2><span>点击行可朗读取义</span></div><div class="word-list">';
       uniq.forEach(function (id) {
         var w = byId[id];
-        h += '<div class="word-row-item"><div class="thumb">' + Sc.get(w.scene) + '</div>' +
+        h += '<div class="word-row-item"><div class="thumb">' + sceneImg(w) + '</div>' +
           '<div class="wr-text"><div class="wr-ru">' + esc(w.ru) + ' <small>' + esc(w.pos) + '</small></div>' +
           '<div class="wr-zh">' + esc(w.zh) + '</div></div>' +
           '<div class="wr-actions"><button class="mini" data-act="speak" data-text="' + esc(w.ru) + '">' + ico('sound', 16) + '</button></div></div>';
@@ -756,7 +764,7 @@
     h += '<div class="flashcard' + (review.shown ? ' flipped' : '') + '" data-act="flip">' +
       '<div class="flashcard-inner">' +
       '<div class="face front">' +
-      '<div class="scene">' + Sc.get(w.scene) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
+      '<div class="scene">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
       '<div class="body-part">' +
       '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
       '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '">' + ico('sound', 19) + '</button></div>' +
@@ -840,7 +848,7 @@
       list.forEach(function (id) {
         var w = byId[id], s = S.get(id);
         h += '<div class="word-row-item">' +
-          '<div class="thumb">' + Sc.get(w.scene) + '</div>' +
+          '<div class="thumb">' + sceneImg(w) + '</div>' +
           '<div class="wr-text"><div class="wr-ru">' + esc(w.ru) + ' <small>' + esc(w.pos) + '</small></div>' +
           '<div class="wr-zh">' + esc(w.zh) + ' · ' + highlight(w.ru, w.ex_ru) + '</div></div>' +
           '<span class="chip ' + S.LEVELS[s.lv].cls + '">' + S.LEVELS[s.lv].name + '</span>' +

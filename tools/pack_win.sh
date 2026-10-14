@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "$0")/.."
 OUT="${1:-release3}"
 SRC="$OUT/win-unpacked"
-NAME="RuVocab-Portable-1.4.0"
+NAME="RuVocab-Portable-1.5.0"
 
 if [ ! -f "$SRC/RuVocab.exe" ]; then
   echo "未找到 $SRC/RuVocab.exe，请先运行: npx electron-builder --win --x64"

@@ -44,13 +44,17 @@ def main():
 
     words = []
     seq = 0
+    img_dir = os.path.join(ROOT, "assets", "img")
     for row in read_tsv(os.path.join(SRC, "vocab.tsv")):
         uid, ru, pos, zh, ex_ru, ex_zh, scene = (row + [""] * 7)[:7]
         ru_stress = (row[7] if len(row) > 7 else "").strip() or ru
         seq += 1
+        wid = "w%03d" % seq
         clean = re.sub(r"[^а-яА-ЯёЁ\- ]", "", ru)
+        # 定制配图：assets/img/<id>.jpg 存在时启用（由工具生成/处理）
+        has_img = os.path.exists(os.path.join(img_dir, wid + ".jpg"))
         words.append({
-            "id": "w%03d" % seq,
+            "id": wid,
             "unit": uid,
             "ru": ru,
             "ru_stress": ru_stress,          # 带重音符的词形（未标注时与 ru 相同）
@@ -59,6 +63,7 @@ def main():
             "ex_ru": ex_ru,
             "ex_zh": ex_zh,
             "scene": scene or "generic",
+            "img": 1 if has_img else 0,      # 1=使用 assets/img/<id>.jpg 定制配图
             # 派生字段：首字母用于拼写题首提示，字母数用于填空长度
             "initial": clean[:1].upper() or ru[:1].upper(),
             "slots": len(re.sub(r"[^а-яА-ЯёЁ]", "", clean)),

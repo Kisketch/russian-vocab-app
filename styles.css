@@ -308,6 +308,12 @@ input, select, textarea { font: inherit; color: inherit; }
   color: var(--text-2); letter-spacing: .5px; transform: rotate(-1.2deg);
 }
 
+/* ---------- 词条配图（定制图片优先，SVG 插画兜底） ---------- */
+.scene-img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  background: var(--surface-2);
+}
+
 /* ---------- 课本词表 ---------- */
 .vlist-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .vlist-head h2 { font-size: 17px; }

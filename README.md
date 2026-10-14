@@ -12,7 +12,7 @@
 ### 1. 学习模式 · 按课分组 + 翻卡记忆
 
 - 15 个单元卡片，每张显示进度环与待复习数量，点进去进入单词卡
-- **卡片正面**：情景插画 + 俄语单词（印刷体）+ **俄语手写体对照** + 一键朗读；**卡片背面**：词性、汉语释义、俄文例句（**目标词自动高亮**，并给出变格/变位后的词形）+ 中文译文
+- **卡片正面**：**该词专属实景配图**（一词一图，高清无水印）+ 俄语单词（印刷体）+ **俄语手写体对照** + 一键朗读；**卡片背面**：词性、汉语释义、俄文例句（**目标词自动高亮**，并给出变格/变位后的词形）+ 中文译文
 - 卡片 / 列表双模式：列表模式一览整课词汇与掌握度，适合快速浏览
 - 掌握度 6 档（生词 → 模糊 → 认识 → 熟悉 → 掌握 → 精通），可手动标记，也随答题自动更新
 
@@ -45,7 +45,7 @@
 
 - 346 条语音（173 单词 + 173 例句），微软 Edge 神经语音 `ru-RU-SvetlanaNeural`，**96kbps 高码率**（该引擎可用的最高音质档）
 - 语速刻意放缓：单词 -5%、例句 -10%（标准、不催促），设置里还有 0.8 倍「慢速跟读」与「测试发音」自检
-- 播放策略：**优先内置 MP3**，缺失或被浏览器策略拦截时自动回退系统 TTS
+- 播放策略：安卓端走**原生音频**（最稳），网页/桌面用内置 MP3，失败自动重试后再回退系统 TTS
 - PWA 模式可在设置页一键把全部语音缓存到本机，之后**完全离线**
 
 ---
@@ -98,6 +98,7 @@ russian-vocab/
 | `build_data.py` | `src/*.tsv` → `js/data.js`（支持第 8 列重音标注） |
 | `gen_audio.py` | 批量生成俄语真人发音（断点续传，可换音色/语速） |
 | `gen_icons.py` | Pillow 绘制 PWA / Electron / Android 全套图标与启动图 |
+| `fetch_images.py` | 从 Bing 图片搜索抓取每个单词的专属配图（大图 + 知识共享许可过滤，自动排除带水印图库）；检索词在 `tools/img_prompts.tsv` |
 | `build_web.py` | 构建 `dist/`（桌面端与安卓共用，增量写入） |
 | `sync_android.py` | `dist/` → 安卓工程资产（`cap sync` 的稳妥替代，自带校验） |
 | `pack_win.sh` | Windows 便携版 zip 打包 |
@@ -129,6 +130,7 @@ npm install                                   # Electron / Capacitor 依赖
 python tools/build_data.py                    # 编译词库
 python tools/gen_audio.py                     # 生成语音（首次需联网）
 python tools/gen_icons.py                     # 生成图标
+python tools/fetch_images.py                  # 抓取每个单词的专属配图（首次约 6 分钟）
 python tools/build_web.py                     # 产出 dist/
 
 # 测试
@@ -136,7 +138,7 @@ NODE_PATH=<node_modules> node tools/smoke.js  # 61 项功能断言
 NODE_PATH=<node_modules> node tools/audit.js  # 产品审查：期望 P0 0 · P1 0
 ```
 
-修改词库：编辑 `src/vocab.tsv`（`单元|俄语|词性|中文|俄文例句|中文译文|配图键|重音词形`）→ `python tools/build_data.py` → `python tools/gen_audio.py`（只补新词）→ `python tools/build_web.py`。
+修改词库：编辑 `src/vocab.tsv`（`单元|俄语|词性|中文|俄文例句|中文译文|配图键|重音词形`）→ `python tools/build_data.py` → `python tools/gen_audio.py`（只补新词）→ 在 `tools/img_prompts.tsv` 补一行新词的检索词 → `python tools/fetch_images.py`（只抓新词）→ `python tools/build_web.py`。
 
 ---
 

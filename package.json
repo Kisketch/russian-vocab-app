@@ -1,6 +1,6 @@
 {
   "name": "ruvocab",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "走遍俄罗斯词汇卡 —— 桌面（Windows）与移动（Android）应用",
   "author": "RuVocab",
   "license": "MIT",
@@ -18,6 +18,7 @@
     "cap:open": "npx cap open android"
   },
   "dependencies": {
+    "@capacitor-community/native-audio": "^6.0.0",
     "@capacitor/android": "^6.2.0",
     "@capacitor/app": "^6.0.0",
     "@capacitor/cli": "^6.2.0",

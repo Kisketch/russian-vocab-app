@@ -55,7 +55,10 @@ async function nav(hash) {
   await nav('#/unit/u03');
   assert($('.flashcard') !== null, '单词卡渲染');
   assert(view().includes('университет'), '正面显示俄语单词');
-  assert($$('.scene svg').length > 0, '情景插画 SVG 注入卡片');
+  assert($$('.scene svg').length + $$('.scene .scene-img').length > 0, '情景插画注入卡片');
+  const sceneImg = $('.scene .scene-img');
+  assert(sceneImg === null || /assets\/img\/w\d{3}\.jpg$/.test(sceneImg.getAttribute('src') || ''),
+    '定制配图路径正确（assets/img/<id>.jpg）');
   assert(view().includes('这是我的新课本') === false, '初始未泄露背面释义（翻转前）');
   click($('[data-act="flip"]'));
   assert($('.flashcard').className.includes('flipped'), '点击翻转到背面');

@@ -327,6 +327,7 @@ window.RV_DATA = {
    "ex_ru": "Здравствуйте! Как вас зовут?",
    "ex_zh": "您好！您叫什么名字？",
    "scene": "greet",
+   "img": 1,
    "initial": "З",
    "slots": 12
   },
@@ -340,6 +341,7 @@ window.RV_DATA = {
    "ex_ru": "Привет, Анна! Как дела?",
    "ex_zh": "你好，安娜！最近怎么样？",
    "scene": "greet",
+   "img": 1,
    "initial": "П",
    "slots": 6
   },
@@ -353,6 +355,7 @@ window.RV_DATA = {
    "ex_ru": "До свидания, Иван Петрович!",
    "ex_zh": "再见，伊万·彼得罗维奇！",
    "scene": "greet",
+   "img": 1,
    "initial": "Д",
    "slots": 10
   },
@@ -366,6 +369,7 @@ window.RV_DATA = {
    "ex_ru": "Спасибо за помощь.",
    "ex_zh": "谢谢您的帮助。",
    "scene": "greet",
+   "img": 1,
    "initial": "С",
    "slots": 7
   },
@@ -379,6 +383,7 @@ window.RV_DATA = {
    "ex_ru": "Пожалуйста, вот ваш билет.",
    "ex_zh": "请，这是您的票。",
    "scene": "greet",
+   "img": 1,
    "initial": "П",
    "slots": 10
   },
@@ -392,6 +397,7 @@ window.RV_DATA = {
    "ex_ru": "Извините, где здесь метро?",
    "ex_zh": "打扰一下，地铁在哪儿？",
    "scene": "city",
+   "img": 1,
    "initial": "И",
    "slots": 8
   },
@@ -405,6 +411,7 @@ window.RV_DATA = {
    "ex_ru": "Меня зовут Ли Мин.",
    "ex_zh": "我叫李明。",
    "scene": "person",
+   "img": 1,
    "initial": "З",
    "slots": 5
   },
@@ -418,6 +425,7 @@ window.RV_DATA = {
    "ex_ru": "Какое у тебя имя?",
    "ex_zh": "你叫什么名字？",
    "scene": "person",
+   "img": 1,
    "initial": "И",
    "slots": 3
   },
@@ -431,6 +439,7 @@ window.RV_DATA = {
    "ex_ru": "Наше знакомство было случайным.",
    "ex_zh": "我们的相识很偶然。",
    "scene": "greet",
+   "img": 1,
    "initial": "З",
    "slots": 10
   },
@@ -444,6 +453,7 @@ window.RV_DATA = {
    "ex_ru": "Очень приятно с вами познакомиться.",
    "ex_zh": "很高兴认识您。",
    "scene": "greet",
+   "img": 1,
    "initial": "П",
    "slots": 7
   },
@@ -457,6 +467,7 @@ window.RV_DATA = {
    "ex_ru": "Это моя семья.",
    "ex_zh": "这是我的家庭。",
    "scene": "family",
+   "img": 1,
    "initial": "С",
    "slots": 5
   },
@@ -470,6 +481,7 @@ window.RV_DATA = {
    "ex_ru": "Моя мама работает в школе.",
    "ex_zh": "我妈妈在学校工作。",
    "scene": "family",
+   "img": 1,
    "initial": "М",
    "slots": 4
   },
@@ -483,6 +495,7 @@ window.RV_DATA = {
    "ex_ru": "Папа читает газету.",
    "ex_zh": "爸爸在看报纸。",
    "scene": "family",
+   "img": 1,
    "initial": "П",
    "slots": 4
   },
@@ -496,6 +509,7 @@ window.RV_DATA = {
    "ex_ru": "У меня есть старший брат.",
    "ex_zh": "我有一个哥哥。",
    "scene": "family",
+   "img": 1,
    "initial": "Б",
    "slots": 4
   },
@@ -509,6 +523,7 @@ window.RV_DATA = {
    "ex_ru": "Моя сестра учится в университете.",
    "ex_zh": "我姐姐在大学读书。",
    "scene": "family",
+   "img": 1,
    "initial": "С",
    "slots": 6
   },
@@ -522,6 +537,7 @@ window.RV_DATA = {
    "ex_ru": "Её сыну пять лет.",
    "ex_zh": "她的儿子五岁。",
    "scene": "family",
+   "img": 1,
    "initial": "С",
    "slots": 3
   },
@@ -535,6 +551,7 @@ window.RV_DATA = {
    "ex_ru": "Дочь очень похожа на маму.",
    "ex_zh": "女儿长得很像妈妈。",
    "scene": "family",
+   "img": 1,
    "initial": "Д",
    "slots": 4
   },
@@ -548,6 +565,7 @@ window.RV_DATA = {
    "ex_ru": "Мои родители живут в Пекине.",
    "ex_zh": "我的父母住在北京。",
    "scene": "family",
+   "img": 1,
    "initial": "Р",
    "slots": 8
   },
@@ -561,6 +579,7 @@ window.RV_DATA = {
    "ex_ru": "Бабушка печёт пирог.",
    "ex_zh": "奶奶在烤馅饼。",
    "scene": "family",
+   "img": 1,
    "initial": "Б",
    "slots": 7
   },
@@ -574,6 +593,7 @@ window.RV_DATA = {
    "ex_ru": "Дедушка любит играть в шахматы.",
    "ex_zh": "爷爷喜欢下象棋。",
    "scene": "family",
+   "img": 1,
    "initial": "Д",
    "slots": 7
   },
@@ -587,6 +607,7 @@ window.RV_DATA = {
    "ex_ru": "Её муж — инженер.",
    "ex_zh": "她的丈夫是工程师。",
    "scene": "family",
+   "img": 1,
    "initial": "М",
    "slots": 3
   },
@@ -600,6 +621,7 @@ window.RV_DATA = {
    "ex_ru": "Моя жена работает в больнице.",
    "ex_zh": "我妻子在医院工作。",
    "scene": "family",
+   "img": 1,
    "initial": "Ж",
    "slots": 4
   },
@@ -613,6 +635,7 @@ window.RV_DATA = {
    "ex_ru": "Я учусь в университете.",
    "ex_zh": "我在大学读书。",
    "scene": "university",
+   "img": 1,
    "initial": "У",
    "slots": 11
   },
@@ -626,6 +649,7 @@ window.RV_DATA = {
    "ex_ru": "Он учится на историческом факультете.",
    "ex_zh": "他在历史系学习。",
    "scene": "university",
+   "img": 1,
    "initial": "Ф",
    "slots": 9
   },
@@ -639,6 +663,7 @@ window.RV_DATA = {
    "ex_ru": "Занятие будет в аудитории двести три.",
    "ex_zh": "课在203教室上。",
    "scene": "university",
+   "img": 1,
    "initial": "А",
    "slots": 9
   },
@@ -652,6 +677,7 @@ window.RV_DATA = {
    "ex_ru": "Вот мой новый учебник.",
    "ex_zh": "这是我的新课本。",
    "scene": "book",
+   "img": 1,
    "initial": "У",
    "slots": 7
   },
@@ -665,6 +691,7 @@ window.RV_DATA = {
    "ex_ru": "Дай мне тетрадь, пожалуйста.",
    "ex_zh": "请把练习本给我。",
    "scene": "book",
+   "img": 1,
    "initial": "Т",
    "slots": 7
   },
@@ -678,6 +705,7 @@ window.RV_DATA = {
    "ex_ru": "Где моя ручка?",
    "ex_zh": "我的钢笔在哪儿？",
    "scene": "book",
+   "img": 1,
    "initial": "Р",
    "slots": 5
   },
@@ -691,6 +719,7 @@ window.RV_DATA = {
    "ex_ru": "Мы занимаемся в библиотеке.",
    "ex_zh": "我们在图书馆学习。",
    "scene": "university",
+   "img": 1,
    "initial": "Б",
    "slots": 10
   },
@@ -704,6 +733,7 @@ window.RV_DATA = {
    "ex_ru": "Завтра у нас экзамен.",
    "ex_zh": "明天我们有考试。",
    "scene": "university",
+   "img": 1,
    "initial": "Э",
    "slots": 7
   },
@@ -717,6 +747,7 @@ window.RV_DATA = {
    "ex_ru": "Первое занятие начинается в девять.",
    "ex_zh": "第一节课九点开始。",
    "scene": "university",
+   "img": 1,
    "initial": "З",
    "slots": 7
   },
@@ -730,6 +761,7 @@ window.RV_DATA = {
    "ex_ru": "Преподаватель объясняет нам грамматику.",
    "ex_zh": "老师在给我们讲语法。",
    "scene": "university",
+   "img": 1,
    "initial": "П",
    "slots": 13
   },
@@ -743,6 +775,7 @@ window.RV_DATA = {
    "ex_ru": "Он студент первого курса.",
    "ex_zh": "他是一年级大学生。",
    "scene": "university",
+   "img": 1,
    "initial": "С",
    "slots": 7
   },
@@ -756,6 +789,7 @@ window.RV_DATA = {
    "ex_ru": "Учитель дал домашнее задание.",
    "ex_zh": "老师布置了家庭作业。",
    "scene": "book",
+   "img": 1,
    "initial": "З",
    "slots": 7
   },
@@ -769,6 +803,7 @@ window.RV_DATA = {
    "ex_ru": "Мой брат работает в банке.",
    "ex_zh": "我哥哥在银行工作。",
    "scene": "work",
+   "img": 1,
    "initial": "Р",
    "slots": 8
   },
@@ -782,6 +817,7 @@ window.RV_DATA = {
    "ex_ru": "У неё интересная работа.",
    "ex_zh": "她有一份有趣的工作。",
    "scene": "work",
+   "img": 1,
    "initial": "Р",
    "slots": 6
   },
@@ -795,6 +831,7 @@ window.RV_DATA = {
    "ex_ru": "По профессии он инженер.",
    "ex_zh": "他的职业是工程师。",
    "scene": "work",
+   "img": 1,
    "initial": "И",
    "slots": 7
   },
@@ -808,6 +845,7 @@ window.RV_DATA = {
    "ex_ru": "Моя мама — врач.",
    "ex_zh": "我妈妈是医生。",
    "scene": "health",
+   "img": 1,
    "initial": "В",
    "slots": 4
   },
@@ -821,6 +859,7 @@ window.RV_DATA = {
    "ex_ru": "Мой дядя — учитель математики.",
    "ex_zh": "我叔叔是数学老师。",
    "scene": "university",
+   "img": 1,
    "initial": "У",
    "slots": 7
   },
@@ -834,6 +873,7 @@ window.RV_DATA = {
    "ex_ru": "Он работает журналистом.",
    "ex_zh": "他做记者工作。",
    "scene": "work",
+   "img": 1,
    "initial": "Ж",
    "slots": 9
   },
@@ -847,6 +887,7 @@ window.RV_DATA = {
    "ex_ru": "Офис находится на пятом этаже.",
    "ex_zh": "办公室在五层。",
    "scene": "work",
+   "img": 1,
    "initial": "О",
    "slots": 4
   },
@@ -860,6 +901,7 @@ window.RV_DATA = {
    "ex_ru": "Эта компания очень большая.",
    "ex_zh": "这家公司很大。",
    "scene": "work",
+   "img": 1,
    "initial": "К",
    "slots": 8
   },
@@ -873,6 +915,7 @@ window.RV_DATA = {
    "ex_ru": "Зарплату платят два раза в месяц.",
    "ex_zh": "工资一个月发两次。",
    "scene": "work",
+   "img": 1,
    "initial": "З",
    "slots": 8
   },
@@ -886,6 +929,7 @@ window.RV_DATA = {
    "ex_ru": "Мой коллега приехал из Москвы.",
    "ex_zh": "我的同事来自莫斯科。",
    "scene": "work",
+   "img": 1,
    "initial": "К",
    "slots": 7
   },
@@ -899,6 +943,7 @@ window.RV_DATA = {
    "ex_ru": "Москва — очень большой город.",
    "ex_zh": "莫斯科是一座很大的城市。",
    "scene": "city",
+   "img": 1,
    "initial": "Г",
    "slots": 5
   },
@@ -912,6 +957,7 @@ window.RV_DATA = {
    "ex_ru": "На нашей улице много магазинов.",
    "ex_zh": "我们这条街上有很多商店。",
    "scene": "city",
+   "img": 1,
    "initial": "У",
    "slots": 5
   },
@@ -925,6 +971,7 @@ window.RV_DATA = {
    "ex_ru": "Мы встретимся на площади.",
    "ex_zh": "我们在广场见面。",
    "scene": "city",
+   "img": 1,
    "initial": "П",
    "slots": 7
   },
@@ -938,6 +985,7 @@ window.RV_DATA = {
    "ex_ru": "Театр в центре города.",
    "ex_zh": "剧院在市中心。",
    "scene": "city",
+   "img": 1,
    "initial": "Ц",
    "slots": 5
   },
@@ -951,6 +999,7 @@ window.RV_DATA = {
    "ex_ru": "Я еду домой на метро.",
    "ex_zh": "我坐地铁回家。",
    "scene": "transport",
+   "img": 1,
    "initial": "М",
    "slots": 5
   },
@@ -964,6 +1013,7 @@ window.RV_DATA = {
    "ex_ru": "Автобус идёт десять минут.",
    "ex_zh": "公共汽车要走十分钟。",
    "scene": "transport",
+   "img": 1,
    "initial": "А",
    "slots": 7
   },
@@ -977,6 +1027,7 @@ window.RV_DATA = {
    "ex_ru": "Здесь ходит только трамвай.",
    "ex_zh": "这里只有有轨电车通行。",
    "scene": "transport",
+   "img": 1,
    "initial": "Т",
    "slots": 7
   },
@@ -990,6 +1041,7 @@ window.RV_DATA = {
    "ex_ru": "Где остановка автобуса?",
    "ex_zh": "公共汽车站在哪儿？",
    "scene": "transport",
+   "img": 1,
    "initial": "О",
    "slots": 9
   },
@@ -1003,6 +1055,7 @@ window.RV_DATA = {
    "ex_ru": "Поезд приходит на вокзал в шесть.",
    "ex_zh": "火车六点到站。",
    "scene": "travel",
+   "img": 1,
    "initial": "В",
    "slots": 6
   },
@@ -1016,6 +1069,7 @@ window.RV_DATA = {
    "ex_ru": "Мы взяли такси до гостиницы.",
    "ex_zh": "我们打车去了旅馆。",
    "scene": "transport",
+   "img": 1,
    "initial": "Т",
    "slots": 5
   },
@@ -1029,6 +1083,7 @@ window.RV_DATA = {
    "ex_ru": "Вечером я иду домой.",
    "ex_zh": "傍晚我回家。",
    "scene": "house",
+   "img": 1,
    "initial": "Д",
    "slots": 3
   },
@@ -1042,6 +1097,7 @@ window.RV_DATA = {
    "ex_ru": "У них новая квартира.",
    "ex_zh": "他们有一套新住房。",
    "scene": "house",
+   "img": 1,
    "initial": "К",
    "slots": 8
   },
@@ -1055,6 +1111,7 @@ window.RV_DATA = {
    "ex_ru": "Моя комната большая и светлая.",
    "ex_zh": "我的房间又大又明亮。",
    "scene": "house",
+   "img": 1,
    "initial": "К",
    "slots": 7
   },
@@ -1068,6 +1125,7 @@ window.RV_DATA = {
    "ex_ru": "Мама сейчас на кухне.",
    "ex_zh": "妈妈现在在厨房。",
    "scene": "house",
+   "img": 1,
    "initial": "К",
    "slots": 5
   },
@@ -1081,6 +1139,7 @@ window.RV_DATA = {
    "ex_ru": "Открой окно, пожалуйста.",
    "ex_zh": "请把窗户打开。",
    "scene": "house",
+   "img": 1,
    "initial": "О",
    "slots": 4
   },
@@ -1094,6 +1153,7 @@ window.RV_DATA = {
    "ex_ru": "Закрой дверь, здесь холодно.",
    "ex_zh": "把门关上，这儿冷。",
    "scene": "house",
+   "img": 1,
    "initial": "Д",
    "slots": 5
   },
@@ -1107,6 +1167,7 @@ window.RV_DATA = {
    "ex_ru": "Книга лежит на столе.",
    "ex_zh": "书放在桌子上。",
    "scene": "house",
+   "img": 1,
    "initial": "С",
    "slots": 4
   },
@@ -1120,6 +1181,7 @@ window.RV_DATA = {
    "ex_ru": "Садись на стул.",
    "ex_zh": "请坐在椅子上。",
    "scene": "house",
+   "img": 1,
    "initial": "С",
    "slots": 4
   },
@@ -1133,6 +1195,7 @@ window.RV_DATA = {
    "ex_ru": "Ребёнок уже спит в кровати.",
    "ex_zh": "孩子已经在床上睡了。",
    "scene": "house",
+   "img": 1,
    "initial": "К",
    "slots": 7
   },
@@ -1146,6 +1209,7 @@ window.RV_DATA = {
    "ex_ru": "Одежда висит в шкафу.",
    "ex_zh": "衣服挂在柜子里。",
    "scene": "house",
+   "img": 1,
    "initial": "Ш",
    "slots": 4
   },
@@ -1159,6 +1223,7 @@ window.RV_DATA = {
    "ex_ru": "Мы смотрим телевизор.",
    "ex_zh": "我们在看电视。",
    "scene": "house",
+   "img": 1,
    "initial": "Т",
    "slots": 9
   },
@@ -1172,6 +1237,7 @@ window.RV_DATA = {
    "ex_ru": "В холодильнике есть молоко.",
    "ex_zh": "冰箱里有牛奶。",
    "scene": "house",
+   "img": 1,
    "initial": "Х",
    "slots": 11
   },
@@ -1185,6 +1251,7 @@ window.RV_DATA = {
    "ex_ru": "Завтрак уже готов.",
    "ex_zh": "早饭已经做好了。",
    "scene": "food",
+   "img": 1,
    "initial": "З",
    "slots": 7
   },
@@ -1198,6 +1265,7 @@ window.RV_DATA = {
    "ex_ru": "Обед начинается в час.",
    "ex_zh": "午饭一点开始。",
    "scene": "food",
+   "img": 1,
    "initial": "О",
    "slots": 4
   },
@@ -1211,6 +1279,7 @@ window.RV_DATA = {
    "ex_ru": "Ужин был очень вкусным.",
    "ex_zh": "晚饭很好吃。",
    "scene": "food",
+   "img": 1,
    "initial": "У",
    "slots": 4
   },
@@ -1224,6 +1293,7 @@ window.RV_DATA = {
    "ex_ru": "Купи хлеб и молоко.",
    "ex_zh": "买些面包和牛奶。",
    "scene": "food",
+   "img": 1,
    "initial": "Х",
    "slots": 4
   },
@@ -1237,6 +1307,7 @@ window.RV_DATA = {
    "ex_ru": "Я хочу суп и салат.",
    "ex_zh": "我要汤和沙拉。",
    "scene": "food",
+   "img": 1,
    "initial": "С",
    "slots": 3
   },
@@ -1250,6 +1321,7 @@ window.RV_DATA = {
    "ex_ru": "Он совсем не ест мясо.",
    "ex_zh": "他完全不吃肉。",
    "scene": "food",
+   "img": 1,
    "initial": "М",
    "slots": 4
   },
@@ -1263,6 +1335,7 @@ window.RV_DATA = {
    "ex_ru": "Эта рыба очень свежая.",
    "ex_zh": "这条鱼很新鲜。",
    "scene": "food",
+   "img": 1,
    "initial": "Р",
    "slots": 4
   },
@@ -1276,6 +1349,7 @@ window.RV_DATA = {
    "ex_ru": "Она очень любит фрукты.",
    "ex_zh": "她非常喜欢水果。",
    "scene": "food",
+   "img": 1,
    "initial": "Ф",
    "slots": 6
   },
@@ -1289,6 +1363,7 @@ window.RV_DATA = {
    "ex_ru": "Чай или кофе?",
    "ex_zh": "喝茶还是咖啡？",
    "scene": "food",
+   "img": 1,
    "initial": "Ч",
    "slots": 3
   },
@@ -1302,6 +1377,7 @@ window.RV_DATA = {
    "ex_ru": "Дайте мне кофе без сахара.",
    "ex_zh": "请给我一杯不加糖的咖啡。",
    "scene": "food",
+   "img": 1,
    "initial": "К",
    "slots": 4
   },
@@ -1315,6 +1391,7 @@ window.RV_DATA = {
    "ex_ru": "Можно стакан воды?",
    "ex_zh": "可以给我一杯水吗？",
    "scene": "food",
+   "img": 1,
    "initial": "В",
    "slots": 4
   },
@@ -1328,6 +1405,7 @@ window.RV_DATA = {
    "ex_ru": "Вечером мы идём в ресторан.",
    "ex_zh": "晚上我们去餐厅。",
    "scene": "food",
+   "img": 1,
    "initial": "Р",
    "slots": 8
   },
@@ -1341,6 +1419,7 @@ window.RV_DATA = {
    "ex_ru": "Принесите меню, пожалуйста.",
    "ex_zh": "请把菜单拿来。",
    "scene": "food",
+   "img": 1,
    "initial": "М",
    "slots": 4
   },
@@ -1354,6 +1433,7 @@ window.RV_DATA = {
    "ex_ru": "Я встаю в семь утра.",
    "ex_zh": "我早上七点起床。",
    "scene": "clock",
+   "img": 1,
    "initial": "В",
    "slots": 8
   },
@@ -1367,6 +1447,7 @@ window.RV_DATA = {
    "ex_ru": "Мы завтракаем всей семьёй.",
    "ex_zh": "我们全家一起吃早饭。",
    "scene": "food",
+   "img": 1,
    "initial": "З",
    "slots": 10
   },
@@ -1380,6 +1461,7 @@ window.RV_DATA = {
    "ex_ru": "Дети уже давно спят.",
    "ex_zh": "孩子们早就睡了。",
    "scene": "clock",
+   "img": 1,
    "initial": "С",
    "slots": 5
   },
@@ -1393,6 +1475,7 @@ window.RV_DATA = {
    "ex_ru": "Летом мы отдыхаем на море.",
    "ex_zh": "夏天我们在海边休假。",
    "scene": "nature",
+   "img": 1,
    "initial": "О",
    "slots": 8
   },
@@ -1406,6 +1489,7 @@ window.RV_DATA = {
    "ex_ru": "Вечером я гуляю в парке.",
    "ex_zh": "傍晚我在公园散步。",
    "scene": "nature",
+   "img": 1,
    "initial": "Г",
    "slots": 6
   },
@@ -1419,6 +1503,7 @@ window.RV_DATA = {
    "ex_ru": "Доброе утро!",
    "ex_zh": "早上好！",
    "scene": "clock",
+   "img": 1,
    "initial": "У",
    "slots": 4
   },
@@ -1432,6 +1517,7 @@ window.RV_DATA = {
    "ex_ru": "Добрый вечер!",
    "ex_zh": "晚上好！",
    "scene": "clock",
+   "img": 1,
    "initial": "В",
    "slots": 5
   },
@@ -1445,6 +1531,7 @@ window.RV_DATA = {
    "ex_ru": "Спокойной ночи!",
    "ex_zh": "晚安！",
    "scene": "clock",
+   "img": 1,
    "initial": "Н",
    "slots": 4
   },
@@ -1458,6 +1545,7 @@ window.RV_DATA = {
    "ex_ru": "Я ждал целый час.",
    "ex_zh": "我等了整整一个小时。",
    "scene": "clock",
+   "img": 1,
    "initial": "Ч",
    "slots": 3
   },
@@ -1471,6 +1559,7 @@ window.RV_DATA = {
    "ex_ru": "Подожди пять минут.",
    "ex_zh": "等五分钟。",
    "scene": "clock",
+   "img": 1,
    "initial": "М",
    "slots": 6
   },
@@ -1484,6 +1573,7 @@ window.RV_DATA = {
    "ex_ru": "Сегодня я пришёл рано.",
    "ex_zh": "今天我来得早。",
    "scene": "clock",
+   "img": 1,
    "initial": "Р",
    "slots": 4
   },
@@ -1497,6 +1587,7 @@ window.RV_DATA = {
    "ex_ru": "Уже поздно, пора домой.",
    "ex_zh": "已经很晚了，该回家了。",
    "scene": "clock",
+   "img": 1,
    "initial": "П",
    "slots": 6
   },
@@ -1510,6 +1601,7 @@ window.RV_DATA = {
    "ex_ru": "Вот расписание наших занятий.",
    "ex_zh": "这是我们的课程表。",
    "scene": "clock",
+   "img": 1,
    "initial": "Р",
    "slots": 10
   },
@@ -1523,6 +1615,7 @@ window.RV_DATA = {
    "ex_ru": "Этот магазин работает до восьми.",
    "ex_zh": "这家商店营业到八点。",
    "scene": "shop",
+   "img": 1,
    "initial": "М",
    "slots": 7
   },
@@ -1536,6 +1629,7 @@ window.RV_DATA = {
    "ex_ru": "Я каждый день покупаю продукты.",
    "ex_zh": "我每天买食品。",
    "scene": "shop",
+   "img": 1,
    "initial": "П",
    "slots": 8
   },
@@ -1549,6 +1643,7 @@ window.RV_DATA = {
    "ex_ru": "Какая цена этого костюма?",
    "ex_zh": "这套衣服多少钱？",
    "scene": "shop",
+   "img": 1,
    "initial": "Ц",
    "slots": 4
   },
@@ -1562,6 +1657,7 @@ window.RV_DATA = {
    "ex_ru": "У меня сейчас нет денег.",
    "ex_zh": "我现在身上没钱。",
    "scene": "shop",
+   "img": 1,
    "initial": "Д",
    "slots": 6
   },
@@ -1575,6 +1671,7 @@ window.RV_DATA = {
    "ex_ru": "Здесь очень дорого.",
    "ex_zh": "这里很贵。",
    "scene": "shop",
+   "img": 1,
    "initial": "Д",
    "slots": 6
   },
@@ -1588,6 +1685,7 @@ window.RV_DATA = {
    "ex_ru": "На рынке всё дёшево.",
    "ex_zh": "市场上什么都很便宜。",
    "scene": "shop",
+   "img": 1,
    "initial": "Д",
    "slots": 6
   },
@@ -1601,6 +1699,7 @@ window.RV_DATA = {
    "ex_ru": "Мы идём на рынок за овощами.",
    "ex_zh": "我们去市场买蔬菜。",
    "scene": "shop",
+   "img": 1,
    "initial": "Р",
    "slots": 5
   },
@@ -1614,6 +1713,7 @@ window.RV_DATA = {
    "ex_ru": "Продавец дал мне чек.",
    "ex_zh": "售货员给了我收据。",
    "scene": "shop",
+   "img": 1,
    "initial": "П",
    "slots": 8
   },
@@ -1627,6 +1727,7 @@ window.RV_DATA = {
    "ex_ru": "Её новая сумка очень красивая.",
    "ex_zh": "她的新包很好看。",
    "scene": "shop",
+   "img": 1,
    "initial": "С",
    "slots": 5
   },
@@ -1640,6 +1741,7 @@ window.RV_DATA = {
    "ex_ru": "Какой у вас размер?",
    "ex_zh": "您穿多大号？",
    "scene": "shop",
+   "img": 1,
    "initial": "Р",
    "slots": 6
   },
@@ -1653,6 +1755,7 @@ window.RV_DATA = {
    "ex_ru": "Я плачу картой.",
    "ex_zh": "我用银行卡付款。",
    "scene": "shop",
+   "img": 1,
    "initial": "П",
    "slots": 7
   },
@@ -1666,6 +1769,7 @@ window.RV_DATA = {
    "ex_ru": "Можно примерить эти туфли?",
    "ex_zh": "可以试穿这双鞋吗？",
    "scene": "shop",
+   "img": 1,
    "initial": "П",
    "slots": 9
   },
@@ -1679,6 +1783,7 @@ window.RV_DATA = {
    "ex_ru": "Какая сегодня погода?",
    "ex_zh": "今天天气怎么样？",
    "scene": "weather",
+   "img": 1,
    "initial": "П",
    "slots": 6
   },
@@ -1692,6 +1797,7 @@ window.RV_DATA = {
    "ex_ru": "На улице стало тепло.",
    "ex_zh": "外面暖和起来了。",
    "scene": "weather",
+   "img": 1,
    "initial": "Т",
    "slots": 5
   },
@@ -1705,6 +1811,7 @@ window.RV_DATA = {
    "ex_ru": "Зимой здесь очень холодно.",
    "ex_zh": "冬天这里很冷。",
    "scene": "weather",
+   "img": 1,
    "initial": "Х",
    "slots": 7
   },
@@ -1718,6 +1825,7 @@ window.RV_DATA = {
    "ex_ru": "Целый день идёт дождь.",
    "ex_zh": "一整天都在下雨。",
    "scene": "weather",
+   "img": 1,
    "initial": "Д",
    "slots": 5
   },
@@ -1731,6 +1839,7 @@ window.RV_DATA = {
    "ex_ru": "Выпал первый снег.",
    "ex_zh": "下了第一场雪。",
    "scene": "weather",
+   "img": 1,
    "initial": "С",
    "slots": 4
   },
@@ -1744,6 +1853,7 @@ window.RV_DATA = {
    "ex_ru": "Солнце светит очень ярко.",
    "ex_zh": "阳光十分灿烂。",
    "scene": "weather",
+   "img": 1,
    "initial": "С",
    "slots": 6
   },
@@ -1757,6 +1867,7 @@ window.RV_DATA = {
    "ex_ru": "Весной всё начинает цвести.",
    "ex_zh": "春天万物开始开花。",
    "scene": "nature",
+   "img": 1,
    "initial": "В",
    "slots": 5
   },
@@ -1770,6 +1881,7 @@ window.RV_DATA = {
    "ex_ru": "Летом я еду к морю.",
    "ex_zh": "夏天我去海边。",
    "scene": "nature",
+   "img": 1,
    "initial": "Л",
    "slots": 4
   },
@@ -1783,6 +1895,7 @@ window.RV_DATA = {
    "ex_ru": "Осень — моё любимое время года.",
    "ex_zh": "秋天是我最喜欢的季节。",
    "scene": "nature",
+   "img": 1,
    "initial": "О",
    "slots": 5
   },
@@ -1796,6 +1909,7 @@ window.RV_DATA = {
    "ex_ru": "Здесь зима долгая и снежная.",
    "ex_zh": "这里的冬天又长又多雪。",
    "scene": "weather",
+   "img": 1,
    "initial": "З",
    "slots": 4
   },
@@ -1809,6 +1923,7 @@ window.RV_DATA = {
    "ex_ru": "Сегодня минус десять градусов.",
    "ex_zh": "今天零下十度。",
    "scene": "weather",
+   "img": 1,
    "initial": "Г",
    "slots": 6
   },
@@ -1822,6 +1937,7 @@ window.RV_DATA = {
    "ex_ru": "Небо голубое и ясное.",
    "ex_zh": "天空蔚蓝而晴朗。",
    "scene": "nature",
+   "img": 1,
    "initial": "Н",
    "slots": 4
   },
@@ -1835,6 +1951,7 @@ window.RV_DATA = {
    "ex_ru": "Температура воздуха двадцать градусов.",
    "ex_zh": "气温是二十度。",
    "scene": "weather",
+   "img": 1,
    "initial": "Т",
    "slots": 11
   },
@@ -1848,6 +1965,7 @@ window.RV_DATA = {
    "ex_ru": "Здоровье важнее денег.",
    "ex_zh": "健康比金钱更重要。",
    "scene": "health",
+   "img": 1,
    "initial": "З",
    "slots": 8
   },
@@ -1861,6 +1979,7 @@ window.RV_DATA = {
    "ex_ru": "У меня болит голова.",
    "ex_zh": "我头疼。",
    "scene": "health",
+   "img": 1,
    "initial": "Б",
    "slots": 6
   },
@@ -1874,6 +1993,7 @@ window.RV_DATA = {
    "ex_ru": "Она подняла голову.",
    "ex_zh": "她抬起了头。",
    "scene": "person",
+   "img": 1,
    "initial": "Г",
    "slots": 6
   },
@@ -1887,6 +2007,7 @@ window.RV_DATA = {
    "ex_ru": "Он поднял руку.",
    "ex_zh": "他举起了手。",
    "scene": "person",
+   "img": 1,
    "initial": "Р",
    "slots": 4
   },
@@ -1900,6 +2021,7 @@ window.RV_DATA = {
    "ex_ru": "Она подвернула ногу.",
    "ex_zh": "她崴了脚。",
    "scene": "person",
+   "img": 1,
    "initial": "Н",
    "slots": 4
   },
@@ -1913,6 +2035,7 @@ window.RV_DATA = {
    "ex_ru": "Его положили в больницу.",
    "ex_zh": "他被送进医院了。",
    "scene": "health",
+   "img": 1,
    "initial": "Б",
    "slots": 8
   },
@@ -1926,6 +2049,7 @@ window.RV_DATA = {
    "ex_ru": "Аптека рядом с нашим домом.",
    "ex_zh": "药店就在我们家旁边。",
    "scene": "health",
+   "img": 1,
    "initial": "А",
    "slots": 6
   },
@@ -1939,6 +2063,7 @@ window.RV_DATA = {
    "ex_ru": "Врач прописал новое лекарство.",
    "ex_zh": "医生开了新药。",
    "scene": "health",
+   "img": 1,
    "initial": "Л",
    "slots": 9
   },
@@ -1952,6 +2077,7 @@ window.RV_DATA = {
    "ex_ru": "Поликлиника открыта с восьми утра.",
    "ex_zh": "门诊部从早上八点开始上班。",
    "scene": "health",
+   "img": 1,
    "initial": "П",
    "slots": 11
   },
@@ -1965,6 +2091,7 @@ window.RV_DATA = {
    "ex_ru": "У него грипп, он дома.",
    "ex_zh": "他得了流感，在家休息。",
    "scene": "health",
+   "img": 1,
    "initial": "Г",
    "slots": 5
   },
@@ -1978,6 +2105,7 @@ window.RV_DATA = {
    "ex_ru": "Принимайте лекарство два раза в день.",
    "ex_zh": "这种药请一天服两次。",
    "scene": "health",
+   "img": 1,
    "initial": "П",
    "slots": 9
   },
@@ -1991,6 +2119,7 @@ window.RV_DATA = {
    "ex_ru": "Мы идём в театр в субботу.",
    "ex_zh": "我们周六去剧院。",
    "scene": "culture",
+   "img": 1,
    "initial": "Т",
    "slots": 5
   },
@@ -2004,6 +2133,7 @@ window.RV_DATA = {
    "ex_ru": "Вечером будет новое кино.",
    "ex_zh": "晚上有一部新电影。",
    "scene": "culture",
+   "img": 1,
    "initial": "К",
    "slots": 4
   },
@@ -2017,6 +2147,7 @@ window.RV_DATA = {
    "ex_ru": "Музей открыт до шести вечера.",
    "ex_zh": "博物馆开放到下午六点。",
    "scene": "culture",
+   "img": 1,
    "initial": "М",
    "slots": 5
   },
@@ -2030,6 +2161,7 @@ window.RV_DATA = {
    "ex_ru": "На выставке было много народу.",
    "ex_zh": "展览上人很多。",
    "scene": "culture",
+   "img": 1,
    "initial": "В",
    "slots": 8
   },
@@ -2043,6 +2175,7 @@ window.RV_DATA = {
    "ex_ru": "Билеты на концерт уже кончились.",
    "ex_zh": "音乐会的票已经卖完了。",
    "scene": "culture",
+   "img": 1,
    "initial": "К",
    "slots": 7
   },
@@ -2056,6 +2189,7 @@ window.RV_DATA = {
    "ex_ru": "Я люблю классическую музыку.",
    "ex_zh": "我喜欢古典音乐。",
    "scene": "culture",
+   "img": 1,
    "initial": "М",
    "slots": 6
   },
@@ -2069,6 +2203,7 @@ window.RV_DATA = {
    "ex_ru": "Они танцевали весь вечер.",
    "ex_zh": "他们整个晚上都在跳舞。",
    "scene": "culture",
+   "img": 1,
    "initial": "Т",
    "slots": 9
   },
@@ -2082,6 +2217,7 @@ window.RV_DATA = {
    "ex_ru": "Она поёт очень хорошо.",
    "ex_zh": "她唱得非常好。",
    "scene": "culture",
+   "img": 1,
    "initial": "П",
    "slots": 4
   },
@@ -2095,6 +2231,7 @@ window.RV_DATA = {
    "ex_ru": "Этот фильм стоит посмотреть.",
    "ex_zh": "这部电影值得一看。",
    "scene": "culture",
+   "img": 1,
    "initial": "Ф",
    "slots": 5
   },
@@ -2108,6 +2245,7 @@ window.RV_DATA = {
    "ex_ru": "Мы гуляем в городском парке.",
    "ex_zh": "我们在市立公园散步。",
    "scene": "nature",
+   "img": 1,
    "initial": "П",
    "slots": 4
   },
@@ -2121,6 +2259,7 @@ window.RV_DATA = {
    "ex_ru": "Это очень интересная книга.",
    "ex_zh": "这是一本很有趣的书。",
    "scene": "book",
+   "img": 1,
    "initial": "К",
    "slots": 5
   },
@@ -2134,6 +2273,7 @@ window.RV_DATA = {
    "ex_ru": "Дай мне свой телефон.",
    "ex_zh": "把你的电话号码给我。",
    "scene": "contact",
+   "img": 1,
    "initial": "Т",
    "slots": 7
   },
@@ -2147,6 +2287,7 @@ window.RV_DATA = {
    "ex_ru": "Я звоню родителям каждый день.",
    "ex_zh": "我每天给父母打电话。",
    "scene": "contact",
+   "img": 1,
    "initial": "З",
    "slots": 7
   },
@@ -2160,6 +2301,7 @@ window.RV_DATA = {
    "ex_ru": "Я написал письмо старому другу.",
    "ex_zh": "我给老朋友写了封信。",
    "scene": "contact",
+   "img": 1,
    "initial": "П",
    "slots": 6
   },
@@ -2173,6 +2315,7 @@ window.RV_DATA = {
    "ex_ru": "Почта закрыта в воскресенье.",
    "ex_zh": "邮局星期天关门。",
    "scene": "contact",
+   "img": 1,
    "initial": "П",
    "slots": 5
   },
@@ -2186,6 +2329,7 @@ window.RV_DATA = {
    "ex_ru": "Напиши мне свой адрес.",
    "ex_zh": "把你的地址写给我。",
    "scene": "contact",
+   "img": 1,
    "initial": "А",
    "slots": 5
   },
@@ -2199,6 +2343,7 @@ window.RV_DATA = {
    "ex_ru": "Мне нужна одна марка.",
    "ex_zh": "我需要一张邮票。",
    "scene": "contact",
+   "img": 1,
    "initial": "М",
    "slots": 5
   },
@@ -2212,6 +2357,7 @@ window.RV_DATA = {
    "ex_ru": "Купи конверты и бумагу.",
    "ex_zh": "买些信封和纸吧。",
    "scene": "contact",
+   "img": 1,
    "initial": "К",
    "slots": 7
   },
@@ -2225,6 +2371,7 @@ window.RV_DATA = {
    "ex_ru": "Мой компьютер работает быстро.",
    "ex_zh": "我的电脑运行很快。",
    "scene": "contact",
+   "img": 1,
    "initial": "К",
    "slots": 9
   },
@@ -2238,6 +2385,7 @@ window.RV_DATA = {
    "ex_ru": "У нас дома есть интернет.",
    "ex_zh": "我们家里有网络。",
    "scene": "contact",
+   "img": 1,
    "initial": "И",
    "slots": 8
   },
@@ -2251,6 +2399,7 @@ window.RV_DATA = {
    "ex_ru": "Я получил твоё сообщение.",
    "ex_zh": "我收到了你的短信。",
    "scene": "contact",
+   "img": 1,
    "initial": "С",
    "slots": 9
   },
@@ -2264,6 +2413,7 @@ window.RV_DATA = {
    "ex_ru": "У университета новый сайт.",
    "ex_zh": "大学有了新网站。",
    "scene": "contact",
+   "img": 1,
    "initial": "С",
    "slots": 4
   },
@@ -2277,6 +2427,7 @@ window.RV_DATA = {
    "ex_ru": "Путешествие продолжалось месяц.",
    "ex_zh": "旅行持续了一个月。",
    "scene": "travel",
+   "img": 1,
    "initial": "П",
    "slots": 11
   },
@@ -2290,6 +2441,7 @@ window.RV_DATA = {
    "ex_ru": "Поезд отправляется в восемь.",
    "ex_zh": "火车八点发车。",
    "scene": "travel",
+   "img": 1,
    "initial": "П",
    "slots": 5
   },
@@ -2303,6 +2455,7 @@ window.RV_DATA = {
    "ex_ru": "Самолёт летит два часа.",
    "ex_zh": "飞机要飞两个小时。",
    "scene": "travel",
+   "img": 1,
    "initial": "С",
    "slots": 7
   },
@@ -2316,6 +2469,7 @@ window.RV_DATA = {
    "ex_ru": "Мы остановились в гостинице.",
    "ex_zh": "我们住在一家旅馆里。",
    "scene": "travel",
+   "img": 1,
    "initial": "Г",
    "slots": 9
   },
@@ -2329,6 +2483,7 @@ window.RV_DATA = {
    "ex_ru": "Покажите ваш паспорт.",
    "ex_zh": "请出示您的护照。",
    "scene": "travel",
+   "img": 1,
    "initial": "П",
    "slots": 7
   },
@@ -2342,6 +2497,7 @@ window.RV_DATA = {
    "ex_ru": "Виза будет готова через неделю.",
    "ex_zh": "签证一周后办好。",
    "scene": "travel",
+   "img": 1,
    "initial": "В",
    "slots": 4
   },
@@ -2355,6 +2511,7 @@ window.RV_DATA = {
    "ex_ru": "Где можно сдать багаж?",
    "ex_zh": "在哪里可以托运行李？",
    "scene": "travel",
+   "img": 1,
    "initial": "Б",
    "slots": 5
   },
@@ -2368,6 +2525,7 @@ window.RV_DATA = {
    "ex_ru": "Я собираю вещи в чемодан.",
    "ex_zh": "我在往箱子里收拾东西。",
    "scene": "travel",
+   "img": 1,
    "initial": "Ч",
    "slots": 7
   },
@@ -2381,6 +2539,7 @@ window.RV_DATA = {
    "ex_ru": "Дорога заняла три часа.",
    "ex_zh": "路上花了三个小时。",
    "scene": "travel",
+   "img": 1,
    "initial": "Д",
    "slots": 6
   },
@@ -2394,6 +2553,7 @@ window.RV_DATA = {
    "ex_ru": "У нас есть карта города.",
    "ex_zh": "我们有一张城市地图。",
    "scene": "travel",
+   "img": 1,
    "initial": "К",
    "slots": 5
   },
@@ -2407,6 +2567,7 @@ window.RV_DATA = {
    "ex_ru": "Он в отпуске уже неделю.",
    "ex_zh": "他已经休假一周了。",
    "scene": "travel",
+   "img": 1,
    "initial": "О",
    "slots": 6
   },
@@ -2420,6 +2581,7 @@ window.RV_DATA = {
    "ex_ru": "Летом мы едем к морю.",
    "ex_zh": "夏天我们去海边。",
    "scene": "nature",
+   "img": 1,
    "initial": "М",
    "slots": 4
   },
@@ -2433,6 +2595,7 @@ window.RV_DATA = {
    "ex_ru": "С наступающим праздником!",
    "ex_zh": "节日快乐！",
    "scene": "holiday",
+   "img": 1,
    "initial": "П",
    "slots": 8
   },
@@ -2446,6 +2609,7 @@ window.RV_DATA = {
    "ex_ru": "Когда у тебя день рождения?",
    "ex_zh": "你的生日是什么时候？",
    "scene": "gift",
+   "img": 1,
    "initial": "Д",
    "slots": 12
   },
@@ -2459,6 +2623,7 @@ window.RV_DATA = {
    "ex_ru": "Поздравляю тебя с днём рождения!",
    "ex_zh": "祝你生日快乐！",
    "scene": "holiday",
+   "img": 1,
    "initial": "П",
    "slots": 11
   },
@@ -2472,6 +2637,7 @@ window.RV_DATA = {
    "ex_ru": "Желаю тебе счастья и здоровья!",
    "ex_zh": "祝你幸福健康！",
    "scene": "holiday",
+   "img": 1,
    "initial": "Ж",
    "slots": 6
   },
@@ -2485,6 +2651,7 @@ window.RV_DATA = {
    "ex_ru": "Я купил красивые цветы.",
    "ex_zh": "我买了漂亮的花。",
    "scene": "gift",
+   "img": 1,
    "initial": "Ц",
    "slots": 5
   },
@@ -2498,6 +2665,7 @@ window.RV_DATA = {
    "ex_ru": "Мама испекла большой торт.",
    "ex_zh": "妈妈烤了一个大蛋糕。",
    "scene": "gift",
+   "img": 1,
    "initial": "Т",
    "slots": 4
   },
@@ -2511,6 +2679,7 @@ window.RV_DATA = {
    "ex_ru": "Гости пришли в семь часов.",
    "ex_zh": "客人们七点钟到了。",
    "scene": "holiday",
+   "img": 1,
    "initial": "Г",
    "slots": 5
   },
@@ -2524,6 +2693,7 @@ window.RV_DATA = {
    "ex_ru": "Желаю тебе большого счастья!",
    "ex_zh": "祝你幸福美满！",
    "scene": "holiday",
+   "img": 1,
    "initial": "С",
    "slots": 7
   },
@@ -2537,6 +2707,7 @@ window.RV_DATA = {
    "ex_ru": "Мы празднуем Новый год дома.",
    "ex_zh": "我们在家过新年。",
    "scene": "holiday",
+   "img": 1,
    "initial": "П",
    "slots": 11
   },
@@ -2550,6 +2721,7 @@ window.RV_DATA = {
    "ex_ru": "С Новым годом!",
    "ex_zh": "新年快乐！",
    "scene": "holiday",
+   "img": 1,
    "initial": "Н",
    "slots": 8
   },
@@ -2563,6 +2735,7 @@ window.RV_DATA = {
    "ex_ru": "Это подарок для тебя.",
    "ex_zh": "这是给你的礼物。",
    "scene": "gift",
+   "img": 1,
    "initial": "П",
    "slots": 7
   }

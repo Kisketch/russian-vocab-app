@@ -1460,9 +1460,9 @@
         var box = $('#selftestResult');
         if (box) box.textContent = '正在测试…';
         RVAudio.selfTest().then(function (r) {
-          var msg = (r.ok ? '✓ 发音正常 · ' : '✗ 播放失败 · ') + r.via + (r.error ? ' · ' + r.error : '');
+          var msg = (r.ok ? '✓ 发音正常（' + r.via + '）' : '✗ 全部通道失败') + ' · ' + (r.error || '');
           if (box) box.textContent = msg;
-          toast(r.ok ? '发音正常：本地 MP3 可用' : '发音异常：' + r.error);
+          toast(r.ok ? '发音正常：' + r.via : '发音异常，详见设置页说明');
         });
         break;
       }
@@ -1627,6 +1627,10 @@
   function boot() {
     // 导航/标签栏图标（data-ico → 内联 SVG）
     $$('[data-ico]').forEach(function (s) { s.innerHTML = ico(s.dataset.ico, 20); });
+    // 音频全通道失败时的可见反馈（绝不无声无息）
+    window.addEventListener('rv-audio-fail', function (e) {
+      toast('发音播放失败：' + (e.detail || '未知原因') + '（可在设置-测试发音查看详情）');
+    });
     // 语法/词典数据（失败不影响主流程；加载完成后重渲染以补全语法详解）
     if (window.RVGrammar) {
       RVGrammar.load().then(function () { try { render(); } catch (e) { } })

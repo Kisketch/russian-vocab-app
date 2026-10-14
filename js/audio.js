@@ -50,20 +50,20 @@
     // APK 内 web 资产位于 assets/public/，原生插件直接从 assets/ 根按此路径读取
     var path = 'public/assets/audio/' + (kind === 'sent' ? 'sent' : 'words') + '/' + id + '.mp3';
     function go() {
-      return p.play({ id: nid }).then(function () {
+      return p.play({ assetId: nid }).then(function () {
         lastError = '';
       }, function (e) {
         nativeLoading[nid] = false;
-        throw e;
+        throw new Error('native-play: ' + (e && e.message || e));
       });
     }
     if (nativeLoading[nid]) return go();
     return p.preload({
-      id: nid,
+      assetId: nid,
       assetPath: path,
       volume: 1
     }).then(function () { nativeLoading[nid] = true; return go(); },
-      function () { nativeOk = false; throw new Error('preload-failed'); });
+      function (e) { nativeOk = false; throw new Error('preload-failed: ' + (e && e.message || e)); });
   }
 
   /* ---------- 程序生成 0.2s 静音 WAV（用于解锁媒体） ---------- */
@@ -179,55 +179,71 @@
     var hit = opts.id ? { id: opts.id, kind: opts.kind || 'word' } : resolveId(text);
     var slow = !!opts.slow;
     if (S.state.settings.ttsOnly || !hit) { tts(text, slow); return Promise.resolve(); }
-    // 1) 安卓原生播放（最稳）→ 2) HTMLAudio（失败自动换新元素重试一次）→ 3) 系统语音
-    return playNative(hit.id, hit.kind).catch(function () {
+    /* 播放顺序：1) HTMLAudio（每次新建元素，已在真机验证）
+                2) 安卓原生 MediaPlayer（HTMLAudio 失败时兜底）
+                3) 系统 TTS；全部失败时给出可见提示，绝不无声无息 */
+    var attempts = [];
+    function tryHtml() {
       return playFile(hit.id, hit.kind, slow).catch(function (e) {
         var reason = e && e.message;
         if (reason === 'NotAllowedError') {
-          // 自动播放策略拦截：挂起，等用户下一次点击时补播
           pending = { text: text, opts: opts };
-          return;
+          return 'pending';
         }
+        // 换一个全新元素立即重试一次
         return playFile(hit.id, hit.kind, slow).catch(function (e2) {
-          if (e2 && e2.message === 'NotAllowedError') {
-            pending = { text: text, opts: opts };
-            return;
-          }
-          tts(text, slow);
+          if (e2 && e2.message === 'NotAllowedError') { pending = { text: text, opts: opts }; return 'pending'; }
+          attempts.push('mp3:' + (e2 && e2.message || 'fail'));
+          return playNative(hit.id, hit.kind).catch(function (e3) {
+            attempts.push('native:' + (e3 && e3.message || 'fail'));
+            tts(text, slow);
+            if (!hasRussian()) {
+              lastError = attempts.join(' | ');
+              if (window.RVStore) {
+                try { window.dispatchEvent(new CustomEvent('rv-audio-fail', { detail: lastError })); } catch (err) { }
+              }
+            }
+            return 'tts';
+          });
         });
       });
-    });
+    }
+    return tryHtml();
   }
 
-  /* 预取（点击发热词时无感） */
+  /* 预取：只预热 HTTP 缓存，不创建 Audio 元素（大量元素会占用解码器资源，
+     在部分机型上导致后续 play 失败） */
   function prefetch(ids) {
-    (ids || []).slice(0, 60).forEach(function (id) {
+    (ids || []).slice(0, 20).forEach(function (id) {
       ['words', 'sent'].forEach(function (dir) {
-        var a = new Audio();
-        a.preload = 'auto';
-        a.src = 'assets/audio/' + dir + '/' + id + '.mp3';
+        try {
+          fetch(src(id, dir), { mode: 'same-origin' }).catch(function () { });
+        } catch (e) { }
       });
     });
   }
 
-  /* 发音自检：依次尝试 原生 → 本地 MP3，返回诊断信息（设置页展示） */
+  /* 发音自检：逐个通道实测，返回完整诊断（设置页展示） */
   function selfTest() {
     lastError = '';
     var id = (D.words[0] && D.words[0].id) || 'w001';
-    return playNative(id, 'words').then(function () {
-      return { ok: true, via: '原生音频（NativeAudio）', error: '' };
-    }, function () {
-      return playFile(id, 'words', false).then(function () {
-        return { ok: true, via: '本地 MP3（' + src(id, 'words') + '）', error: '' };
-      }, function (e) {
-        var r = e && e.message || 'unknown';
-        var hint = {
-          NotAllowedError: '浏览器/WebView 拦截了自动播放（点一下页面任意处再试）',
-          NotSupportedError: '文件格式不被当前环境支持',
-          missing: '音频文件缺失',
-          stalled: '加载超时'
-        }[r] || '未知原因';
-        return { ok: false, via: '回退系统语音', error: r + ' — ' + hint };
+    var report = { mp3: '', native: '', tts: '', ok: false, via: '', error: '' };
+    return playFile(id, 'words', false).then(function () {
+      report.mp3 = '✓ 本地 MP3 可播放';
+      report.ok = true; report.via = '本地 MP3';
+      return report;
+    }, function (e1) {
+      report.mp3 = '✗ ' + (e1 && e1.message || 'fail');
+      return playNative(id, 'words').then(function () {
+        report.native = '✓ 原生音频可播放';
+        report.ok = true; report.via = '原生音频（NativeAudio）';
+        return report;
+      }, function (e2) {
+        report.native = '✗ ' + (e2 && e2.message || 'fail');
+        var ru = hasRussian();
+        report.tts = ru ? '✓ 有俄语系统语音' : '✗ 无俄语系统语音（回退无效）';
+        report.error = [report.mp3, report.native, report.tts].join(' ｜ ');
+        return report;
       });
     });
   }

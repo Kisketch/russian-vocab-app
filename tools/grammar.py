@@ -49,6 +49,7 @@ IRREGULAR_PLURAL = {
 }
 # 复数 G 特殊（-ей / 零结尾例外）
 IRREGULAR_GEN_PL = {
+    "деньги": "денег", "дети": "детей", "люди": "людей",
     "колено": "коленей", "колесо": "колёс", "перо": "перьев",
     "дерево": "деревьев", "небо": "небес", "ухо": "ушей",
     "глаз": "глаз", "дом": "домов", "век": "веков",
@@ -166,7 +167,8 @@ ANIMATE = {
     "преподаватель", "учитель", "врач", "инженер", "журналист", "коллега",
     "продавец", "гость", "собака", "кот", "кошка", "рыба", "птица", "медведь",
     "волк", "лиса", "заяц", "лошадь", "корова", "свинья", "овца", "коза",
-    "котёнок", "щенок", "животное", "хозяин", "супруг", "супруга"
+    "котёнок", "щенок", "животное", "хозяин", "супруг", "супруга",
+    "родители", "мальчик", "девочка", "человек2"
 }
 
 # ---------------------------------------------------------------- 工具
@@ -203,6 +205,43 @@ def apply_end(stem_, ending):
 
 
 # ---------------------------------------------------------------- 名词
+def decline_invariable(w):
+    """外来不变格名词（метро, такси…）：各格同形"""
+    same = {c: w for c in CASES}
+    return {"type": "noun-invariable", "sg": same, "pl": same,
+            "note": "外来词，不变格（各格同形）"}
+
+
+def decline_plural_noun(w):
+    """只有复数形式的名词（родители, фрукты, дети…）：给出复数各格，单数标注「—」"""
+    if w in IRREGULAR_GEN_PL:
+        gen = IRREGULAR_GEN_PL[w]
+    elif w.endswith("и"):
+        stem = w[:-1]
+        gen = stem + "ей"
+        if w.endswith("ги") or w.endswith("ки") or w.endswith("хи"):
+            gen = stem + "ов" if False else stem + "ов"
+    else:
+        stem = w[:-1]
+        gen = stem + "ов"
+    soft = w.endswith("и")
+    stem = w[:-1]
+    pl = {
+        "nom": w,
+        "gen": gen,
+        "dat": stem + ("ям" if soft else "ам"),
+        "acc": w,
+        "ins": stem + ("ями" if soft else "ами"),
+        "prep": stem + ("ях" if soft else "ах"),
+    }
+    if w in ANIMATE:
+        pl["acc"] = gen
+    if w in IRREGULAR_PLURAL:
+        pl["nom"] = IRREGULAR_PLURAL[w]
+    sg = {c: "—" for c in CASES}
+    return {"type": "noun-pl", "sg": sg, "pl": pl}
+
+
 def decline_noun(word, gender, animate):
     w = word.lower()
     sg, pl = {}, {}
@@ -447,7 +486,10 @@ def main():
         if pos.startswith("名词"):
             gender = ("m" if "阳性" in pos else "f" if "阴性" in pos else "n" if "中性" in pos else "pl" if "复数" in pos else "m")
             if "不变" in pos:
-                entry["grammar"] = {"type": "noun-invariable", "note": "外来词，不变格"}
+                entry["grammar"] = decline_invariable(w)
+            elif "复数" in pos:
+                entry["grammar"] = decline_plural_noun(w)
+                stats["noun"] += 1
             else:
                 entry["grammar"] = decline_noun(w, gender, animate)
                 stats["noun"] += 1

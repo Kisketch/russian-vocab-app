@@ -147,10 +147,11 @@ apksigner verify --print-certs 走遍俄罗斯词汇卡-1.2-release.apk
 
 ## 4. 音频说明
 
-- `python tools/gen_audio.py` 使用微软 Edge 神经语音生成：
+- `python tools/gen_audio.py` 使用微软 Edge 神经语音生成（**自动应用 96kbps 高码率补丁**，实测 48kHz/PCM/Opus 端点不支持）：
   - 单词：`ru-RU-SvetlanaNeural`，语速 -5%（标准、略慢）
   - 例句：`ru-RU-SvetlanaNeural`，语速 -10%（更从容，适合跟读）
-- 产物 `assets/audio/words/<id>.mp3` 与 `assets/audio/sent/<id>.mp3`，全量约 4~5 MB
+- 产物 `assets/audio/words/<id>.mp3` 与 `assets/audio/sent/<id>.mp3`（24kHz/96kbps 单声道），全量约 10 MB
 - 脚本支持断点续传：中断后重新运行会自动补齐缺失文件；`--force` 全部重生成
 - 换男声：`python tools/gen_audio.py --voice ru-RU-DmitryNeural --force`
 - 运行时优先播放本地 MP3；文件缺失时自动回退到系统 TTS（Web Speech API）
+- 安卓端已在 `MainActivity` 关闭 WebView 的"媒体需用户手势"限制，自动朗读不会被静默拦截

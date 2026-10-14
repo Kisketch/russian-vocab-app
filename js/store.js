@@ -19,7 +19,7 @@
     words: {},      // id -> { lv, due, seen, right, wrong, streak, book, manual, fav, last }
     daily: {},      // 'YYYY-MM-DD' -> { learn, views, quiz, correct, wrong, newWords, review, revGood, revHard, revForget }
     views: { date: '', ids: [] },   // 当日接触过的词（去重）
-    settings: { rate: 0.85, autoSpeak: true, slow: false, ttsOnly: false, showStress: true },
+    settings: { rate: 0.85, autoSpeak: true, slow: false, ttsOnly: false, showStress: true, showCursive: true },
     createdAt: Date.now()
   };
 

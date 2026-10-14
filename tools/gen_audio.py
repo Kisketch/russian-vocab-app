@@ -23,6 +23,35 @@ DATA = os.path.join(ROOT, "js", "data.js")
 OUT_W = os.path.join(ROOT, "assets", "audio", "words")
 OUT_S = os.path.join(ROOT, "assets", "audio", "sent")
 
+HIGH_QUALITY_FORMAT = "audio-24khz-96kbitrate-mono-mp3"
+
+
+def ensure_high_quality_format():
+    """把 edge-tts 的输出从 48kbps 提升到 96kbps（音质更干净，体积约 2 倍）。
+
+    实测 Edge 免费端点仅接受 mp3 家族（16khz/32k、24khz/48k、24khz/96k），
+    48khz 与 PCM/Opus 均返回 NoAudioReceived，故取可用的最高档 24khz/96k。
+    同时修正 edge-tts 的字节-时间换算常数（48k → 96k），保证 word boundary 正确。
+    注意：必须用 find_spec 定位文件（不要先 import），否则本进程会缓存旧代码。
+    """
+    import importlib.util
+    import re as _re
+    spec = importlib.util.find_spec("edge_tts")
+    if not spec or not spec.origin:
+        return False
+    p = os.path.join(os.path.dirname(spec.origin), "communicate.py")
+    with open(p, encoding="utf-8") as f:
+        s = f.read()
+    if HIGH_QUALITY_FORMAT in s:
+        return True
+    s2, n = _re.subn(r'"outputFormat":"[^"]+"', '"outputFormat":"%s"' % HIGH_QUALITY_FORMAT, s)
+    s2 = s2.replace("// 48_000", "// 96_000")
+    if n and s2 != s:
+        with open(p, "w", encoding="utf-8") as f:
+            f.write(s2)
+        return True
+    return False
+
 
 def load_data():
     with open(DATA, encoding="utf-8") as f:
@@ -60,6 +89,8 @@ async def synth(sem, text, voice, rate, path, tag, stats, retries=4):
 
 
 async def main_async(args):
+    hq = ensure_high_quality_format()
+    print("音质模式：%s" % ("48kHz / 96kbps（已启用高质量补丁）" if hq else "24kHz / 48kbps（补丁未生效，使用默认）"), flush=True)
     data = load_data()
     words = data["words"]
     tasks, manifest = [], []

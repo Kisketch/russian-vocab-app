@@ -285,6 +285,8 @@
         '<div class="body-part">' +
         '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
         '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '" aria-label="朗读">' + ico('sound', 19) + '</button></div>' +
+        (S.state.settings.showCursive === false ? '' :
+          '<div class="cursive-line"><span class="cursive-tag">手写体</span><span class="ru-cursive">' + esc(ruText(w)) + '</span></div>') +
         '<div class="pos">' + esc(w.pos) + '</div>' +
         '<div class="hint-flip tail">点击卡片 / 按空格翻转查看释义与例句</div>' +
         '</div></div>' +
@@ -703,6 +705,8 @@
       '<div class="body-part">' +
       '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
       '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '">' + ico('sound', 19) + '</button></div>' +
+      (S.state.settings.showCursive === false ? '' :
+        '<div class="cursive-line"><span class="cursive-tag">手写体</span><span class="ru-cursive">' + esc(ruText(w)) + '</span></div>') +
       '<div class="pos">' + esc(w.pos) + '</div>' +
       '<div class="hint-flip tail">先回忆词义，再点「显示释义」自评</div>' +
       '</div></div>' +
@@ -950,6 +954,10 @@
     var stressed = WORDS.filter(function (w) { return w.ru_stress && w.ru_stress !== w.ru; }).length;
     h += '<label class="switch"><input type="checkbox" data-act="set-stress" ' + (st.showStress === false ? '' : 'checked') + '><span class="track"></span>显示重音符号' +
       '<span class="hint" style="margin-left:6px">已标注 ' + stressed + ' / ' + WORDS.length + ' 词</span></label>';
+    h += '<label class="switch"><input type="checkbox" data-act="set-cursive" ' + (st.showCursive === false ? '' : 'checked') + '><span class="track"></span>单词下方显示手写体</label>';
+    h += '<div style="display:flex;gap:10px;align-items:center;margin-top:10px">' +
+      '<button class="btn sm" data-act="audio-selftest">' + ico('sound', 15) + ' 测试发音</button>' +
+      '<span class="hint" id="selftestResult">点击后播放第 1 个单词，并报告播放通道与失败原因</span></div>';
     h += '<div class="field" style="max-width:340px"><label>朗读语速：<b id="rateLabel">' + st.rate.toFixed(2) + '</b></label>' +
       '<input type="range" min="0.5" max="1.2" step="0.05" value="' + st.rate + '" data-act="set-rate"></div>';
 
@@ -1132,6 +1140,17 @@
       case 'set-slow': S.state.settings.slow = el.checked; S.save(); toast(el.checked ? '已切换为慢速朗读' : '已恢复标准语速'); break;
       case 'set-tts': S.state.settings.ttsOnly = el.checked; S.save(); toast(el.checked ? '将仅使用系统语音' : '将优先使用内置真人发音'); break;
       case 'set-stress': S.state.settings.showStress = el.checked; S.save(); render(); break;
+      case 'set-cursive': S.state.settings.showCursive = el.checked; S.save(); render(); break;
+      case 'audio-selftest': {
+        var box = $('#selftestResult');
+        if (box) box.textContent = '正在测试…';
+        RVAudio.selfTest().then(function (r) {
+          var msg = (r.ok ? '✓ 发音正常 · ' : '✗ 播放失败 · ') + r.via + (r.error ? ' · ' + r.error : '');
+          if (box) box.textContent = msg;
+          toast(r.ok ? '发音正常：本地 MP3 可用' : '发音异常：' + r.error);
+        });
+        break;
+      }
       case 'precache': {
         var tip = $('#precacheTip'), bar = $('#precacheBar');
         if (bar) bar.style.display = 'block';

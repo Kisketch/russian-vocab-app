@@ -23,6 +23,25 @@
   --ease: cubic-bezier(.16, 1, .3, 1);
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --serif: "PT Serif", Georgia, "Times New Roman", serif;
+  --cursive: "Marck Script", "Segoe Script", cursive;
+}
+
+/* 俄语手写体：Marck Script（SIL OFL，随包分发，西里尔子集仅 10.5KB） */
+@font-face {
+  font-family: 'Marck Script';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/marck-script-cyrillic-400-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Marck Script';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/marck-script-latin-400-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD;
 }
 
 * { box-sizing: border-box; }
@@ -277,6 +296,17 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .ex-line { display: flex; gap: 8px; align-items: flex-start; }
 .ex-ru { font-family: var(--serif); font-size: 15.5px; color: var(--text); line-height: 1.45; }
+
+/* 手写体展示行（俄语字母的手写体与印刷体差异很大，卡片上同时给出两种写法） */
+.cursive-line { display: flex; align-items: baseline; justify-content: center; gap: 9px; margin-top: 4px; }
+.cursive-tag {
+  font-size: 10.5px; color: var(--muted); background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 99px; padding: 1px 8px; flex: 0 0 auto;
+}
+.ru-cursive {
+  font-family: var(--cursive); font-size: 31px; line-height: 1.05;
+  color: var(--text-2); letter-spacing: .5px; transform: rotate(-1.2deg);
+}
 .hl {
   background: #fbf1d8; color: inherit; padding: 0 3px; border-radius: 4px;
   box-shadow: inset 0 -1px 0 #ecd9a8;

@@ -1,5 +1,5 @@
 /* Service Worker：应用外壳预缓存 + 语音运行时缓存（CacheFirst） */
-var SHELL = 'ruvocab-shell-v3';
+var SHELL = 'ruvocab-shell-v4';
 var AUDIO = 'ruvocab-audio-v1';
 
 var SHELL_FILES = [
@@ -12,6 +12,8 @@ var SHELL_FILES = [
   './js/store.js',
   './js/audio.js',
   './js/app.js',
+  './js/grammar.js',
+  './assets/grammar.json',
   './assets/fonts/marck-script-cyrillic-400-normal.woff2',
   './assets/fonts/marck-script-latin-400-normal.woff2',
   './icons/icon-192.png',

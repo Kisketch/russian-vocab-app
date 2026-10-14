@@ -37,6 +37,9 @@
   /* ---------------- 图标 ---------------- */
   var PATHS = {
     list: '<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+    dict: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h8M9 11h6"/>',
+    gram: '<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/>',
+    know: '<path d="M9 18h10M9 14h10M9 10h10M9 6h10M4.5 6h.01M4.5 10h.01M4.5 14h.01M4.5 18h.01"/>',
     learn: '<path d="M3 5.5A1.5 1.5 0 0 1 4.5 4H10a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H4.5A1.5 1.5 0 0 1 3 16z"/><path d="M21 5.5A1.5 1.5 0 0 0 19.5 4H14a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5h6A1.5 1.5 0 0 0 21 16z"/>',
     quiz: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M5 6l1.4 1.4L8.6 5.2"/>',
     review: '<path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.8 4.4v4.6h-4.6"/><path d="M12 7.5V12l3 2"/>',
@@ -149,12 +152,15 @@
   }
 
   /* ---------------- 界面骨架状态 ---------------- */
-  var ui = { unitMode: 'card', unitId: null, idx: 0, flipped: false, vocabFilter: 'all' };
+  var ui = { unitMode: 'card', unitId: null, idx: 0, flipped: false, vocabFilter: 'all', knowUnit: 'u01' };
   var quiz = null, review = null;
 
   var TITLES = {
     units: ['学习', '按《走遍俄罗斯》教材单元浏览单词'],
     list: ['课本词表', '按课本课序排列 · 印刷体与手写体对照'],
+    dict: ['词典', '查单词 · 变形反查 · 语音输入'],
+    gram: ['语法专题', '格变化 · 动词变位 · 代词 · 前置词'],
+    know: ['课文知识总结', '发音 · 语法句型 · 词汇 · 文化 · 易错点'],
     unit: ['单元学习', '单词卡片 · 翻转与例句'],
     quiz: ['练习', '四类题型即时反馈'],
     review: ['复习', '间隔重复 · 到期队列'],
@@ -217,6 +223,8 @@
       '<div class="hero-stat"><b>' + S.streakDays() + '</b><span>连续天数</span></div>' +
       '</div>' +
       '<div class="actions">' +
+      '<button class="btn" data-act="go" data-hash="#/know">知识总结</button>' +
+      '<button class="btn" data-act="go" data-hash="#/gram">语法专题</button>' +
       '<button class="btn primary" data-act="review-start">' + ico('review', 16) + ' ' + (dueN ? '开始复习' : '复习临近词') + '</button>' +
       '<button class="btn" data-act="quick-quiz">' + ico('quiz', 16) + ' 快速练习</button>' +
       '</div></div>';
@@ -247,6 +255,211 @@
       return '<img class="scene-img" src="assets/img/' + w.id + '.jpg" alt="' + esc(altZh || w.zh) + '" loading="lazy" decoding="async">';
     }
     return Sc.get(w.scene);
+  }
+
+  /* ---------------- 语法详解（卡片背面可展开） ---------------- */
+  var CASE_ORDER = ['nom', 'gen', 'dat', 'acc', 'ins', 'prep'];
+  var CASE_LABEL = { nom: '一格', gen: '二格', dat: '三格', acc: '四格', ins: '五格', prep: '六格' };
+  var PERSON_LABEL = { '1sg': 'я', '2sg': 'ты', '3sg': 'он/она', '1pl': 'мы', '2pl': 'вы', '3pl': 'они' };
+
+  function grammarPanel(w) {
+    var g = window.RVGrammar && RVGrammar.get(w.id);
+    if (!g || !g.grammar) return '';
+    var gr = g.grammar, h = '';
+    h += '<details class="gram-panel"><summary>' + ico('gram', 14) + ' 语法详解（格变化 / 变位）</summary><div class="gram-body">';
+    if (gr.type === 'noun-invariable') {
+      h += '<p class="hint">' + esc(gr.note || '外来词，不变格') + '</p>';
+    } else if (gr.type && gr.type.indexOf('noun') === 0) {
+      h += '<table class="gram-table"><thead><tr><th>格</th><th>单数</th><th>复数</th></tr></thead><tbody>';
+      CASE_ORDER.forEach(function (c) {
+        h += '<tr><td>' + CASE_LABEL[c] + '</td><td class="ru">' + esc(gr.sg[c] || '—') +
+          '</td><td class="ru">' + esc(gr.pl[c] || '—') + '</td></tr>';
+      });
+      h += '</tbody></table>';
+      h += '<p class="hint">变格类型：' + esc({ noun1: '第一变格法（-а/-я）', noun2m: '第二变格法（阳性）', noun2n: '第二变格法（中性）', noun3: '第三变格法（-ь）' }[gr.type] || gr.type) +
+        ' · 重音位置请以课本/词典为准</p>';
+    } else if (gr.type === 'verb') {
+      h += '<table class="gram-table"><thead><tr><th>人称</th><th>变位</th></tr></thead><tbody>';
+      ['1sg', '2sg', '3sg', '1pl', '2pl', '3pl'].forEach(function (p) {
+        h += '<tr><td>' + PERSON_LABEL[p] + '</td><td class="ru">' + esc(gr.present[p] || '—') + '</td></tr>';
+      });
+      h += '</tbody></table>';
+      h += '<div class="gram-rows">' +
+        '<span>过去时：<b class="ru">' + esc(gr.past.m) + '</b> / <b class="ru">' + esc(gr.past.f) + '</b> / <b class="ru">' + esc(gr.past.n) + '</b> / <b class="ru">' + esc(gr.past.pl) + '</b></span>' +
+        '<span>命令式：<b class="ru">' + esc(gr.imperative || '—') + '</b></span>' +
+        '<span>变位法：' + (gr.conj === 2 ? '第二变位法' : '第一变位法') + (gr.irregular ? '（不规则）' : '') + '</span>' +
+        '</div>';
+    } else if (gr.type === 'adj') {
+      h += '<table class="gram-table"><thead><tr><th>性/数</th><th>形式</th></tr></thead><tbody>';
+      [['m', '阳性'], ['f', '阴性'], ['n', '中性'], ['pl', '复数']].forEach(function (kv) {
+        h += '<tr><td>' + kv[1] + '</td><td class="ru">' + esc(gr.forms[kv[0]] || '—') + '</td></tr>';
+      });
+      h += '</tbody></table>';
+      if (gr.comparative) h += '<p class="hint">比较级：' + esc(gr.comparative.more || '—') + '</p>';
+    } else if (gr.note) {
+      h += '<p class="hint">' + esc(gr.note) + '</p>';
+    }
+    h += '</div></details>';
+    return h;
+  }
+
+  /* ---------------- 视图：词典 ---------------- */
+  function renderDict() {
+    var h = '';
+    h += '<div class="section"><div class="dict-head">' +
+      '<div class="dict-search">' +
+      '<input id="dictInput" type="search" placeholder="输入俄语/中文，或点话筒说话…" autocomplete="off">' +
+      '<button class="icon-btn" data-act="voice-input" id="voiceBtn" title="语音查词" aria-label="语音查词">' + ico('sound', 18) + '</button>' +
+      '</div>' +
+      '<div class="dict-meta" id="dictMeta">词库 ' + WORDS.length + ' 词 · 内置词典 ' + (D.dict || []).length + ' 条 · 支持变形反查（如读 читаю 查到 читать）</div>' +
+      '<div class="dict-result" id="dictResult"></div>' +
+      '</div></div>';
+    return h;
+  }
+
+  function dictRender(q) {
+    var box = $('#dictResult');
+    if (!box) return;
+    var r = RVGrammar.lookup(q);
+    if (!q.trim()) { box.innerHTML = ''; return; }
+    var h = '';
+    if (r.words.length) {
+      h += '<div class="dict-group">词库命中</div>';
+      r.words.forEach(function (w) {
+        var u = unitById[w.unit];
+        h += '<div class="dict-row" data-act="open-word" data-unit="' + w.unit + '" data-idx="' + wordsOfUnit[w.unit].indexOf(w) + '">' +
+          '<div class="dr-main"><span class="dr-ru">' + esc(ruText(w)) + '</span><span class="dr-pos">' + esc(w.pos) + '</span></div>' +
+          '<div class="dr-zh">' + esc(w.zh) + '</div>' +
+          '<div class="dr-unit">' + esc(u ? '第' + u.no + '课 · ' + u.zh : '') + '</div></div>';
+      });
+    }
+    if (r.dict.length) {
+      h += '<div class="dict-group">内置词典</div>';
+      r.dict.forEach(function (d) {
+        h += '<div class="dict-row plain"><div class="dr-main"><span class="dr-ru">' + esc(d.ru) + '</span><span class="dr-pos">' + esc(d.pos) + '</span></div>' +
+          '<div class="dr-zh">' + esc(d.zh) + '</div></div>';
+      });
+    }
+    if (!h) h = '<div class="empty"><h3>没找到「' + esc(q) + '」</h3>换个说法试试，或用中文检索</div>';
+    box.innerHTML = h;
+  }
+
+  /* ---------------- 视图：语法专题 ---------------- */
+  function renderGram() {
+    var ref = RVGrammar.ref();
+    var h = '<div class="section">';
+    if (!ref) { h += '<div class="empty"><h3>语法资料加载中…</h3></div></div>'; return h; }
+    h += '<div class="gram-topics">';
+    var topics = [
+      { key: 'cases', name: '六个格的用法', desc: '一格～六格的意义、疑问词与例句' },
+      { key: 'declension', name: '名词变格法', desc: '第一/第二/第三变格法词尾总表' },
+      { key: 'conjugation', name: '动词变位法', desc: '第一/第二变位法词尾与例外' },
+      { key: 'pronouns', name: '代词变格', desc: '人称/指示/物主/疑问代词全表' },
+      { key: 'numbers', name: '数词与数量', desc: '1～10 及数量搭配规则' },
+      { key: 'prepositions', name: '前置词与格', desc: '常用前置词接格与语义' }
+    ];
+    topics.forEach(function (t) {
+      h += '<div class="card gram-topic" data-act="gram-topic" data-topic="' + t.key + '">' +
+        '<div class="gt-ico">' + ico('gram', 20) + '</div>' +
+        '<div><b>' + t.name + '</b><span>' + t.desc + '</span></div>' +
+        '<span class="gt-arrow">›</span></div>';
+    });
+    h += '</div>';
+    h += '<div id="gramDetail"></div>';
+    h += '<p class="hint" style="text-align:center">每个词条的格变化表见「学习」卡片背面 → 语法详解</p>';
+    h += '</div>';
+    return h;
+  }
+
+  function gramShow(topic) {
+    var ref = RVGrammar.ref(), box = $('#gramDetail');
+    if (!box || !ref) return;
+    var h = '';
+    if (topic === 'cases') {
+      ref.cases.forEach(function (c) {
+        h += '<div class="gram-block"><h3>' + c.zh + '</h3>' +
+          '<p>' + esc(c.use) + '</p>' +
+          '<div class="gram-ex">' + esc(c.example) + '</div></div>';
+      });
+    } else if (topic === 'declension') {
+      ref.declension.forEach(function (d) {
+        h += '<div class="gram-block"><h3>' + d.zh + '</h3>' +
+          '<p class="gram-when">适用：' + esc(d.when) + '</p>' +
+          '<p class="gram-end">词尾：' + esc(d.ending) + '</p></div>';
+      });
+      ref.notes.forEach(function (n) { h += '<p class="hint">· ' + esc(n) + '</p>'; });
+    } else if (topic === 'conjugation') {
+      ref.conjugation.forEach(function (c) {
+        h += '<div class="gram-block"><h3>' + c.zh + '</h3>' +
+          '<p class="gram-when">适用：' + esc(c.when) + '</p>' +
+          '<p class="gram-end">词尾：' + esc(c.endings) + '</p>' +
+          '<div class="gram-ex">' + esc(c.example) + '</div></div>';
+      });
+    } else if (topic === 'pronouns') {
+      h += '<table class="gram-table"><thead><tr><th>代词</th>' +
+        CASE_ORDER.map(function (c) { return '<th>' + CASE_LABEL[c] + '</th>'; }).join('') + '</tr></thead><tbody>';
+      Object.keys(ref.pronouns).forEach(function (k) {
+        var p = ref.pronouns[k];
+        h += '<tr><td class="ru"><b>' + esc(k) + '</b><small>' + esc(p.zh) + '</small></td>' +
+          CASE_ORDER.map(function (c) { return '<td class="ru">' + esc(p[c] || '—') + '</td>'; }).join('') + '</tr>';
+      });
+      h += '</tbody></table>';
+    } else if (topic === 'numbers') {
+      h += '<table class="gram-table"><thead><tr><th>数词</th><th>二格</th><th>三格</th><th>五格</th><th>六格</th><th>说明</th></tr></thead><tbody>';
+      Object.keys(ref.numbers).forEach(function (k) {
+        var n = ref.numbers[k];
+        h += '<tr><td class="ru"><b>' + esc(k) + '</b><small>' + esc(n.zh) + '</small></td>' +
+          '<td class="ru">' + esc(n.gen || '—') + '</td><td class="ru">' + esc(n.dat || '—') + '</td>' +
+          '<td class="ru">' + esc(n.ins || '—') + '</td><td class="ru">' + esc(n.prep || '—') + '</td>' +
+          '<td class="gnote">' + esc(n.note || '') + '</td></tr>';
+      });
+      h += '</tbody></table>';
+      h += '<p class="hint">搭配：один 接单数；2–4 接单数二格；5 以上接复数二格</p>';
+    } else if (topic === 'prepositions') {
+      h += '<table class="gram-table pre-table"><thead><tr><th>前置词</th><th>接格</th><th>意义</th><th>例</th></tr></thead><tbody>';
+      ref.prepositions.forEach(function (p) {
+        h += '<tr><td class="ru"><b>' + esc(p.prep) + '</b></td><td>' + esc(p.cases) + '</td>' +
+          '<td>' + esc(p.use) + '</td><td class="ru gex">' + esc(p.example) + '</td></tr>';
+      });
+      h += '</tbody></table>';
+    }
+    box.innerHTML = h;
+    if (box.scrollIntoView) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ---------------- 视图：课文知识总结 ---------------- */
+  var KNOW_CAT = {
+    pron: { name: '特殊发音', color: '#3f6f96' },
+    gram: { name: '语法句型', color: '#8a5f0c' },
+    vocab: { name: '高频词汇', color: '#2e7d5b' },
+    culture: { name: '文化背景', color: '#7a4a8a' },
+    pitfall: { name: '易错点', color: '#b5551d' }
+  };
+
+  function renderKnow() {
+    var f = ui.knowUnit || 'u01';
+    var h = '<div class="section">';
+    h += '<div class="vchips">';
+    UNITS.forEach(function (u) {
+      h += '<button class="chip pick' + (f === u.id ? ' on' : '') + '" data-act="know-unit" data-id="' + u.id + '">第' + u.no + '课</button>';
+    });
+    h += '</div>';
+    var u = unitById[f] || UNITS[0];
+    h += '<div class="know-head"><b>第' + u.no + '课 · ' + esc(u.zh) + '</b><span>' + esc(u.ru) + ' — ' + esc(u.desc) + '</span></div>';
+    var items = (D.knowledge || []).filter(function (k) { return k.unit === f; });
+    Object.keys(KNOW_CAT).forEach(function (cat) {
+      var list = items.filter(function (k) { return k.cat === cat; });
+      if (!list.length) return;
+      var meta = KNOW_CAT[cat];
+      h += '<div class="know-cat" style="--kc:' + meta.color + '"><div class="know-cat-name">' + meta.name + '</div>';
+      list.forEach(function (k) {
+        h += '<details class="know-item"><summary>' + esc(k.title) + '</summary><div class="know-body">' + esc(k.content) + '</div></details>';
+      });
+      h += '</div>';
+    });
+    if (!items.length) h += '<div class="empty"><h3>本课知识总结整理中</h3></div>';
+    h += '</div>';
+    return h;
   }
 
   /* ---------------- 视图：课本词表（按课序的生词表） ---------------- */
@@ -365,6 +578,7 @@
         '<div class="ex-zh">' + esc(w.ex_zh) + '</div>' +
         '</div>' +
         '<div class="hint-flip tail">再次点击卡片返回正面</div>' +
+        grammarPanel(w) +
         '</div></div>' +
         '</div></div>';
 
@@ -1072,6 +1286,9 @@
     switch (key) {
       case 'units': html = renderUnits(); break;
       case 'list': html = renderVocab(); break;
+      case 'dict': html = renderDict(); break;
+      case 'gram': html = renderGram(); break;
+      case 'know': html = renderKnow(); break;
       case 'unit': html = renderUnit(seg[1]); key = 'unit'; break;
       case 'quiz': html = renderQuiz(); break;
       case 'review': html = renderReview(); break;
@@ -1087,6 +1304,13 @@
     }
     $('#view').innerHTML = html;
     updateChrome(key === 'unit' ? 'units' : key, sub);
+    if (key === 'dict') {
+      var di = $('#dictInput');
+      if (di) {
+        di.addEventListener('input', function () { dictRender(di.value); });
+        setTimeout(function () { di.focus(); }, 60);
+      }
+    }
     window.scrollTo({ top: 0 });
   }
 
@@ -1124,6 +1348,26 @@
         go('#/unit/' + v.unit); break;
       case 'vocab-filter':
         ui.vocabFilter = v.id; render(); break;
+      case 'know-unit':
+        ui.knowUnit = v.id; render(); break;
+      case 'gram-topic':
+        gramShow(v.topic); break;
+      case 'voice-input': {
+        var btn = $('#voiceBtn');
+        if (!RVGrammar.speechAvailable()) { toast('当前环境不支持语音识别（可用 Chrome/Edge 或安装版 App）'); break; }
+        if (btn) { btn.classList.add('rec'); btn.innerHTML = ico('sound', 18); }
+        toast('请说俄语…');
+        RVGrammar.listen('ru-RU', function (text) {
+          if (btn) { btn.classList.remove('rec'); btn.innerHTML = ico('sound', 18); }
+          var input = $('#dictInput');
+          if (input) { input.value = text; dictRender(text); }
+          if (text) toast('识别：' + text); else toast('没有识别到内容');
+        }, function (err) {
+          if (btn) { btn.classList.remove('rec'); btn.innerHTML = ico('sound', 18); }
+          toast('语音识别失败：' + err);
+        });
+        break;
+      }
       case 'open-unit':
         if (e.target.closest('[data-act="fav"],[data-act="speak"]')) return;
         ui.idx = 0; ui.flipped = false;
@@ -1383,6 +1627,11 @@
   function boot() {
     // 导航/标签栏图标（data-ico → 内联 SVG）
     $$('[data-ico]').forEach(function (s) { s.innerHTML = ico(s.dataset.ico, 20); });
+    // 语法/词典数据（失败不影响主流程；加载完成后重渲染以补全语法详解）
+    if (window.RVGrammar) {
+      RVGrammar.load().then(function () { try { render(); } catch (e) { } })
+        .catch(function () { });
+    }
     if (!location.hash) location.hash = '#/units';
     render();
     window.addEventListener('hashchange', render);

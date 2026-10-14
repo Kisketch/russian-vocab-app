@@ -75,7 +75,23 @@ def main():
     for u in units:
         u["wordIds"] = by_unit.get(u["id"], [])
 
+    # 课文知识总结（src/knowledge.tsv：unit|分类|标题|内容）
+    knowledge = []
+    cat_map = {"发音": "pron", "语法": "gram", "词汇": "vocab", "文化": "culture", "易错": "pitfall"}
+    for row in read_tsv(os.path.join(SRC, "knowledge.tsv")):
+        if len(row) >= 4:
+            u, cat, title, content = row[0], row[1], row[2], row[3]
+            knowledge.append({"unit": u, "cat": cat_map.get(cat, cat), "catZh": cat, "title": title, "content": content})
+
+    # 内置小词典（src/dict.tsv：ru|pos|zh），供词典查询
+    dict_entries = []
+    for row in read_tsv(os.path.join(SRC, "dict.tsv")):
+        if len(row) >= 3:
+            dict_entries.append({"ru": row[0], "pos": row[1], "zh": row[2]})
+
     payload = {
+        "knowledge": knowledge,
+        "dict": dict_entries,
         "meta": {
             "book": "走遍俄罗斯（外研社引进《Дорога в Россию》）第 1 册",
             "unitCount": len(units),
@@ -93,7 +109,7 @@ def main():
         f.write(body)
         f.write(";\n")
 
-    print("units=%d words=%d -> %s" % (len(units), len(words), OUT))
+    print("units=%d words=%d dict=%d -> %s" % (len(units), len(words), len(dict_entries), OUT))
 
 
 if __name__ == "__main__":

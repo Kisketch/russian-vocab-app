@@ -314,6 +314,94 @@ input, select, textarea { font: inherit; color: inherit; }
   background: var(--surface-2);
 }
 
+/* ---------- 语法详解（卡片背面） ---------- */
+.gram-panel { margin-top: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+.gram-panel > summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px;
+  padding: 9px 12px; font-size: 13px; font-weight: 600; color: var(--accent-deep);
+}
+.gram-panel > summary::-webkit-details-marker { display: none; }
+.gram-panel > summary::after { content: '▾'; margin-left: auto; color: var(--muted); font-size: 11px; }
+.gram-panel[open] > summary::after { content: '▴'; }
+.gram-panel .gram-body { padding: 0 12px 12px; }
+.gram-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.gram-table th, .gram-table td { border: 1px solid var(--border); padding: 5px 8px; text-align: left; background: #fff; }
+.gram-table th { background: var(--surface-2); font-weight: 600; font-size: 12px; color: var(--text-2); }
+.gram-table td.ru { font-family: var(--serif); font-size: 15px; }
+.gram-table td small { display: block; font-size: 10.5px; color: var(--muted); font-family: var(--sans); }
+.gram-rows { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 12.5px; color: var(--text-2); }
+.gram-rows b { font-family: var(--serif); font-size: 14.5px; color: var(--text); }
+
+/* ---------- 课文知识总结 ---------- */
+.know-head { margin-bottom: 12px; }
+.know-head b { font-size: 16px; }
+.know-head span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.know-cat { margin-bottom: 14px; border-left: 3px solid var(--kc, var(--accent)); padding-left: 12px; }
+.know-cat-name {
+  font-size: 13px; font-weight: 700; color: var(--kc, var(--accent-deep));
+  letter-spacing: .04em; margin-bottom: 8px;
+}
+.know-item {
+  background: #fff; border: 1px solid var(--border); border-radius: 12px;
+  margin-bottom: 8px; overflow: hidden;
+}
+.know-item > summary {
+  cursor: pointer; list-style: none; padding: 10px 12px; font-size: 14px; font-weight: 600;
+  color: var(--text); display: flex; align-items: center; gap: 8px;
+}
+.know-item > summary::-webkit-details-marker { display: none; }
+.know-item > summary::before { content: '›'; color: var(--muted); transform: rotate(0deg); transition: transform .2s var(--ease); }
+.know-item[open] > summary::before { transform: rotate(90deg); }
+.know-item[open] > summary { color: var(--accent-deep); }
+.know-body { padding: 0 12px 12px 26px; font-size: 13.5px; line-height: 1.65; color: var(--text-2); white-space: pre-line; }
+
+/* ---------- 词典 ---------- */
+.dict-head { display: flex; flex-direction: column; gap: 10px; }
+.dict-search { display: flex; gap: 8px; align-items: center; }
+.dict-search input {
+  flex: 1; height: 44px; border: 1px solid var(--border); border-radius: 12px; padding: 0 14px;
+  font-size: 15px; background: #fff; color: var(--text);
+}
+.dict-search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.dict-search .icon-btn { width: 44px; height: 44px; border: 1px solid var(--border); background: #fff; border-radius: 12px; cursor: pointer; color: var(--accent-deep); }
+.dict-search .icon-btn.rec { background: var(--bad-soft); color: var(--bad); animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: .55; } }
+.dict-meta { font-size: 12px; color: var(--muted); }
+.dict-result { display: flex; flex-direction: column; gap: 8px; }
+.dict-group { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.dict-row {
+  background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px;
+  cursor: pointer; transition: border-color .15s;
+}
+.dict-row:hover { border-color: var(--accent); }
+.dr-main { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.dr-ru { font-family: var(--serif); font-size: 18px; font-weight: 600; }
+.dr-pos { font-size: 11px; color: var(--muted); background: var(--surface-2); border-radius: 99px; padding: 1px 8px; }
+.dr-zh { font-size: 13.5px; color: var(--text-2); margin-top: 3px; }
+.dr-unit { font-size: 11.5px; color: var(--accent-deep); margin-top: 3px; }
+
+/* ---------- 语法专题 ---------- */
+.gram-topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.gram-topic { display: flex; align-items: center; gap: 12px; padding: 13px 14px; cursor: pointer; }
+.gram-topic:hover { border-color: var(--accent); }
+.gram-topic > div { flex: 1; min-width: 0; }
+.gram-topic b { display: block; font-size: 14.5px; }
+.gram-topic span { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+.gt-ico { width: 38px; height: 38px; border-radius: 11px; background: var(--accent-soft); color: var(--accent-deep); display: grid; place-items: center; flex: 0 0 auto; }
+.gt-arrow { color: var(--muted); font-size: 20px; }
+.gram-block { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+.gram-block h3 { font-size: 14.5px; margin: 0 0 6px; }
+.gram-block p { margin: 0 0 6px; font-size: 13px; color: var(--text-2); }
+.gram-when, .gram-end { color: var(--muted) !important; }
+.gram-ex {
+  font-family: var(--serif); font-size: 15px; background: var(--surface-2);
+  border-radius: 8px; padding: 6px 10px; color: var(--text);
+}
+#gramDetail table { margin-top: 10px; }
+.pre-table td { font-size: 12.5px; }
+.pre-table .gex { font-family: var(--serif); font-size: 13px; }
+.gnote { font-size: 11px; color: var(--muted); }
+
 /* ---------- 课本词表 ---------- */
 .vlist-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .vlist-head h2 { font-size: 17px; }

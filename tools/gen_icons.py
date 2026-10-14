@@ -52,42 +52,65 @@ def rounded_mask(size, radius):
     return m
 
 
-def draw_book(d, cx, cy, s):
-    """以 (cx,cy) 为中心、宽度 s 绘制一本翻开的书"""
+def _font(size):
+    """取一个支持西里尔字母的系统字体"""
+    for fp in ("C:/Windows/Fonts/arialbd.ttf", "C:/Windows/Fonts/arial.ttf",
+               "C:/Windows/Fonts/segoeuib.ttf", "C:/Windows/Fonts/segoeui.ttf"):
+        if os.path.exists(fp):
+            try:
+                from PIL import ImageFont
+                return ImageFont.truetype(fp, size)
+            except Exception:
+                pass
+    from PIL import ImageFont
+    return ImageFont.load_default()
+
+
+def draw_book(d, cx, cy, s, letters=True):
+    """原创设计：翻开的书 + 左页「Р」右页「Я」（русский язык 首字母）+ 金色书签"""
     w, h = s, s * 0.78
-    left_top_y = cy - h * 0.42
-    bottom = cy + h * 0.42
+    top = cy - h * 0.44
+    bottom = cy + h * 0.44
     spine_x = cx
     half = w / 2
     # 左页
     d.polygon([
-        (cx - half, left_top_y + h * 0.06),
-        (cx - half * 0.16, left_top_y + h * 0.02),
-        (spine_x, cy - h * 0.05),
+        (cx - half, top + h * 0.07),
+        (cx - half * 0.14, top + h * 0.02),
+        (spine_x, cy - h * 0.06),
         (spine_x, bottom - h * 0.02),
-        (cx - half * 0.16, bottom),
-        (cx - half, bottom - h * 0.05),
+        (cx - half * 0.14, bottom),
+        (cx - half, bottom - h * 0.06),
     ], fill=WHITE)
     # 右页
     d.polygon([
-        (cx + half, left_top_y + h * 0.06),
-        (cx + half * 0.16, left_top_y + h * 0.02),
-        (spine_x, cy - h * 0.05),
+        (cx + half, top + h * 0.07),
+        (cx + half * 0.14, top + h * 0.02),
+        (spine_x, cy - h * 0.06),
         (spine_x, bottom - h * 0.02),
-        (cx + half * 0.16, bottom),
-        (cx + half, bottom - h * 0.05),
+        (cx + half * 0.14, bottom),
+        (cx + half, bottom - h * 0.06),
     ], fill=(247, 250, 252))
-    # 页面上的文字线
-    lw = max(2, int(s * 0.045))
-    for i in range(3):
-        y = left_top_y + h * (0.24 + i * 0.18)
-        x0 = cx - half * 0.86
-        x1 = cx - half * 0.30
-        d.line([(x0, y), (x1, y)], fill=ACCENT, width=lw)
-        d.line([(cx + half * 0.30, y), (cx + half * 0.86, y)], fill=lerp(ACCENT, WHITE, 0.35), width=lw)
     # 书脊
-    d.line([(spine_x, left_top_y + h * 0.04), (spine_x, bottom - h * 0.02)],
-           fill=lerp(ACCENT, WHITE, 0.45), width=lw)
+    lw = max(2, int(s * 0.038))
+    d.line([(spine_x, top + h * 0.05), (spine_x, bottom - h * 0.03)],
+           fill=lerp(ACCENT, WHITE, 0.55), width=lw)
+    # 金色书签（右侧斜挂）
+    gold = (232, 163, 61)
+    bx0, bx1 = cx + half * 0.44, cx + half * 0.66
+    d.polygon([(bx0, top + h * 0.10), (bx1, top + h * 0.10),
+               (bx1, bottom + h * 0.10), (bx0 + (bx1 - bx0) / 2, bottom - h * 0.04),
+               (bx0, bottom + h * 0.10)], fill=gold)
+    if letters:
+        f = _font(int(h * 0.46))
+        ink = BG2
+        for ch, sign in (("Р", -1), ("Я", 1)):
+            try:
+                bb = d.textbbox((0, 0), ch, font=f)
+                tw, th = bb[2] - bb[0], bb[3] - bb[1]
+                d.text((cx + sign * half * 0.55 - tw / 2, cy - th * 0.62), ch, font=f, fill=ink)
+            except Exception:
+                pass
 
 
 def make_icon(size, maskable=False, radius_ratio=0.22):
@@ -95,13 +118,12 @@ def make_icon(size, maskable=False, radius_ratio=0.22):
     d = ImageDraw.Draw(base)
     scale = 0.55 if maskable else 0.72
     draw_book(d, size / 2, size / 2, size * scale)
-    # 底部小圆点：象征复习间隔
-    r = max(2, size * 0.014)
-    y = size * (0.86 if maskable else 0.80)
-    for i, alpha in enumerate([180, 220, 255]):
-        x = size / 2 + (i - 1) * size * 0.075
-        d.ellipse([x - r, y - r, x + r, y + r],
-                  fill=(255, 255, 255, alpha) if False else lerp(WHITE, BG1, 1 - alpha / 255))
+    # 底部三个小圆点：象征间隔复习
+    r = max(2, size * 0.013)
+    y = size * (0.88 if maskable else 0.83)
+    for i, alpha in enumerate([170, 215, 255]):
+        x = size / 2 + (i - 1) * size * 0.072
+        d.ellipse([x - r, y - r, x + r, y + r], fill=lerp(BG1, WHITE, alpha / 255))
     if not maskable:
         m = rounded_mask(size, int(size * radius_ratio))
         out = Image.new("RGBA", (size, size), (0, 0, 0, 0))

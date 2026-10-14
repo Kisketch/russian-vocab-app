@@ -15,7 +15,14 @@ win.scrollTo = () => { };
 win.confirm = () => true;
 win.addEventListener('error', e => errors.push('window error: ' + e.message));
 
-['js/data.js', 'js/scenes.js', 'js/store.js', 'js/audio.js', 'js/app.js'].forEach(f => {
+// jsdom 无 fetch：用文件系统桩替代（供 assets/grammar.json 加载）
+win.fetch = (u) => {
+  const path = require('path'), fs = require('fs');
+  const p = path.join(process.cwd(), String(u).replace(/^\.?\//, ''));
+  if (fs.existsSync(p)) return Promise.resolve({ ok: true, json: () => JSON.parse(fs.readFileSync(p, 'utf8')) });
+  return Promise.reject(new Error('404 ' + u));
+};
+['js/data.js', 'js/scenes.js', 'js/store.js', 'js/audio.js', 'js/grammar.js', 'js/app.js'].forEach(f => {
   try { win.eval(fs.readFileSync(path.join(root, f), 'utf8')); }
   catch (e) { errors.push('执行 ' + f + ' 出错: ' + e.message); }
 });
@@ -196,8 +203,42 @@ async function nav(hash) {
   assert(view().includes('polyline') || $$('.bars .bar').length > 0, '图表绘制成功');
   assert(view().includes('正确率'), '统计页含正确率指标');
 
-  console.log('— 课本词表 —');
-  await nav('#/list');
+  console.log('— 词典与语法 —');
+  await nav('#/dict');
+  assert($('#dictInput') !== null, '词典页渲染搜索框');
+  assert((win.RV_DATA.dict || []).length > 500, '内置词典词条充足（实际 ' + (win.RV_DATA.dict || []).length + '）');
+  const hit1 = win.RVGrammar.lookup('работаю');
+  assert(hit1.words.length === 1 && hit1.words[0].ru === 'работать', '变形反查：работаю → работать');
+  const hit4 = win.RVGrammar.lookup('университете');
+  assert(hit4.words.length === 1 && hit4.words[0].ru === 'университет', '格变化反查：университете → университет');
+  const hit2 = win.RVGrammar.lookup('大学');
+  assert(hit2.words.some(w => w.ru === 'университет'), '中文检索：大学 → университет');
+  const hit3 = win.RVGrammar.lookup('спасибо');
+  assert(hit3.words.length >= 1 || hit3.dict.length >= 1, '词典可查到 спасибо');
+  await nav('#/gram');
+  assert($$('.gram-topic').length === 6, '语法专题 6 个集合');
+  click($('[data-act="gram-topic"][data-topic="pronouns"]'));
+  await tick();
+  assert($('#gramDetail table') !== null, '代词变格表渲染');
+  await nav('#/unit/u03');
+  const cardBtn = $('[data-act="unit-mode"][data-mode="card"]');
+  if (cardBtn && !cardBtn.classList.contains('on')) { click(cardBtn); await tick(); }
+  click($('[data-act="flip"]'));
+  await tick();
+  assert($('.gram-panel') !== null, '卡片背面含语法详解（名词变格表）');
+  assert($('#view').innerHTML.indexOf('二格') >= 0 && $('#view').innerHTML.indexOf('gram-table') >= 0, '卡片背面渲染了变格表');
+
+  await nav('#/know');
+  await tick(120);
+  assert($('.know-cat') !== null, '知识总结渲染（第1课）');
+  assert($$('.know-item').length >= 5, '第1课知识条目≥5（实际 ' + $$('.know-item').length + '）');
+  const kchip = $$('[data-act="know-unit"]').find(c => c.dataset.id === 'u07');
+  assert(kchip !== undefined, '存在第7课知识 chip');
+  click(kchip);
+  await tick(120);
+  assert($('#view').innerHTML.indexOf('ё 的读音') >= 0, '切换第7课知识');
+
+  console.log('— 课本词表 —');  await nav('#/list');
   assert($$('.vrow').length === 173, '课本词表 173 行（实际 ' + $$('.vrow').length + '）');
   assert($$('.v-cursive').length === 173, '词表含手写体对照（实际 ' + $$('.v-cursive').length + '）');
   click($('.vchips [data-act="vocab-filter"][data-id="u01"]'));

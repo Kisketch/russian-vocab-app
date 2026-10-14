@@ -1,5 +1,8 @@
 # 走遍俄罗斯 · 俄语词汇卡
 
+> GitHub 仓库：<https://github.com/Kisketch/russian-vocab-app>
+> 安装包 Release：https://github.com/Kisketch/russian-vocab-app/releases/tag/v2.0.1
+
 一套**离线可用**的俄语背单词应用：图文卡片 + 情景例句 + 真人发音 + 四类题型练习 + 间隔重复复习 + 学习可视化。
 词库按外研社《走遍俄罗斯》（引进版 *Дорога в Россию*）第 1 册的课序主题编排，交互与内容组织方式参考「百词斩」——**看图记词、情景例句、词汇与例句强关联**。
 

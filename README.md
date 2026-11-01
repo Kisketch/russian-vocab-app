@@ -1,7 +1,7 @@
 ﻿# 走遍俄罗斯 · 俄语词汇卡
 
 > GitHub 仓库：<https://github.com/Kisketch/russian-vocab-app>
-> 安装包 Release（线上最新 v2.0.1）：https://github.com/Kisketch/russian-vocab-app/releases/tag/v2.0.1
+> 安装包 Release（线上最新 v2.0.3）：https://github.com/Kisketch/russian-vocab-app/releases/tag/v2.0.3
 > 本地 v2.1.0 构建产物见 `release/`（网页 dist、Android debug APK、预览图）
 
 一套**离线可用**的俄语背单词应用：图文卡片 + 情景例句 + 真人发音 + 四类题型练习 + 间隔重复复习 + 学习可视化。

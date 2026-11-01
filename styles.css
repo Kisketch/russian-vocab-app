@@ -344,8 +344,8 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .unit:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--line-strong); }
 .unit:active { transform: translateY(-1px) scale(.995); }
-.unit-art { position: relative; height: 92px; overflow: hidden; background: var(--surface-2); }
-.unit-art svg, .unit-art img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .9; transition: transform .5s var(--ease); }
+.unit-art { position: relative; aspect-ratio: 3 / 2; height: auto; overflow: hidden; background: var(--surface-2); }
+.unit-art svg, .unit-art img { width: 100%; height: 100%; object-fit: contain; display: block; opacity: .9; transition: transform .5s var(--ease); }
 .unit:hover .unit-art svg, .unit:hover .unit-art img { transform: scale(1.045); }
 .unit-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--surface) 2%, transparent 70%); }
 .unit-art .unit-no {

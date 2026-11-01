@@ -241,7 +241,9 @@ async function playQuiz(c, limit) {
     await c2.nav('#/book');
     /这里还没有生词/.test(c2.view()) ? ok('生词本空态提示存在') : issue('P1', '生词本无空态引导');
     await c2.nav('#/stats');
-    c2.$$('.chart-box').length >= 4 ? ok('零数据时统计图表仍可渲染（' + c2.$$('.chart-box').length + ' 个区块）') : issue('P2', '零数据时统计页异常');
+    c2.$$('.chart-box').length >= 4 || /统计会从第一次学习开始生长/.test(c2.view())
+      ? ok('零数据时统计页显示引导空态（' + c2.$$('.chart-box').length + ' 个图表区块）')
+      : issue('P2', '零数据时统计页异常');
   }
 
   console.log('\n=== 11. 无障碍与可读性 ===');

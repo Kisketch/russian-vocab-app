@@ -45,7 +45,7 @@ async function nav(hash) {
 
 (async function run() {
   console.log('— 数据 —');
-  assert(win.RV_DATA.words.length === 173, '词条数 173（实际 ' + win.RV_DATA.words.length + '）');
+  assert(win.RV_DATA.words.length === 233, '词条数 233（实际 ' + win.RV_DATA.words.length + '）');
   assert(win.RV_DATA.units.length === 15, '单元数 15（实际 ' + win.RV_DATA.units.length + '）');
   assert(win.RVScenes.keys().length >= 20, '情景插画 ' + win.RVScenes.keys().length + ' 幅');
   assert(win.RV_DATA.words.every(w => w.ru && w.pos && w.zh && w.ex_ru && w.ex_zh && w.scene), '词条字段完整（俄/词性/汉/例句俄/例句汉/配图）');
@@ -80,7 +80,7 @@ async function nav(hash) {
   assert(win.RVStore.get(curId).fav === true, '收藏生效');
   click($('[data-act="unit-mode"][data-mode="list"]'));
   await tick();
-  assert($$('.word-row-item').length === 12, '列表模式展示本课 12 词（实际 ' + $$('.word-row-item').length + '）');
+  assert($$('.word-row-item').length === 16, '列表模式展示本课 16 词（实际 ' + $$('.word-row-item').length + '）');
 
   console.log('— 练习模式 —');
   await nav('#/quiz');
@@ -239,11 +239,11 @@ async function nav(hash) {
   assert($('#view').innerHTML.indexOf('ё 的读音') >= 0, '切换第7课知识');
 
   console.log('— 课本词表 —');  await nav('#/list');
-  assert($$('.vrow').length === 173, '课本词表 173 行（实际 ' + $$('.vrow').length + '）');
-  assert($$('.v-cursive').length === 173, '词表含手写体对照（实际 ' + $$('.v-cursive').length + '）');
+  assert($$('.vrow').length === 233, '课本词表 233 行（实际 ' + $$('.vrow').length + '）');
+  assert($$('.v-cursive').length === 233, '词表含手写体对照（实际 ' + $$('.v-cursive').length + '）');
   click($('.vchips [data-act="vocab-filter"][data-id="u01"]'));
   await tick();
-  assert($$('.vrow').length === 10, '第 1 课词表 10 行（实际 ' + $$('.vrow').length + '）');
+  assert($$('.vrow').length === 14, '第 1 课词表 14 行（实际 ' + $$('.vrow').length + '）');
   click($$('.vrow')[0]);
   await tick();
   assert(win.location.hash === '#/unit/u01', '点词行跳转到对应课的学习卡');
@@ -253,7 +253,7 @@ async function nav(hash) {
   await nav('#/settings');
   assert($('[data-act="export-json"]') !== null, '设置页渲染导出/清空控件');
   assert($('[data-act="set-slow"]') !== null && $('[data-act="set-tts"]') !== null, '语速/音源开关渲染');
-  assert(win.RVAudio && win.RVAudio.counts().words === 173, '音频索引覆盖 173 词');
+  assert(win.RVAudio && win.RVAudio.counts().words === 233, '音频索引覆盖 233 词');
   const hit = win.RVAudio.resolveId('университет');
   assert(hit && hit.kind === 'word' && hit.id === 'w023', '文本反查词条 id 正确');
   assert(win.localStorage.getItem('ruvocab.state.v1') !== null, '学习进度已写入 localStorage');

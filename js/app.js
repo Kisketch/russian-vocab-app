@@ -58,7 +58,16 @@
     down: '<path d="M12 4v12M7 11l5 5 5-5"/><path d="M5 20h14"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
     eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
-    back: '<path d="M20 12H4"/><path d="M10 6l-6 6 6 6"/>'
+    back: '<path d="M20 12H4"/><path d="M10 6l-6 6 6 6"/>',
+    alpha: '<path d="M4 19 9.5 5h2L17 19"/><path d="M6.4 14.2h8.2"/><path d="M19 19h2"/>',
+    phrase: '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+    more: '<circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
+    search: '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/>',
+    moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+    spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9z"/>',
+    fire: '<path d="M12 22c4 0 7-2.6 7-6.5 0-3.2-2-5.3-3.7-7.2C13.9 6.6 13 4.8 13 2c-2.2 1.3-3.5 3.2-3.5 5.2 0 1.3.5 2.4 1.2 3.3C7.5 11.4 5 13.9 5 16.5 5 20 7.8 22 12 22z"/>'
+
   };
   function ico(name, size, cls) {
     var p = PATHS[name] || '';
@@ -142,12 +151,12 @@
   function progressRing(pct, size, label) {
     size = size || 46;
     var r = (size - 6) / 2, c = 2 * Math.PI * r, off = c * (1 - pct / 100);
-    return '<svg viewBox="0 0 ' + size + ' ' + size + '" width="' + size + '" height="' + size + '" class="ring">' +
-      '<circle cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke="#e5e8ee" stroke-width="4"/>' +
-      '<circle cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke="#3f6f96" stroke-width="4" ' +
+    return '<svg viewBox="0 0 ' + size + ' ' + size + '" width="' + size + '" height="' + size + '" class="ring" aria-hidden="true">' +
+      '<circle class="ring-bg" cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke-width="4"/>' +
+      '<circle class="ring-fg" cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke-width="4" ' +
       'stroke-linecap="round" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) +
       '" transform="rotate(-90 ' + size / 2 + ' ' + size / 2 + ')"/>' +
-      (label ? '<text x="50%" y="50%" text-anchor="middle" dy="4" font-size="11" fill="#7b8493">' + label + '</text>' : '') +
+      (label ? '<text x="50%" y="50%" text-anchor="middle" dy="4" font-size="11" fill="currentColor">' + label + '</text>' : '') +
       '</svg>';
   }
 
@@ -161,6 +170,8 @@
     dict: ['词典', '查单词 · 变形反查 · 语音输入'],
     gram: ['语法专题', '格变化 · 动词变位 · 代词 · 前置词'],
     know: ['课文知识总结', '发音 · 语法句型 · 词汇 · 文化 · 易错点'],
+    alphabet: ['俄语字母表', '33 个字母 · 名称 · 发音 · 例词'],
+    phrases: ['情景短语', '问候 · 课堂 · 购物 · 餐厅 · 问路 · 旅行'],
     unit: ['单元学习', '单词卡片 · 翻转与例句'],
     quiz: ['练习', '四类题型即时反馈'],
     review: ['复习', '间隔重复 · 到期队列'],
@@ -168,12 +179,26 @@
     stats: ['学习统计', '每日学习量与正确率'],
     settings: ['设置', '朗读、数据与关于']
   };
+  var KICKERS = {
+    units: 'УЧЕБНИК · 01—15', list: 'СЛОВАРЬ · 词表', dict: 'СЛОВАРЬ · 词典',
+    gram: 'ГРАММАТИКА · 语法', know: 'КОНСПЕКТ · 知识', alphabet: 'АЛФАВИТ · 字母',
+    phrases: 'ФРАЗЫ · 短语', unit: 'КАРТОЧКА · 卡片', quiz: 'ПРАКТИКА · 练习',
+    review: 'ПОВТОРЕНИЕ · 复习', book: 'ИЗБРАННОЕ · 生词', stats: 'СТАТИСТИКА · 统计',
+    settings: 'НАСТРОЙКИ · 设置'
+  };
 
   function updateChrome(key, sub) {
     var t = TITLES[key] || TITLES.units;
     $('#pageTitle').textContent = t[0];
     $('#pageSub').textContent = sub || t[1];
-    $$('#nav a, #tabbar a').forEach(function (a) { a.classList.toggle('active', a.dataset.key === key); });
+    var kick = $('#pageKicker'); if (kick) kick.textContent = KICKERS[key] || KICKERS.units;
+    $$('#nav a').forEach(function (a) { a.classList.toggle('active', a.dataset.key === key); });
+    var tabMap = { unit: 'units', alphabet: 'more', phrases: 'more', dict: 'more', gram: 'more', know: 'more', book: 'more', stats: 'more', settings: 'more' };
+    var tk = tabMap[key] || key;
+    $$('#tabbar a').forEach(function (a) { a.classList.toggle('active', a.dataset.key === tk); });
+    var more = $('#tabMore'); if (more) more.classList.toggle('active', tk === 'more');
+    var streak = S.streakDays();
+    var sc = $('#streakChip'); if (sc) sc.textContent = streak > 1 ? '连续 ' + streak + ' 天' : '';
 
     var dueN = S.dueIds(ALL_IDS).length;
     var bookN = S.wordbookIds(ALL_IDS).length;
@@ -210,32 +235,65 @@
     var t = S.today();
     var learned = S.learnedIds(ALL_IDS).length;
     var dueN = S.dueIds(ALL_IDS).length;
+    var pct = WORDS.length ? Math.round(learned / WORDS.length * 100) : 0;
+    var goal = S.state.settings.dailyGoal || 20;
+    var todayViews = S.viewsToday();
+    var goalPct = clamp(Math.round(todayViews / goal * 100), 0, 100);
+    var dayIdx = Math.floor(Date.now() / 86400000) % WORDS.length;
+    var daily = WORDS[dayIdx];
+
     var h = '';
     h += '<div class="hero">' +
       '<div class="hero-text">' +
-      '<h2>' + (dueN ? '今天有 ' + dueN + ' 个单词到期复习' : '开始今天的学习') + '</h2>' +
-      '<p>' + esc(D.meta.book) + ' · 共 ' + UNITS.length + ' 课 / ' + WORDS.length + ' 词</p>' +
+      '<span class="eyebrow">Дорога в Россию · 第 1 册</span>' +
+      '<h2>' + (dueN ? '今天有 ' + dueN + ' 个词<br>在等你复习' : '今天，和俄语<br>待一会儿') + '</h2>' +
+      '<p>' + esc(D.meta.book) + ' · 共 ' + UNITS.length + ' 课 / ' + WORDS.length + ' 词。看图记词，听音辨义，按记忆曲线复习。</p>' +
       '</div>' +
       '<div class="hero-stats">' +
-      '<div class="hero-stat"><b>' + S.viewsToday() + '</b><span>今日接触词</span></div>' +
+      '<div class="hero-stat"><b>' + todayViews + '</b><span>今日接触</span></div>' +
       '<div class="hero-stat"><b>' + (t.quiz ? Math.round(t.correct / t.quiz * 100) + '%' : '—') + '</b><span>练习正确率</span></div>' +
-      '<div class="hero-stat"><b>' + learned + '</b><span>已学词数</span></div>' +
       '<div class="hero-stat"><b>' + S.streakDays() + '</b><span>连续天数</span></div>' +
       '</div>' +
+      '<div class="hero-ring">' + progressRing(pct, 104, pct + '%') + '</div>' +
       '<div class="actions">' +
-      '<button class="btn" data-act="go" data-hash="#/know">知识总结</button>' +
-      '<button class="btn" data-act="go" data-hash="#/gram">语法专题</button>' +
-      '<button class="btn primary" data-act="review-start">' + ico('review', 16) + ' ' + (dueN ? '开始复习' : '复习临近词') + '</button>' +
+      '<button class="btn primary" data-act="review-start">' + ico('review', 16) + ' ' + (dueN ? '开始复习 ' + dueN + ' 词' : '复习临近词') + '</button>' +
       '<button class="btn" data-act="quick-quiz">' + ico('quiz', 16) + ' 快速练习</button>' +
+      '<button class="btn" data-act="go" data-hash="#/alphabet">' + ico('alpha', 16) + ' 字母表</button>' +
+      '<button class="btn" data-act="go" data-hash="#/phrases">' + ico('phrase', 16) + ' 情景短语</button>' +
       '</div></div>';
+
+    h += '<div class="home-duo">';
+    h += '<div class="card daily-card" data-act="open-word-sheet" data-id="' + daily.id + '" tabindex="0" role="button">' +
+      '<div class="daily-art no-photo" data-letter="' + esc(daily.initial) + '"></div>' +
+      '<div class="daily-body">' +
+      '<div class="daily-kicker">每日一词 · СЛОВО ДНЯ</div>' +
+      '<div class="daily-ru">' + esc(ruText(daily)) + '</div>' +
+      '<div class="daily-zh">' + esc(daily.zh) + ' <span class="pos">' + esc(daily.pos) + '</span></div>' +
+      '<div class="daily-ex">' + highlight(daily.ru, daily.ex_ru) + '</div>' +
+      '<div class="daily-ex-zh">' + esc(daily.ex_zh) + '</div>' +
+      '</div></div>';
+
+    h += '<div class="card goal-card">' +
+      '<div class="goal-top"><span class="daily-kicker">今日目标 · ЦЕЛЬ</span>' + progressRing(goalPct, 72, todayViews + '/' + goal) + '</div>' +
+      '<h3>' + (goalPct >= 100 ? '今天的目标完成了' : '再接触 ' + Math.max(0, goal - todayViews) + ' 个词') + '</h3>' +
+      '<p>每日 ' + goal + ' 词 · 已接触 ' + todayViews + ' 词 · 待复习 ' + dueN + ' 词</p>' +
+      '<div class="goal-bar"><i style="width:' + goalPct + '%"></i></div>' +
+      '<div class="actions" style="margin-top:14px">' +
+      '<button class="btn sm" data-act="go" data-hash="#/stats">查看统计</button>' +
+      '<button class="btn sm" data-act="go" data-hash="#/settings">调整目标</button>' +
+      '</div></div>';
+    h += '</div>';
 
     h += '<div class="section"><div class="section-head"><h2>教材单元</h2><span>' + esc(D.meta.note) + '</span></div>';
     h += '<div class="unit-grid">';
-    UNITS.forEach(function (u) {
+    UNITS.forEach(function (u, i) {
       var st = unitStat(u);
-      h += '<div class="card unit" data-act="open-unit" data-id="' + u.id + '" tabindex="0" role="button">' +
+      var cover = wordsOfUnit[u.id][0];
+      h += '<div class="card unit" data-act="open-unit" data-id="' + u.id + '" tabindex="0" role="button" style="--i:' + i + '">' +
+        '<div class="unit-art' + (cover && cover.img ? '' : ' no-photo') + '" data-letter="' + (cover ? esc(cover.initial) : u.no) + '">' +
+        (cover ? sceneImg(cover) : '') +
+        '<span class="unit-no">' + u.no + '</span></div>' +
         '<div class="unit-top">' +
-        '<div class="unit-no">' + u.no + '</div>' +
         '<div class="unit-title"><b>' + esc(u.zh) + '</b><span>' + esc(u.ru) + '</span></div>' +
         '<div class="unit-ring" title="已标记进度">' + progressRing(st.pct, 44, st.pct + '%') + '</div>' +
         '</div>' +
@@ -321,26 +379,36 @@
     var box = $('#dictResult');
     if (!box) return;
     var r = RVGrammar.lookup(q);
-    if (!q.trim()) { box.innerHTML = ''; return; }
+    if (!q.trim()) {
+      var picks = ['семья', 'университет', 'поезд', 'погода', 'здоровье', 'праздник', 'магазин', 'метро'];
+      box.innerHTML = '<div class="dict-home">' +
+        '<div class="dict-home-title">试试这些词</div>' +
+        '<div class="picker">' + picks.map(function (p) {
+          return '<button class="pick" data-act="dict-pick" data-q="' + p + '">' + p + '</button>';
+        }).join('') + '</div>' +
+        '<div class="dict-home-tip">支持俄语原形、变格/变位形式、中文释义三路查询。例如输入 <b>читаю</b> 可以反查到 <b>читать</b>。</div>' +
+        '</div>';
+      return;
+    }
     var h = '';
     if (r.words.length) {
-      h += '<div class="dict-group">词库命中</div>';
+      h += '<div class="dict-group">词库命中 · ' + r.words.length + '</div>';
       r.words.forEach(function (w) {
         var u = unitById[w.unit];
-        h += '<div class="dict-row" data-act="open-word" data-unit="' + w.unit + '" data-idx="' + wordsOfUnit[w.unit].indexOf(w) + '">' +
+        h += '<div class="dict-row" data-act="open-word-sheet" data-id="' + w.id + '">' +
           '<div class="dr-main"><span class="dr-ru">' + esc(ruText(w)) + '</span><span class="dr-pos">' + esc(w.pos) + '</span></div>' +
           '<div class="dr-zh">' + esc(w.zh) + '</div>' +
-          '<div class="dr-unit">' + esc(u ? '第' + u.no + '课 · ' + u.zh : '') + '</div></div>';
+          '<div class="dr-unit">' + esc(u ? '第' + u.no + '课 · ' + u.zh : '') + ' · 点击查看详情</div></div>';
       });
     }
     if (r.dict.length) {
-      h += '<div class="dict-group">内置词典</div>';
+      h += '<div class="dict-group">内置词典 · ' + r.dict.length + '</div>';
       r.dict.forEach(function (d) {
         h += '<div class="dict-row plain"><div class="dr-main"><span class="dr-ru">' + esc(d.ru) + '</span><span class="dr-pos">' + esc(d.pos) + '</span></div>' +
           '<div class="dr-zh">' + esc(d.zh) + '</div></div>';
       });
     }
-    if (!h) h = '<div class="empty"><h3>没找到「' + esc(q) + '」</h3>换个说法试试，或用中文检索</div>';
+    if (!h) h = '<div class="empty"><h3>没找到「' + esc(q) + '」</h3><p>换个说法试试，或用中文检索；也可以去「课本词表」按课浏览。</p></div>';
     box.innerHTML = h;
   }
 
@@ -365,6 +433,12 @@
         '<span class="gt-arrow">›</span></div>';
     });
     h += '</div>';
+    h += '<div class="card gram-quick"><div class="gq-head"><b>六格速查</b><span>ШЕСТЬ ПАДЕЖЕЙ · 先记疑问词，再记典型例句</span></div>' +
+      '<div class="gq-wrap"><table class="gram-table"><thead><tr><th>格</th><th>用法 / 疑问词</th><th>例句</th></tr></thead><tbody>' +
+      ref.cases.map(function (c) {
+        return '<tr><td class="ru"><b>' + esc(c.zh) + '</b></td><td>' + esc(c.use) + '</td><td class="ru gex">' + esc(c.example) + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<p class="hint gq-note">点上方专题看完整变格表；卡片背面的「语法详解」会按当前单词给出具体词形。</p></div>';
     h += '<div id="gramDetail"></div>';
     h += '<p class="hint" style="text-align:center">每个词条的格变化表见「学习」卡片背面 → 语法详解</p>';
     h += '</div>';
@@ -453,7 +527,7 @@
       var meta = KNOW_CAT[cat];
       h += '<div class="know-cat" style="--kc:' + meta.color + '"><div class="know-cat-name">' + meta.name + '</div>';
       list.forEach(function (k) {
-        h += '<details class="know-item"><summary>' + esc(k.title) + '</summary><div class="know-body">' + esc(k.content) + '</div></details>';
+        h += '<details class="know-item" open><summary>' + esc(k.title) + '</summary><div class="know-body">' + esc(k.content) + '</div></details>';
       });
       h += '</div>';
     });
@@ -551,13 +625,21 @@
         '<div class="flashcard-inner">' +
         // 正面
         '<div class="face front">' +
-        '<div class="scene">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
+        '<div class="scene' + (w.img ? '' : ' no-photo') + '" data-letter="' + esc(w.initial) + '">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
         '<div class="body-part">' +
         '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
         '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '" aria-label="朗读">' + ico('sound', 19) + '</button></div>' +
         (S.state.settings.showCursive === false ? '' :
           '<div class="cursive-line"><span class="cursive-tag">手写体</span><span class="ru-cursive">' + esc(ruText(w)) + '</span></div>') +
         '<div class="pos">' + esc(w.pos) + '</div>' +
+        '<div class="card-meta"><span>第 ' + u.no + ' 课</span><span>' + w.slots + ' 个字母</span><span>' + esc(u.zh) + '</span></div>' +
+        '<div class="memory-tip"><b>记忆提示</b> · ' + esc(SCENE_DESC[w.scene] || '结合场景记忆') + '。先看图回忆词义，再点击卡片核对。</div>' +
+        '<div class="word-dots" role="group" aria-label="本课单词快速跳转">' +
+        ws.map(function (x, i) {
+          var sx = S.get(x.id);
+          return '<button class="word-dot' + (i === ui.idx ? ' on' : '') + (sx.lv > 0 ? ' done' : '') + '" data-act="goto-word" data-idx="' + i + '" title="' + (i + 1) + '. ' + esc(x.ru) + '" aria-label="第 ' + (i + 1) + ' 词 ' + esc(x.ru) + '"></button>';
+        }).join('') + '</div>' +
+        '<div class="word-dots-cap">快速跳词 · 本课第 ' + (ui.idx + 1) + ' / ' + ws.length + ' 词 · 绿点表示已标记掌握</div>' +
         '<div class="hint-flip tail">点击卡片 / 按空格翻转查看释义与例句</div>' +
         '</div></div>' +
         // 背面
@@ -607,7 +689,7 @@
 
   function wordRow(w, i) {
     var s = S.get(w.id);
-    return '<div class="word-row-item">' +
+    return '<div class="word-row-item" data-act="open-word-sheet" data-id="' + w.id + '" tabindex="0" role="button">' +
       '<span class="row-index">' + (i + 1) + '</span>' +
       '<div class="thumb">' + sceneImg(w) + '</div>' +
       '<div class="wr-text">' +
@@ -755,6 +837,8 @@
 
   function finishQuiz() {
     quiz.running = false; quiz.done = true;
+    var total = quiz.right + quiz.wrong;
+    if (total && quiz.right / total >= 0.8) setTimeout(confettiBurst, 120);
   }
 
   function renderRun() {
@@ -978,7 +1062,7 @@
     h += '<div class="flashcard' + (review.shown ? ' flipped' : '') + '" data-act="flip">' +
       '<div class="flashcard-inner">' +
       '<div class="face front">' +
-      '<div class="scene">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
+      '<div class="scene' + (w.img ? '' : ' no-photo') + '" data-letter="' + esc(w.initial) + '">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
       '<div class="body-part">' +
       '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
       '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '">' + ico('sound', 19) + '</button></div>' +
@@ -1061,7 +1145,7 @@
       h += '<div class="word-list">';
       list.forEach(function (id) {
         var w = byId[id], s = S.get(id);
-        h += '<div class="word-row-item">' +
+        h += '<div class="word-row-item" data-act="open-word-sheet" data-id="' + id + '" tabindex="0" role="button">' +
           '<div class="thumb">' + sceneImg(w) + '</div>' +
           '<div class="wr-text"><div class="wr-ru">' + esc(w.ru) + ' <small>' + esc(w.pos) + '</small></div>' +
           '<div class="wr-zh">' + esc(w.zh) + ' · ' + highlight(w.ru, w.ex_ru) + '</div></div>' +
@@ -1106,6 +1190,19 @@
     var t = S.today();
     var totalQuiz = ser.reduce(function (a, b) { return a + b.quiz; }, 0);
     var totalRight = ser.reduce(function (a, b) { return a + b.correct; }, 0);
+    var hasData = learned > 0 || totalQuiz > 0 || t.review > 0 || ser.some(function (d) { return d.views + d.learn + d.quiz + d.review > 0; });
+
+    if (!hasData) {
+      return '<div class="card empty" style="padding:52px 24px">' +
+        '<div class="empty-art">' + Sc.get('clock') + '</div>' +
+        '<h3>统计会从第一次学习开始生长</h3>' +
+        '<p>去单元里翻几张卡片，或做一组 10 题练习。之后这里会出现每日学习量、正确率趋势、掌握度分布和连续天数。</p>' +
+        '<div class="actions center" style="margin-top:16px">' +
+        '<button class="btn primary" data-act="go" data-hash="#/units">去学习</button>' +
+        '<button class="btn" data-act="go" data-hash="#/quiz">做一组练习</button></div>' +
+        '<div class="card-meta" style="justify-content:center;margin-top:22px"><span>1 · 看图记词</span><span>2 · 即时练习</span><span>3 · 间隔复习</span></div>' +
+        '</div>';
+    }
 
     var h = '';
     h += '<div class="kpis section">' +
@@ -1220,23 +1317,172 @@
     return h + '</ul>';
   }
 
-  /* ---------------- 视图：设置 ---------------- */
+  /* ---------------- 视图：字母表 ---------------- */
+  var alphaFilter = '全部';
+  function renderAlphabet() {
+    var list = D.alphabet || [];
+    var types = ['全部', '元音', '辅音', '无音'];
+    var shown = list.filter(function (a) { return alphaFilter === '全部' || a.type === alphaFilter; });
+    var h = '<div class="card alpha-intro">' +
+      '<div><h2>Алфавит · 33 个字母</h2><p>10 个元音、21 个辅音、2 个无音符号。先认字母，再记单词——零基础也能从这里开始。点击字母卡查看发音要点与例词。</p></div>' +
+      '<div class="alpha-filters">' + types.map(function (t) {
+        return '<button class="pick' + (alphaFilter === t ? ' on' : '') + '" data-act="alpha-filter" data-type="' + t + '">' + t + '</button>';
+      }).join('') + '</div></div>';
+    h += '<div class="alpha-grid">';
+    shown.forEach(function (a, i) {
+      h += '<div class="alpha-card" data-act="open-alpha" data-upper="' + esc(a.upper) + '" tabindex="0" role="button" data-type="' + esc(a.type) + '">' +
+        '<div class="alpha-big">' + esc(a.upper) + '<small>' + esc(a.lower) + '</small></div>' +
+        '<div class="alpha-name">' + esc(a.name) + ' <span class="alpha-ipa">' + esc(a.ipa) + '</span></div>' +
+        '<div class="alpha-ex"><b>' + esc(a.example) + '</b> · ' + esc(a.exampleZh) + '</div></div>';
+    });
+    h += '</div>';
+    return h;
+  }
+
+  /* ---------------- 视图：情景短语 ---------------- */
+  var phraseCat = '全部';
+  function renderPhrases() {
+    var list = D.phrases || [];
+    var cats = ['全部']; list.forEach(function (p) { if (cats.indexOf(p.cat) < 0) cats.push(p.cat); });
+    var shown = list.filter(function (p) { return phraseCat === '全部' || p.cat === phraseCat; });
+    var h = '<div class="card alpha-intro"><div><h2>Фразы · 开口就能用</h2><p>' + list.length + ' 句高频情景短语，按场景分组。点击卡片朗读，长按/右键可复制俄语原文。</p></div>' +
+      '<div class="alpha-filters">' + cats.map(function (c) {
+        return '<button class="pick' + (phraseCat === c ? ' on' : '') + '" data-act="phrase-cat" data-cat="' + esc(c) + '">' + esc(c) + '</button>';
+      }).join('') + '</div></div>';
+    h += '<div class="phrase-grid">';
+    shown.forEach(function (p) {
+      h += '<div class="card phrase-card" data-act="speak" data-text="' + esc(p.ru) + '">' +
+        '<button class="mini ph-play" data-act="speak" data-text="' + esc(p.ru) + '" aria-label="朗读">' + ico('sound', 15) + '</button>' +
+        '<div class="ph-cat">' + esc(p.cat) + '</div><div class="ph-ru">' + esc(p.ru) + '</div>' +
+        '<div class="ph-zh">' + esc(p.zh) + '</div>' + (p.note ? '<div class="ph-note">' + esc(p.note) + '</div>' : '') + '</div>';
+    });
+    h += '</div>';
+    return h;
+  }
+
+  /* ---------------- 底部抽屉与单词详情 ---------------- */
+  var sheetLastFocus = null;
+  function openSheet(html, label) {
+    var sheet = $('#sheet'), body = $('#sheetBody');
+    if (!sheet || !body) return;
+    sheetLastFocus = document.activeElement;
+    body.innerHTML = html;
+    sheet.hidden = false;
+    document.body.classList.add('sheet-open');
+    var panel = sheet.querySelector('.sheet-panel');
+    if (panel) panel.setAttribute('aria-label', label || '详情');
+    var close = sheet.querySelector('.sheet-close');
+    if (close) setTimeout(function () { close.focus(); }, 40);
+    lockMainScroll(true);
+  }
+  function closeSheet() {
+    var sheet = $('#sheet');
+    if (!sheet || sheet.hidden) return;
+    sheet.hidden = true;
+    document.body.classList.remove('sheet-open');
+    lockMainScroll(false);
+    if (sheetLastFocus && sheetLastFocus.focus) sheetLastFocus.focus();
+  }
+  function lockMainScroll(on) {
+    var main = $('#main');
+    if (!main) return;
+    if (on) { main.dataset.scrollTop = main.scrollTop; main.style.overflow = 'hidden'; }
+    else { main.style.overflow = ''; if (main.dataset.scrollTop) main.scrollTop = +main.dataset.scrollTop; }
+  }
+  function wordSheet(id) {
+    var w = byId[id]; if (!w) return;
+    var s = S.get(id);
+    var u = unitById[w.unit];
+    var h = '<div class="sheet-word"><div class="ru">' + esc(ruText(w)) + '</div>' +
+      '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '">' + ico('sound', 18) + '</button></div>' +
+      '<div class="pos">' + esc(w.pos) + ' · 第 ' + u.no + ' 课 ' + esc(u.zh) + '</div>' +
+      '<div class="sheet-zh">' + esc(w.zh) + '</div>';
+    if (S.state.settings.showCursive !== false) {
+      h += '<div class="cursive-line" style="justify-content:flex-start"><span class="cursive-tag">手写体</span><span class="ru-cursive" style="font-size:28px">' + esc(ruText(w)) + '</span></div>';
+    }
+    h += '<div class="sheet-sec"><h3>例句 · ПРИМЕР</h3><div class="sheet-ex">' + highlight(w.ru, w.ex_ru) +
+      ' <button class="mini" data-act="speak" data-text="' + esc(w.ex_ru) + '">' + ico('sound', 14) + '</button></div>' +
+      '<div class="sheet-ex-zh">' + esc(w.ex_zh) + '</div></div>';
+    if (w.img) h += '<div class="sheet-sec"><h3>情景 · СИТУАЦИЯ</h3><div class="q-scene" style="width:100%;margin:0">' + sceneImg(w) + '</div></div>';
+    h += grammarPanel(w);
+    h += '<div class="sheet-actions">' +
+      '<button class="btn sm ' + (s.fav ? 'primary' : '') + '" data-act="fav" data-id="' + id + '">' + ico(s.fav ? 'starOn' : 'star', 14) + ' ' + (s.fav ? '已收藏' : '收藏') + '</button>' +
+      '<button class="btn sm" data-act="toggle-book" data-id="' + id + '">' + ico('book', 14) + ' ' + (s.book ? '移出生词本' : '加入生词本') + '</button>' +
+      '<button class="btn sm" data-act="goto-card-detail" data-unit="' + w.unit + '" data-id="' + id + '">' + ico('learn', 14) + ' 打开学习卡</button>' +
+      '</div>';
+    openSheet(h, w.ru);
+  }
+  function alphaSheet(upper) {
+    var a = (D.alphabet || []).filter(function (x) { return x.upper === upper; })[0];
+    if (!a) return;
+    var sameType = (D.alphabet || []).filter(function (x) { return x.type === a.type; }).length;
+    var h = '<div class="alpha-detail"><div class="alpha-hero-letter">' + esc(a.upper) + '<div style="font-size:30px;color:var(--muted);text-align:center">' + esc(a.lower) + '</div></div>' +
+      '<div><h2>' + esc(a.name) + '</h2><div class="alpha-meta">' + esc(a.type) + ' · ' + esc(a.ipa) + ' · 同类字母 ' + sameType + ' 个</div>' +
+      '<div class="alpha-note">' + esc(a.note) + '</div>' +
+      '<div class="alpha-word">' + esc(a.example) + ' <span style="font-family:var(--sans);font-size:13px;color:var(--muted)">' + esc(a.exampleZh) + '</span></div>' +
+      '<div class="sheet-actions"><button class="btn sm primary" data-act="speak" data-text="' + esc(a.example) + '">' + ico('sound', 14) + ' 朗读例词</button>' +
+      '<button class="btn sm" data-act="speak" data-text="' + esc(a.name) + '">朗读字母名称</button></div></div></div>';
+    openSheet(h, a.name);
+  }
+
+  /* ---------------- 搜索命令面板 ---------------- */
+  var paletteIndex = -1, paletteHits = [];
+  function openPalette() {
+    var p = $('#palette'); if (!p) return;
+    p.hidden = false;
+    var input = $('#paletteInput');
+    if (input) { input.value = ''; input.focus(); }
+    paletteIndex = -1;
+    paletteRender('');
+  }
+  function closePalette() { var p = $('#palette'); if (p) p.hidden = true; }
+  function paletteRender(q) {
+    q = (q || '').trim().toLowerCase();
+    var hits = [];
+    if (!q) {
+      hits = WORDS.slice(0, 8);
+    } else {
+      WORDS.forEach(function (w) {
+        var score = 0;
+        if (w.ru.toLowerCase().indexOf(q) === 0) score = 3;
+        else if (w.ru.toLowerCase().indexOf(q) > -1) score = 2;
+        else if (w.zh.indexOf(q) > -1) score = 2;
+        else if (w.pos.indexOf(q) > -1) score = 1;
+        if (score) hits.push({ w: w, score: score });
+      });
+      hits.sort(function (a, b) { return b.score - a.score; });
+      hits = hits.slice(0, 12).map(function (x) { return x.w; });
+    }
+    paletteHits = hits;
+    var box = $('#paletteResults');
+    if (!box) return;
+    if (!hits.length) { box.innerHTML = '<div class="palette-empty">没有找到「' + esc(q) + '」<br><span style="font-size:12px">试试俄语原形、中文释义，或去词典做变格反查</span></div>'; return; }
+    box.innerHTML = hits.map(function (w, i) {
+      return '<div class="palette-row' + (i === paletteIndex ? ' on' : '') + '" data-act="palette-open" data-id="' + w.id + '">' +
+        '<span class="pr-ru">' + esc(ruText(w)) + '</span><span class="pr-zh">' + esc(w.zh) + '</span>' +
+        '<span class="pr-pos">' + esc(w.pos) + '</span></div>';
+    }).join('');
+  }
+
+
   function renderSettings() {
     var st = S.state.settings;
     var h = '<div class="study-wrap"><div class="card" style="padding:18px">';
     h += '<div class="section-head"><h2>学习与朗读</h2></div>';
-    h += '<label class="switch"><input type="checkbox" data-act="set-auto" ' + (st.autoSpeak ? 'checked' : '') + '><span class="track"></span>卡片出现时自动朗读俄语</label>';
-    h += '<label class="switch"><input type="checkbox" data-act="set-slow" ' + (st.slow ? 'checked' : '') + '><span class="track"></span>慢速朗读（约 0.8 倍速，适合跟读）</label>';
-    h += '<label class="switch"><input type="checkbox" data-act="set-tts" ' + (st.ttsOnly ? 'checked' : '') + '><span class="track"></span>仅使用系统语音（不读内置真人发音）</label>';
+    h += '<label class="switch"><input type="checkbox" data-act="set-auto" ' + (st.autoSpeak ? 'checked' : '') + '><span class="track"></span><span class="switch-text">卡片出现时自动朗读俄语<small>翻到新词时自动播放发音</small></span></label>';
+    h += '<label class="switch"><input type="checkbox" data-act="set-slow" ' + (st.slow ? 'checked' : '') + '><span class="track"></span><span class="switch-text">慢速朗读<small>约 0.8 倍速，适合跟读</small></span></label>';
+    h += '<label class="switch"><input type="checkbox" data-act="set-tts" ' + (st.ttsOnly ? 'checked' : '') + '><span class="track"></span><span class="switch-text">仅使用系统语音<small>不播放内置真人发音</small></span></label>';
     var stressed = WORDS.filter(function (w) { return w.ru_stress && w.ru_stress !== w.ru; }).length;
-    h += '<label class="switch"><input type="checkbox" data-act="set-stress" ' + (st.showStress === false ? '' : 'checked') + '><span class="track"></span>显示重音符号' +
-      '<span class="hint" style="margin-left:6px">已标注 ' + stressed + ' / ' + WORDS.length + ' 词</span></label>';
-    h += '<label class="switch"><input type="checkbox" data-act="set-cursive" ' + (st.showCursive === false ? '' : 'checked') + '><span class="track"></span>单词下方显示手写体</label>';
+    h += '<label class="switch' + (stressed ? '' : ' is-disabled') + '"><input type="checkbox" data-act="set-stress" ' + (stressed && st.showStress !== false ? 'checked' : '') + (stressed ? '' : ' disabled') + '><span class="track"></span><span class="switch-text">显示重音符号<small>' + (stressed ? '已标注 ' + stressed + ' / ' + WORDS.length + ' 词' : '当前词库尚未标注重音，暂以真人发音为准') + '</small></span></label>';
+    h += '<label class="switch"><input type="checkbox" data-act="set-cursive" ' + (st.showCursive === false ? '' : 'checked') + '><span class="track"></span><span class="switch-text">单词下方显示手写体<small>对照印刷体与手写体</small></span></label>';
     h += '<div style="display:flex;gap:10px;align-items:center;margin-top:10px">' +
       '<button class="btn sm" data-act="audio-selftest">' + ico('sound', 15) + ' 测试发音</button>' +
       '<span class="hint" id="selftestResult">点击后播放第 1 个单词，并报告播放通道与失败原因</span></div>';
     h += '<div class="field" style="max-width:340px"><label>朗读语速：<b id="rateLabel">' + st.rate.toFixed(2) + '</b></label>' +
       '<input type="range" min="0.5" max="1.2" step="0.05" value="' + st.rate + '" data-act="set-rate"></div>';
+    var goal = st.dailyGoal || 20;
+    h += '<div class="field" style="max-width:340px"><label>每日目标：<b>' + goal + '</b> 词</label>' +
+      '<div class="range-row"><input type="range" min="10" max="60" step="5" value="' + goal + '" data-act="set-goal" aria-label="每日目标"><span class="hint">10 ~ 60</span></div></div>';
 
     h += '<div class="section-head" style="margin-top:18px"><h2>离线语音</h2><span>共 ' + RVAudio.counts().words + ' 个单词 + ' + RVAudio.counts().sents + ' 个例句</span></div>';
     if (location.protocol === 'file:') {
@@ -1289,6 +1535,8 @@
       case 'dict': html = renderDict(); break;
       case 'gram': html = renderGram(); break;
       case 'know': html = renderKnow(); break;
+      case 'alphabet': html = renderAlphabet(); break;
+      case 'phrases': html = renderPhrases(); break;
       case 'unit': html = renderUnit(seg[1]); key = 'unit'; break;
       case 'quiz': html = renderQuiz(); break;
       case 'review': html = renderReview(); break;
@@ -1303,6 +1551,10 @@
       sub = '第 ' + uu.no + ' 课 · ' + uu.zh + ' · ' + uu.ru + ' · 单词卡片';
     }
     $('#view').innerHTML = html;
+    var vEl = $('#view');
+    vEl.classList.remove('view-enter');
+    void vEl.offsetWidth;
+    vEl.classList.add('view-enter');
     updateChrome(key === 'unit' ? 'units' : key, sub);
     if (key === 'dict') {
       var di = $('#dictInput');
@@ -1310,8 +1562,10 @@
         di.addEventListener('input', function () { dictRender(di.value); });
         setTimeout(function () { di.focus(); }, 60);
       }
+      dictRender('');
     }
     window.scrollTo({ top: 0 });
+    var mainEl = $('#main'); if (mainEl) mainEl.scrollTop = 0;
   }
 
   function go(hash) { location.hash = hash; }
@@ -1323,7 +1577,22 @@
     var act = el.dataset.act, id = el.dataset.id, v = el.dataset;
     switch (act) {
       case 'go': go(v.hash); break;
+      case 'open-word-sheet': wordSheet(id); break;
+      case 'dict-pick': {
+        var di = $('#dictInput'); if (di) di.value = v.q; dictRender(v.q); break;
+      }
+      case 'open-alpha': alphaSheet(v.upper); break;
+      case 'alpha-filter': alphaFilter = v.type; render(); break;
+      case 'phrase-cat': phraseCat = v.cat; render(); break;
+      case 'palette-open': closePalette(); wordSheet(id); break;
+      case 'goto-card-detail': {
+        var wid = byId[id]; if (!wid) break;
+        var wi = wordsOfUnit[wid.unit].map(function (x) { return x.id; }).indexOf(id);
+        ui.unitMode = 'card'; ui.idx = wi < 0 ? 0 : wi; ui.flipped = false;
+        closeSheet(); go('#/unit/' + wid.unit); break;
+      }
       case 'goto-card': ui.unitMode = 'card'; ui.idx = +v.idx; ui.flipped = false; render(); break;
+      case 'goto-word': ui.unitMode = 'card'; ui.idx = +v.idx; ui.flipped = false; render(); break;
       case 'unit-mode': ui.unitMode = v.mode; ui.flipped = false; render(); break;
       case 'flip':
         if (quiz && quiz.running) return;
@@ -1493,6 +1762,8 @@
     if (el) { quizSetup.count = +el.value; var l = $('#cntLabel'); if (l) l.textContent = el.value; }
     var el2 = e.target.closest('[data-act="set-rate"]');
     if (el2) { S.state.settings.rate = parseFloat(el2.value); var r = $('#rateLabel'); if (r) r.textContent = parseFloat(el2.value).toFixed(2); S.save(); }
+    var el3 = e.target.closest('[data-act="set-goal"]');
+    if (el3) { S.state.settings.dailyGoal = +el3.value; S.save(); var gl = el3.parentElement.parentElement.querySelector('label b'); if (gl) gl.textContent = el3.value; }
   });
 
   /* 学习卡操作 */
@@ -1514,6 +1785,38 @@
     ui.idx = next; ui.flipped = false;
     render();
     if (S.state.settings.autoSpeak) setTimeout(function () { speak(wordsOfUnit[ui.unitId][ui.idx].ru, S.state.settings.slow); }, 60);
+  }
+
+  /* 手机滑动手势：右滑上一词、左滑下一词、上滑翻面 */
+  var swipe = { x: 0, y: 0, t: 0 };
+  document.addEventListener('touchstart', function (e) {
+    if (!e.target.closest('#view .flashcard')) return;
+    if ((location.hash || '').indexOf('#/unit/') !== 0 || ui.unitMode !== 'card') return;
+    var t = e.touches[0]; swipe.x = t.clientX; swipe.y = t.clientY; swipe.t = Date.now();
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (!e.target.closest('#view .flashcard')) return;
+    if ((location.hash || '').indexOf('#/unit/') !== 0 || ui.unitMode !== 'card') return;
+    if (Date.now() - swipe.t > 700) return;
+    var t = e.changedTouches[0]; if (!t) return;
+    var dx = t.clientX - swipe.x, dy = t.clientY - swipe.y;
+    if (Math.abs(dx) > 58 && Math.abs(dy) < 46) { if (navigator.vibrate) navigator.vibrate(8); moveCard(dx > 0 ? -1 : 1); }
+    else if (dy < -72 && Math.abs(dx) < 52) { if (navigator.vibrate) navigator.vibrate(8); flipCard(); }
+  }, { passive: true });
+
+  function confettiBurst() {
+    var box = $('#confetti'); if (!box) return;
+    var colors = ['#b23a2e', '#a87c2f', '#3f6e58', '#e06a56', '#20201d'];
+    for (var i = 0; i < 42; i++) {
+      var p = document.createElement('i');
+      p.style.left = (Math.random() * 100) + '%';
+      p.style.background = colors[i % colors.length];
+      p.style.animationDelay = (Math.random() * .25) + 's';
+      p.style.transform = 'rotate(' + (Math.random() * 180) + 'deg)';
+      p.style.opacity = .8;
+      box.appendChild(p);
+    }
+    setTimeout(function () { box.innerHTML = ''; }, 2400);
   }
 
   /* 复习绘画（避免整页重绘导致闪动） */
@@ -1599,8 +1902,94 @@
     }
   });
 
-  /* 键盘快捷键 */
+  /* 抽屉 / 搜索 / 更多 / 主题 / 滚动进度 */
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-close-sheet]')) { closeSheet(); return; }
+    if (e.target.id === 'palette') { closePalette(); return; }
+    if (e.target.closest('#openSearch')) { openPalette(); return; }
+    if (e.target.closest('#tabMore')) { openMoreSheet(); return; }
+    var moreLink = e.target.closest('[data-more-link]');
+    if (moreLink) { closeSheet(); go(moreLink.dataset.moreLink); }
+  });
+  function openMoreSheet() {
+    var items = [
+      ['dict', '词典', 'dict'], ['gram', '语法', 'gram'], ['know', '知识总结', 'know'],
+      ['alphabet', '字母表', 'alpha'], ['phrases', '情景短语', 'phrase'], ['book', '生词本', 'book'],
+      ['stats', '统计', 'stats'], ['settings', '设置', 'settings'], ['units', '学习', 'learn']
+    ];
+    var h = '<h2 style="margin-bottom:4px">更多</h2><p class="hint" style="margin:0 0 14px">全部学习工具</p><div class="more-grid">' +
+      items.map(function (it) {
+        return '<button class="more-item" data-more-link="#/' + it[0] + '"><span class="ico">' + ico(it[2], 20) + '</span>' + it[1] + '</button>';
+      }).join('') + '</div>';
+    openSheet(h, '更多');
+  }
+  var paletteInput = $('#paletteInput');
+  if (paletteInput) {
+    paletteInput.addEventListener('input', function () { paletteIndex = -1; paletteRender(paletteInput.value); });
+    paletteInput.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); paletteIndex = Math.min(paletteHits.length - 1, paletteIndex + 1); paletteRender(paletteInput.value); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); paletteIndex = Math.max(0, paletteIndex - 1); paletteRender(paletteInput.value); }
+      else if (e.key === 'Enter') { e.preventDefault(); var w = paletteHits[paletteIndex] || paletteHits[0]; if (w) { closePalette(); wordSheet(w.id); } }
+      else if (e.key === 'Escape') { closePalette(); }
+    });
+  }
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    try { localStorage.setItem('ruvocab.theme', t); } catch (e) { }
+    var label = document.querySelector('.theme-label');
+    if (label) label.textContent = t === 'dark' ? '浅色模式' : '深色模式';
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#151512' : '#f4f0e7');
+  }
+  function initTheme() {
+    var t = 'light';
+    try { t = localStorage.getItem('ruvocab.theme') || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) { }
+    try { var q = new URLSearchParams(location.search).get('theme'); if (q === 'dark' || q === 'light') t = q; } catch (e) { }
+    applyTheme(t);
+  }
+  initTheme();
+  var themeBtn = $('#themeToggle');
+  if (themeBtn) themeBtn.addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+  function bindScrollProgress() {
+    var main = $('#main'), bar = $('#scrollProgress i');
+    if (!main || !bar) return;
+    main.addEventListener('scroll', function () {
+      var max = main.scrollHeight - main.clientHeight;
+      bar.style.width = (max > 0 ? (main.scrollTop / max * 100) : 0) + '%';
+    }, { passive: true });
+  }
+  bindScrollProgress();
+  /* 内层滚动容器在边界处不把滚轮事件传给外层（修复内外窗口共用滚轮） */
+  function bindWheelContainment() {
+    document.addEventListener('wheel', function (e) {
+      var el = e.target.closest('.gram-body, .sheet-body, .palette-results, .vchips');
+      if (!el) return;
+      var delta = e.deltaY;
+      var atTop = el.scrollTop <= 0;
+      var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+      if ((delta < 0 && atTop) || (delta > 0 && atBottom)) { e.preventDefault(); e.stopPropagation(); }
+    }, { passive: false });
+    document.addEventListener('touchmove', function (e) {
+      var el = e.target.closest('.gram-body, .sheet-body, .palette-results');
+      if (!el) return;
+      var t = e.touches[0]; if (!t) return;
+      var atTop = el.scrollTop <= 0, atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+      if (atTop || atBottom) e.stopPropagation();
+    }, { passive: true });
+  }
+  bindWheelContainment();
+
+
   document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); openPalette(); return; }
+    if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.matches && e.target.matches('[role="button"][data-act]')) {
+      e.preventDefault(); e.target.click(); return;
+    }
+    if (e.key === 'Escape') { if (!$('#sheet').hidden) closeSheet(); if (!$('#palette').hidden) closePalette(); return; }
+    if (!$('#sheet').hidden || !$('#palette').hidden) return;
     if (/input|textarea|select/i.test((e.target.tagName || ''))) return;
     var key = e.key;
     var inUnit = (location.hash || '').indexOf('#/unit/') === 0 && ui.unitMode === 'card';
@@ -1655,6 +2044,8 @@
     if (!App || !App.addListener) return;
     App.addListener('backButton', function () {
       var h = location.hash || '#/units';
+      if (!$('#sheet').hidden) { closeSheet(); return; }
+      if (!$('#palette').hidden) { closePalette(); return; }
       if (quiz && quiz.running) { quiz = null; go('#/quiz'); return; }      // 答题中 → 退出本次练习
       if (review && !review.done && review.ids.length) { review = null; go('#/review'); return; }
       if (h !== '#/units' && h !== '' && h !== '#') { go('#/units'); return; }

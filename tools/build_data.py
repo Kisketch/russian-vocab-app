@@ -30,6 +30,33 @@ def read_tsv(path):
     return rows
 
 
+def read_knowledge(path):
+    """knowledge.tsv 支持「标题行以 | 结尾，正文写在下一行」的多行写法。
+
+    旧版按行读取，正文行被当成新记录丢弃，导致知识总结全部为空。
+    这里做向前合并：只有 3 列且第 4 列为空时，把后续非记录行并入正文。
+    """
+    rows = []
+    pending = None
+    with open(path, encoding="utf-8-sig") as f:
+        for raw in f:
+            line = raw.rstrip("\n").rstrip("\r").strip()
+            if not line or line.startswith("#"):
+                continue
+            cells = [c.strip() for c in line.split("|")]
+            is_record = len(cells) >= 3 and re.match(r"^u\d+$", cells[0])
+            if is_record:
+                if pending is not None:
+                    rows.append(pending)
+                pending = cells
+            elif pending is not None:
+                # 续行：接到上一行的最后一列
+                pending[-1] = (pending[-1] + "\n" + line).strip()
+    if pending is not None:
+        rows.append(pending)
+    return rows
+
+
 def main():
     units = []
     for row in read_tsv(os.path.join(SRC, "units.tsv")):
@@ -75,13 +102,30 @@ def main():
     for u in units:
         u["wordIds"] = by_unit.get(u["id"], [])
 
-    # 课文知识总结（src/knowledge.tsv：unit|分类|标题|内容）
+    # 课文知识总结（src/knowledge.tsv：unit|分类|标题|内容，正文可换行）
     knowledge = []
     cat_map = {"发音": "pron", "语法": "gram", "词汇": "vocab", "文化": "culture", "易错": "pitfall"}
-    for row in read_tsv(os.path.join(SRC, "knowledge.tsv")):
-        if len(row) >= 4:
-            u, cat, title, content = row[0], row[1], row[2], row[3]
+    for row in read_knowledge(os.path.join(SRC, "knowledge.tsv")):
+        if len(row) >= 3:
+            u, cat, title = row[0], row[1], row[2]
+            content = "|".join(row[3:]).strip()
             knowledge.append({"unit": u, "cat": cat_map.get(cat, cat), "catZh": cat, "title": title, "content": content})
+
+    # 字母表（src/alphabet.tsv：大写|小写|名称|音标|类型|例词|例词释义|发音提示）
+    alphabet = []
+    for row in read_tsv(os.path.join(SRC, "alphabet.tsv")):
+        row = (row + [""] * 8)[:8]
+        alphabet.append({
+            "upper": row[0], "lower": row[1], "name": row[2], "ipa": row[3],
+            "type": row[4], "example": row[5], "exampleZh": row[6], "note": row[7]
+        })
+
+    # 情景短语（src/phrases.tsv：分类|俄语|中文|提示）
+    phrases = []
+    for row in read_tsv(os.path.join(SRC, "phrases.tsv")):
+        row = (row + [""] * 4)[:4]
+        if row[1]:
+            phrases.append({"cat": row[0], "ru": row[1], "zh": row[2], "note": row[3]})
 
     # 内置小词典（src/dict.tsv：ru|pos|zh），供词典查询
     dict_entries = []
@@ -92,10 +136,15 @@ def main():
     payload = {
         "knowledge": knowledge,
         "dict": dict_entries,
+        "alphabet": alphabet,
+        "phrases": phrases,
         "meta": {
             "book": "走遍俄罗斯（外研社引进《Дорога в Россию》）第 1 册",
             "unitCount": len(units),
             "wordCount": len(words),
+            "alphabetCount": len(alphabet),
+            "phraseCount": len(phrases),
+            "knowledgeCount": len(knowledge),
             "note": "单元主题依教材课序编排，词条为该课核心词汇；例句为教学用原创短句。",
         },
         "units": units,

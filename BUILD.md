@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Web / PWA | `dist/` 静态站（含 Service Worker、可安装） | 任何设备、免安装、自动更新 |
 | Windows 桌面端 | Electron → NSIS 安装包 / 绿色便携版 `.exe` | Windows 10/11 x64 |
-| Android 移动端 | Capacitor → APK / AAB（Android Studio 出包） | Android 6.0+ |
+| Android 移动端 | Capacitor → APK / AAB | Android 5.1+ |
 
 ---
 
@@ -15,7 +15,7 @@
 - Node.js ≥ 18（本项目在 22 上开发验证）
 - Python 3.10+（仅构建素材时需要：音频、图标、dist）
 - 桌面端打包：无需额外安装（electron-builder 自动下载 NSIS）
-- 安卓出包：Android Studio（自带 JDK 17 与 SDK）；只想“能用”，可直接用 PWA，见第 3 节
+- 安卓出包：JDK 17 + Android SDK（命令行即可，无需 Android Studio）；只想“能用”，可直接用 PWA，见第 3 节
 
 ```bash
 npm install          # 安装 electron / electron-builder / capacitor
@@ -79,11 +79,10 @@ npm run dev      # 带开发者菜单（需 cross-env，或手动 set RUVOCAB_DE
 
 ### 方式 B：打包 APK（Capacitor）—— 本机已验证可出包
 
-**已产出（release4/）**：
-- `走遍俄罗斯词汇卡-1.2-release.apk`（8.7MB，正式签名版，推荐安装）
-- `走遍俄罗斯词汇卡-1.2-debug.apk`（9.5MB，调试签名版，同样可直接安装）
+**已产出（release/）**：
+- `走遍俄罗斯词汇卡-2.1.0-debug.apk`（约 32MB，调试签名版，可直接安装）
 
-工程已就绪：包名 `cn.yuyan.ruvocab`、版本 1.2（versionCode 3）、minSdk 22（Android 5.1+）、targetSdk 34、图标与启动图、363 个 web 资产（含 346 条音频）已打进 APK。
+工程已就绪：包名 `cn.yuyan.ruvocab`、版本 2.1.0（versionCode 11）、minSdk 22（Android 5.1+）、targetSdk 34、图标与启动图、233 词 / 466 条音频、15 课已打进 APK。
 
 #### 1. 安装构建环境（一次性，约 500MB）
 
@@ -117,9 +116,11 @@ sdk.dir=C\:\\Users\\Lgnatius\\AndroidBuild\\android-sdk
 cd android
 export JAVA_HOME="C:/Users/Lgnatius/AndroidBuild/jdk-17.0.20.1+1"
 export ANDROID_HOME="C:/Users/Lgnatius/AndroidBuild/android-sdk"
-./gradlew assembleDebug      # → app/build/outputs/apk/debug/app-debug.apk
-./gradlew assembleRelease    # → app/build/outputs/apk/release/app-release-unsigned.apk
+./gradlew assembleDebug --no-daemon   # → app/build/outputs/apk/debug/app-debug.apk
 ```
+
+> 工程路径含中文时，`android/gradle.properties` 必须保留 `android.overridePathCheck=true`，否则 Gradle 会拒绝构建。
+> 每次改完 web 代码，先 `python tools/build_web.py`，再 `npx cap sync android`，最后重编 APK。
 
 > ⚠️ **`JAVA_HOME` 必须指向完整 JDK，不能是 JRE。** 若系统 `java` 指向 JRE
 > （如 `Eclipse Adoptium\jre-21.0.12.101-hotspot`），构建会在
@@ -129,36 +130,32 @@ export ANDROID_HOME="C:/Users/Lgnatius/AndroidBuild/android-sdk"
 > 因为 Gradle 容忍该任务失败而 assets 打包照常完成，结果得到的是**旧版本号的 APK**，
 > 务必用 `aapt2 dump badging` 确认 versionCode/versionName 符合预期。
 
-#### 5. 签名 Release 版（密钥已归档在项目根目录 `ruvocab-release.jks`）
+#### 5. 发布签名（可选，正式上架才需要）
+
+当前 `release/` 里是 **debug 签名** APK，适合自用/测试，不适合上架。正式发布请自行生成并妥善保管 keystore：
 
 ```bash
-# 生成密钥（已生成过，换新密钥时才需要）
 keytool -genkeypair -v -keystore ruvocab-release.jks -alias ruvocab -keyalg RSA -keysize 2048 \
-  -validity 10000 -storepass ruvocab2026 -keypass ruvocab2026 -dname "CN=RuVocab, C=CN"
-
-# 对齐 + 签名
-zipalign -p -f 4 app-release-unsigned.apk aligned.apk
-apksigner sign --ks ../ruvocab-release.jks --ks-key-alias ruvocab \
-  --ks-pass pass:ruvocab2026 --key-pass pass:ruvocab2026 --out 走遍俄罗斯词汇卡-1.2-release.apk aligned.apk
-apksigner verify --print-certs 走遍俄罗斯词汇卡-1.2-release.apk
+  -validity 10000 -dname "CN=RuVocab, C=CN"
+./gradlew assembleRelease --no-daemon
 ```
 
-> 密钥库密码 `ruvocab2026`（store 与 key 相同），别名 `ruvocab`，归档于项目根目录。若要正式上架，请更换为自己的密钥与密码，并改 `android/app/build.gradle` 的 `signingConfigs` 让 Gradle 自动签名。
+然后用 Android SDK 的 `zipalign` 与 `apksigner` 对齐、签名 `app-release-unsigned.apk`。**keystore 与密码不要提交到仓库**；同一密钥才能覆盖升级已安装的正式版。
 
 #### 6. 安装到手机
 
-把 APK 传到手机（数据线 / 微信文件传输 / 网盘），点击安装；系统提示"允许安装未知来源应用"时放行即可。两个 APK **不要同时安装**（签名不同会冲突），装一个就行——推荐 release 版。
+把 APK 传到手机（数据线 / 微信文件传输 / 网盘），点击安装；系统提示"允许安装未知来源应用"时放行即可。若手机里装过旧签名版本，需先卸载旧版再装（签名不同会冲突）。
 
 #### 7. 以后更新 App
 
-改 web 代码 → `python tools/build_web.py` → `python tools/sync_android.py` → 上面的第 4、5 步重编重签（同一密钥签名才能覆盖安装）。
+改 web 代码 → `python tools/build_web.py` → `npx cap sync android` → 上面的第 4 步重编。用同一份 keystore 签名后才能覆盖安装。
 
 ## 4. 音频说明
 
 - `python tools/gen_audio.py` 使用微软 Edge 神经语音生成（**自动应用 96kbps 高码率补丁**，实测 48kHz/PCM/Opus 端点不支持）：
   - 单词：`ru-RU-SvetlanaNeural`，语速 -5%（标准、略慢）
   - 例句：`ru-RU-SvetlanaNeural`，语速 -10%（更从容，适合跟读）
-- 产物 `assets/audio/words/<id>.mp3` 与 `assets/audio/sent/<id>.mp3`（24kHz/96kbps 单声道），全量约 10 MB
+- 产物 `assets/audio/words/<id>.mp3` 与 `assets/audio/sent/<id>.mp3`（24kHz/96kbps 单声道），233 词 + 233 例句，全量约 13.5 MB
 - 脚本支持断点续传：中断后重新运行会自动补齐缺失文件；`--force` 全部重生成
 - 换男声：`python tools/gen_audio.py --voice ru-RU-DmitryNeural --force`
 - 运行时优先播放本地 MP3；文件缺失时自动回退到系统 TTS（Web Speech API）

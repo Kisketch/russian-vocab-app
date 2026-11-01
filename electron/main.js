@@ -31,7 +31,7 @@ function createWindow() {
     minWidth: 760,
     minHeight: 560,
     show: false,
-    backgroundColor: '#f5f6f8',
+    backgroundColor: '#f4f0e7',
     title: '走遍俄罗斯 · 词汇卡片',
     ...(icon ? { icon } : {}),
     webPreferences: {

@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f6f7f9">
+<meta name="theme-color" content="#f4f0e7">
+<meta name="color-scheme" content="light dark">
 <title>走遍俄罗斯 · 词汇卡片</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/favicon.ico">
@@ -12,27 +13,28 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="俄语词汇卡">
-<meta name="description" content="《走遍俄罗斯》词汇学习：图文卡片、情景例句、真人发音、间隔重复复习。">
+<meta name="description" content="《走遍俄罗斯》词汇学习：图文卡片、情景例句、真人发音、字母表、情景短语、间隔重复复习。">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="grain" aria-hidden="true"></div>
 <div class="app" id="app">
   <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 32 32" width="28" height="28"><rect width="32" height="32" rx="9" fill="#3f6f96"/><path d="M7 9h6v14c0 .6-.4 1-1 1s-1-.4-1-1V10H7V9zm10 0h6v14c0 .6-.4 1-1 1s-1-.4-1-1V10h-4V9z" fill="#fff"/></svg>
-      </div>
-      <div class="brand-text">
+    <a class="brand" href="#/units" aria-label="返回学习首页">
+      <span class="brand-mark" aria-hidden="true">Д</span>
+      <span class="brand-text">
         <strong>走遍俄罗斯</strong>
         <span>Дорога в Россию · 词汇卡</span>
-      </div>
-    </div>
-    <nav class="nav" id="nav">
+      </span>
+    </a>
+    <nav class="nav" id="nav" aria-label="主导航">
       <a href="#/units" data-key="units"><span class="ico" data-ico="learn"></span><em>学习</em><i class="pill" data-count="units"></i></a>
       <a href="#/list" data-key="list"><span class="ico" data-ico="list"></span><em>课本词表</em></a>
       <a href="#/dict" data-key="dict"><span class="ico" data-ico="dict"></span><em>词典</em></a>
       <a href="#/gram" data-key="gram"><span class="ico" data-ico="gram"></span><em>语法</em></a>
       <a href="#/know" data-key="know"><span class="ico" data-ico="know"></span><em>知识总结</em></a>
+      <a href="#/alphabet" data-key="alphabet"><span class="ico" data-ico="alpha"></span><em>字母表</em></a>
+      <a href="#/phrases" data-key="phrases"><span class="ico" data-ico="phrase"></span><em>情景短语</em></a>
       <a href="#/quiz" data-key="quiz"><span class="ico" data-ico="quiz"></span><em>练习</em></a>
       <a href="#/review" data-key="review"><span class="ico" data-ico="review"></span><em>复习</em><i class="pill" data-count="due"></i></a>
       <a href="#/book" data-key="book"><span class="ico" data-ico="book"></span><em>生词本</em><i class="pill" data-count="book"></i></a>
@@ -41,18 +43,27 @@
     </nav>
     <div class="side-foot">
       <div class="due-card" id="sideDue"></div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换深色模式">
+        <span class="theme-ico" aria-hidden="true"></span><span class="theme-label">深色模式</span>
+      </button>
     </div>
   </aside>
 
-  <main class="main">
+  <main class="main" id="main">
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"><i></i></div>
     <header class="topbar">
       <div class="topbar-inner">
         <div class="topbar-title">
+          <span class="kicker" id="pageKicker">УЧЕБНИК · 01</span>
           <h1 id="pageTitle">学习</h1>
           <p id="pageSub">按教材单元浏览单词</p>
         </div>
         <div class="topbar-tools">
+          <span class="streak-chip" id="streakChip" title="连续学习天数"></span>
           <span class="tag" id="dueTag" title="今天到期需要复习的单词"></span>
+          <button class="icon-btn search-btn" id="openSearch" title="搜索单词（Ctrl+K）" aria-label="搜索单词">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          </button>
           <button class="icon-btn" id="speakToggle" title="自动朗读开关" aria-label="自动朗读开关"></button>
           <button class="icon-btn" id="navSettings" data-act="go" data-hash="#/settings" title="设置" aria-label="设置"></button>
         </div>
@@ -62,17 +73,37 @@
   </main>
 </div>
 
-<nav class="tabbar" id="tabbar" role="navigation" aria-label="主导航">
+<nav class="tabbar" id="tabbar" role="navigation" aria-label="移动端主导航">
   <a href="#/units" data-key="units"><span class="ico" data-ico="learn"></span><em>学习</em></a>
   <a href="#/list" data-key="list"><span class="ico" data-ico="list"></span><em>词表</em></a>
-  <a href="#/dict" data-key="dict"><span class="ico" data-ico="dict"></span><em>词典</em></a>
   <a href="#/quiz" data-key="quiz"><span class="ico" data-ico="quiz"></span><em>练习</em></a>
   <a href="#/review" data-key="review"><span class="ico" data-ico="review"></span><em>复习</em><i class="dot" data-count="due"></i></a>
-  <a href="#/book" data-key="book"><span class="ico" data-ico="book"></span><em>生词</em><i class="dot" data-count="book"></i></a>
-  <a href="#/stats" data-key="stats"><span class="ico" data-ico="stats"></span><em>统计</em></a>
+  <button type="button" class="tab-more" id="tabMore"><span class="ico" data-ico="more"></span><em>更多</em></button>
 </nav>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+
+<div class="palette" id="palette" hidden>
+  <div class="palette-panel" role="dialog" aria-modal="true" aria-label="搜索">
+    <div class="palette-input">
+      <span class="palette-ico">⌕</span>
+      <input id="paletteInput" type="search" placeholder="搜索俄语或中文…" autocomplete="off" spellcheck="false">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="palette-results" id="paletteResults"></div>
+    <div class="palette-foot">↑↓ 选择 · Enter 打开 · 支持俄语变格反查与中文释义</div>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-backdrop" data-close-sheet></div>
+  <div class="sheet-panel" role="dialog" aria-modal="true" aria-label="详情">
+    <div class="sheet-grab" aria-hidden="true"></div>
+    <button class="sheet-close" type="button" data-close-sheet aria-label="关闭">×</button>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</div>
 
 <script src="js/data.js"></script>
 <script src="js/scenes.js"></script>
@@ -82,8 +113,6 @@
 <script src="js/grammar.js"></script>
 <script src="js/app.js"></script>
 <script>
-  /* PWA 离线能力：仅在浏览器/PWA 环境注册 Service Worker。
-     原生 App（Capacitor）内资源已随包分发，注册 SW 反而会在升级后命中旧缓存，故跳过。 */
   (function () {
     var isNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
     if (!isNative && 'serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {

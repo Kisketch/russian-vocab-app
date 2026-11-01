@@ -23,6 +23,9 @@ def main():
         print("dist/ 不存在，请先运行 python tools/build_web.py")
         return 1
     if not os.path.isdir(os.path.dirname(DST)):
+        # Capacitor 工程首次同步时 assets/ 目录可能尚未创建，按需补建
+        os.makedirs(os.path.dirname(DST), exist_ok=True)
+    if not os.path.isdir(os.path.join(ROOT, "android", "app")):
         print("未找到 android 工程，请先执行 npx cap add android")
         return 1
     os.makedirs(DST, exist_ok=True)

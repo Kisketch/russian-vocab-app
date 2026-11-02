@@ -1803,7 +1803,7 @@
     h += '<label class="switch"><input type="checkbox" data-act="set-auto" ' + (st.autoSpeak ? 'checked' : '') + '><span class="track"></span><span class="switch-text">卡片出现时自动朗读俄语<small>翻到新词时自动播放发音</small></span></label>';
     h += '<label class="switch"><input type="checkbox" data-act="set-slow" ' + (st.slow ? 'checked' : '') + '><span class="track"></span><span class="switch-text">慢速朗读<small>约 0.8 倍速，适合跟读</small></span></label>';
     h += '<label class="switch"><input type="checkbox" data-act="set-tts" ' + (st.ttsOnly ? 'checked' : '') + '><span class="track"></span><span class="switch-text">仅使用系统语音<small>不播放内置真人发音</small></span></label>';
-    var stressed = WORDS.filter(function (w) { return w.ru_stress && w.ru_stress !== w.ru; }).length;
+    var stressed = WORDS.filter(function (w) { return !!w.ru_stress; }).length;
     h += '<label class="switch' + (stressed ? '' : ' is-disabled') + '"><input type="checkbox" data-act="set-stress" ' + (stressed && st.showStress !== false ? 'checked' : '') + (stressed ? '' : ' disabled') + '><span class="track"></span><span class="switch-text">显示重音符号<small>' + (stressed ? '已标注 ' + stressed + ' / ' + WORDS.length + ' 词' : '当前词库尚未标注重音，暂以真人发音为准') + '</small></span></label>';
     h += '<label class="switch"><input type="checkbox" data-act="set-cursive" ' + (st.showCursive === false ? '' : 'checked') + '><span class="track"></span><span class="switch-text">单词下方显示手写体<small>对照印刷体与手写体</small></span></label>';
     h += '<div style="display:flex;gap:10px;align-items:center;margin-top:10px">' +

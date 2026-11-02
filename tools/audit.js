@@ -69,8 +69,10 @@ async function playQuiz(c, limit) {
     });
     ok('例句含词干比例 ' + (c.DATA.words.length - noStem.length) + '/' + c.DATA.words.length +
       '，其余为变格/变位形式（如需初学者友好应做词形提示）');
-    issue('P2', '全库无重音标记（stress），初学者无法判断重音位置', '0/' + c.DATA.words.length +
-      ' 词含重音符，例如 ' + c.DATA.words.slice(0, 3).map(w => w.ru).join(' / '));
+    const stressed = c.DATA.words.filter(w => !!w.ru_stress).length;
+    if (stressed === c.DATA.words.length) ok('全库 233 词已标注重音（含 ё 词形）');
+    else issue('P2', '部分词条缺少重音标记', stressed + '/' + c.DATA.words.length +
+      ' 词含重音符，例如 ' + c.DATA.words.filter(w => !w.ru_stress).slice(0, 3).map(w => w.ru).join(' / '));
     const noExTrans = c.DATA.words.filter(w => !w.ex_zh || !w.ex_ru);
     ok('例句字段完整：缺例句 ' + noExTrans.length + ' 条');
   }

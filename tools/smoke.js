@@ -169,7 +169,7 @@ async function nav(hash) {
   click($('[data-act="review-show"]'));
   assert($('[data-act="review-grade"]') !== null, '自评面板出现（忘了/模糊/清楚）');
   // 队列已随机化，按当前卡片显示的单词定位目标
-  const ruShown = $('.flashcard .ru').textContent.trim();
+  const ruShown = $('.flashcard .ru').textContent.trim().replace(/\u0301/g, '');
   const shownId = win.RV_DATA.words.filter(w => w.ru === ruShown)[0].id;
   const lvBefore = win.RVStore.get(shownId).lv;
   const gapBefore = win.RVStore.get(shownId).due - Date.now();
@@ -180,7 +180,7 @@ async function nav(hash) {
   assert(after.due - Date.now() > gapBefore, '下次复习间隔被延长');
   // 评「忘了」应回到生词本
   if ($('.flashcard')) {
-    const ruNow = $('.flashcard .ru').textContent.trim();
+    const ruNow = $('.flashcard .ru').textContent.trim().replace(/\u0301/g, '');
     click($('[data-act="review-show"]'));
     click($('[data-act="review-grade"][data-q="0"]'));
     await tick();

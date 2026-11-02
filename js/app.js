@@ -1,4 +1,4 @@
-/* 走遍俄罗斯词汇卡 · 主程序（零依赖原生实现） */
+﻿/* 走遍俄罗斯词汇卡 · 主程序（零依赖原生实现） */
 (function () {
   'use strict';
 
@@ -651,7 +651,7 @@
         h += '<div class="vrow" data-act="open-word" data-unit="' + u.id + '" data-idx="' + i + '" role="button" tabindex="0">' +
           '<span class="vnum">' + (i + 1) + '</span>' +
           '<div class="vword"><span class="v-ru">' + esc(ruText(w)) + '</span></div>' +
-          '<span class="v-cursive">' + esc(ruText(w)) + '</span>' +
+          '<span class="v-cursive">' + esc(w.ru) + '</span>' +
           '<span class="v-pos">' + esc(w.pos) + '</span>' +
           '<span class="v-zh">' + esc(w.zh) + '</span>' +
           '<button class="mini v-speak" data-act="speak" data-text="' + esc(w.ru) + '" aria-label="朗读 ' + esc(w.ru) + '">' + ico('sound', 15) + '</button>' +
@@ -712,7 +712,7 @@
         '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
         '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '" aria-label="朗读">' + ico('sound', 19) + '</button></div>' +
         (S.state.settings.showCursive === false ? '' :
-          '<div class="cursive-line"><span class="cursive-tag">手写体</span><span class="ru-cursive">' + esc(ruText(w)) + '</span></div>') +
+          '<div class="cursive-line"><span class="cursive-tag">手写体</span><span class="ru-cursive">' + esc(w.ru) + '</span></div>') +
         '<div class="pos">' + esc(w.pos) + '</div>' +
         '<div class="card-meta"><span>第 ' + u.no + ' 课</span><span>' + w.slots + ' 个字母</span><span>' + esc(u.zh) + '</span></div>' +
         '<div class="memory-tip"><b>记忆提示</b> · ' + esc(SCENE_DESC[w.scene] || '结合场景记忆') + '。先看图回忆词义，再点击卡片核对。</div>' +
@@ -741,8 +741,12 @@
         '<span class="ex-ru">' + highlight(w.ru, w.ex_ru) + '</span></div>' +
         '<div class="ex-zh">' + esc(w.ex_zh) + '</div>' +
         '</div>' +
-        '<div class="hint-flip tail">再次点击卡片返回正面</div>' +
         grammarPanel(w) +
+        '<div class="back-info"><div class="back-info-row"><b>用法</b><span>' + esc(wordExplain(w)) + '</span></div>' +
+        '<div class="back-info-row"><b>本课词</b><span class="back-chips">' +
+        relatedWords(w).slice(0, 4).map(function (x) { return '<button class="chip pick" data-act="open-word-sheet" data-id="' + x.id + '">' + esc(x.ru) + '</button>'; }).join('') +
+        '</span></div></div>' +
+        '<div class="hint-flip tail">再次点击卡片返回正面</div>' +
         '</div></div>' +
         '</div></div>';
 
@@ -1150,7 +1154,7 @@
       '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
       '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '">' + ico('sound', 19) + '</button></div>' +
       (S.state.settings.showCursive === false ? '' :
-        '<div class="cursive-line"><span class="cursive-tag">手写体</span><span class="ru-cursive">' + esc(ruText(w)) + '</span></div>') +
+        '<div class="cursive-line"><span class="cursive-tag">手写体</span><span class="ru-cursive">' + esc(w.ru) + '</span></div>') +
       '<div class="pos">' + esc(w.pos) + '</div>' +
       '<div class="hint-flip tail">先回忆词义，再点「显示释义」自评</div>' +
       '</div></div>' +
@@ -1626,7 +1630,7 @@
       '<div class="wd-meta"><span class="chip">' + esc(w.pos) + '</span><span class="chip">第 ' + u.no + ' 课 · ' + esc(u.zh) + '</span>' +
       tags.map(function (t) { return '<span class="chip">' + esc(t) + '</span>'; }).join('') + '</div>' +
       (S.state.settings.showCursive === false ? '' :
-        '<div class="cursive-line" style="justify-content:flex-start"><span class="cursive-tag">手写体</span><span class="ru-cursive" style="font-size:28px">' + esc(ruText(w)) + '</span></div>') +
+        '<div class="cursive-line" style="justify-content:flex-start"><span class="cursive-tag">手写体</span><span class="ru-cursive" style="font-size:28px">' + esc(w.ru) + '</span></div>') +
       '</div>';
 
     if (w.img) h += '<div class="wd-cover">' + sceneImg(w) + '</div>';

@@ -43,12 +43,14 @@ npm run dist:win
 bash tools/pack_win.sh     # 追加生成绿色便携版 zip
 ```
 
-产物（默认输出到 `release3/`，electron-builder 输出目录可用 `-c.directories.output=xxx` 覆盖）：
+产物（默认输出到 `release/`）：
 
-- `RuVocab-1.1.0-x64.exe` —— NSIS 安装包（可选安装目录、桌面快捷方式、中文卸载项）
-- `RuVocab-Portable-1.1.0.zip` —— 免安装绿色版，解压后双击 `RuVocab.exe` 即用
-- `win-unpacked/RuVocab.exe` —— 解包目录（已用 rcedit 写入应用图标与版本信息）
+- `RuVocab-2.2.0-x64.exe` —— NSIS 安装包（可选安装目录、桌面快捷方式、中文卸载项）
+- `win-unpacked/RuVocab.exe` —— 免安装目录，需保留整个 `win-unpacked`
+- `release/keys/ruvocab-codesign.pfx` / `.cer` —— 本机自签名代码证书；安装包与 `RuVocab.exe` 已用该证书签名
 
+> **Windows 签名说明**：该证书是自签名证书，不是公共 CA 证书。签名已写入 EXE，但其他电脑仍会显示“未知发布者”，除非先安装 `ruvocab-codesign.cer` 到“受信任的根证书颁发机构”。要消除 SmartScreen 提示，必须购买/申请受信任的代码签名证书，或使用 Azure Trusted Signing 等服务。证书密码保存在 `release/keys/README.txt`，`release/` 不纳入 Git。
+>
 > `package.json` 中 `signAndEditExecutable: false`：跳过 winCodeSign 环节（其压缩包含 macOS 符号链接，非管理员环境解压会失败）；应用图标与版本信息随后由 `rcedit-x64.exe` 写入，窗口图标在 `electron/main.js` 中指定，不受影响。
 
 日常开发调试：
@@ -80,7 +82,9 @@ npm run dev      # 带开发者菜单（需 cross-env，或手动 set RUVOCAB_DE
 ### 方式 B：打包 APK（Capacitor）—— 本机已验证可出包
 
 **已产出（release/）**：
-- `走遍俄罗斯词汇卡-2.2.0-debug.apk`（约 32MB，调试签名版，可直接安装）
+- `走遍俄罗斯词汇卡-2.2.0-release.apk`（约 31.5MB，**正式 release 签名**，推荐安装）
+- `走遍俄罗斯词汇卡-2.2.0-debug.apk`（约 32.5MB，调试签名，仅测试对比）
+- `release/keys/ruvocab-release.jks` + `release/keys/README.txt`（签名密钥与密码，勿提交/勿丢失）
 
 工程已就绪：包名 `cn.yuyan.ruvocab`、版本 2.2.0（versionCode 12）、minSdk 22（Android 5.1+）、targetSdk 34、图标与启动图、233 词 / 466 条音频、15 课已打进 APK。
 
@@ -130,17 +134,29 @@ export ANDROID_HOME="C:/Users/Lgnatius/AndroidBuild/android-sdk"
 > 因为 Gradle 容忍该任务失败而 assets 打包照常完成，结果得到的是**旧版本号的 APK**，
 > 务必用 `aapt2 dump badging` 确认 versionCode/versionName 符合预期。
 
-#### 5. 发布签名（可选，正式上架才需要）
+#### 5. 发布签名（已生成正式 release APK）
 
-当前 `release/` 里是 **debug 签名** APK，适合自用/测试，不适合上架。正式发布请自行生成并妥善保管 keystore：
+`release/走遍俄罗斯词汇卡-2.2.0-release.apk` 已用项目自带的 release keystore 签名：
+
+- 密钥：`release/keys/ruvocab-release.jks`
+- 别名：`ruvocab`
+- 密码：见 `release/keys/README.txt`（**不要提交 keystore 与密码**）
+- 证书 SHA-256：`5e8dec4c3dbb05751f518560f3f12c0d3b9725daa46e206b522566b8c361497b`
+
+重新签名流程：
 
 ```bash
-keytool -genkeypair -v -keystore ruvocab-release.jks -alias ruvocab -keyalg RSA -keysize 2048 \
-  -validity 10000 -dname "CN=RuVocab, C=CN"
+cd android
 ./gradlew assembleRelease --no-daemon
+# 产出 app/build/outputs/apk/release/app-release-unsigned.apk
+
+zipalign -p -f 4 app-release-unsigned.apk aligned.apk
+apksigner sign --ks ../release/keys/ruvocab-release.jks \
+  --ks-key-alias ruvocab --out ../release/走遍俄罗斯词汇卡-2.2.0-release.apk aligned.apk
+apksigner verify --print-certs ../release/走遍俄罗斯词汇卡-2.2.0-release.apk
 ```
 
-然后用 Android SDK 的 `zipalign` 与 `apksigner` 对齐、签名 `app-release-unsigned.apk`。**keystore 与密码不要提交到仓库**；同一密钥才能覆盖升级已安装的正式版。
+> **同一密钥才能覆盖升级**已安装的 release 版；丢失 keystore 后只能换包名或让用户卸载重装。debug 版与 release 版签名不同，不能互相覆盖安装。
 
 #### 6. 安装到手机
 

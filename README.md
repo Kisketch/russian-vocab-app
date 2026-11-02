@@ -2,7 +2,7 @@
 
 > GitHub 仓库：<https://github.com/Kisketch/russian-vocab-app>
 > 安装包 Release（线上最新 v2.0.3）：https://github.com/Kisketch/russian-vocab-app/releases/tag/v2.0.3
-> 本地 v2.2.0 构建产物见 `release/`（Windows 安装包、Android APK、预览图）
+> 本地 v2.2.0 构建产物见 `release/`（Windows 安装包、Android release APK、预览图、签名文件）
 
 一套**离线可用**的俄语背单词应用：图文卡片 + 情景例句 + 真人发音 + 四类题型练习 + 间隔重复复习 + 学习可视化。
 词库按外研社《走遍俄罗斯》（引进版 *Дорога в Россию*）第 1 册的课序主题编排，交互与内容组织方式参考「百词斩」——**看图记词、情景例句、词汇与例句强关联**。
@@ -144,9 +144,9 @@ russian-vocab/
 cd dist && python -m http.server 8080
 ```
 
-**Windows 桌面端**：运行安装包 `RuVocab-1.2.0-x64.exe`，或解压 `RuVocab-Portable-1.2.0.zip` 后双击 `RuVocab.exe`。
+**Windows 桌面端**：运行安装包 `release/RuVocab-2.2.0-x64.exe`（自签名，首次可能出现 SmartScreen 提示），或解压 `release/win-unpacked/` 后双击 `RuVocab.exe`。
 
-**Android**：安装 `release/走遍俄罗斯词汇卡-2.2.0-debug.apk`（调试签名，Android 5.1+，需允许安装未知来源应用；正式上架需自行配置 release keystore 重签）。
+**Android**：安装 `release/走遍俄罗斯词汇卡-2.2.0-release.apk`（正式 release 签名，Android 5.1+，需允许安装未知来源应用）。`-debug.apk` 仅用于对比测试；两者签名不同，不能互相覆盖安装。
 
 **从源码构建三端**：见 [BUILD.md](BUILD.md)。
 

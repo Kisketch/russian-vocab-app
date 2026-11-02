@@ -207,7 +207,8 @@
     $('#pageTitle').textContent = t[0];
     $('#pageSub').textContent = sub || t[1];
     var kick = $('#pageKicker'); if (kick) kick.textContent = KICKERS[key] || KICKERS.units;
-    $$('#nav a').forEach(function (a) { a.classList.toggle('active', a.dataset.key === key); });
+    var navKey = { typing: 'tools', cursive: 'tools', speak: 'tools', notes: 'tools', game: 'tools', resources: 'tools' }[key] || key;
+    $$('#nav a').forEach(function (a) { a.classList.toggle('active', a.dataset.key === navKey); });
     var tabMap = { unit: 'units', alphabet: 'more', phrases: 'more', tools: 'more', typing: 'more', cursive: 'more', speak: 'more', notes: 'more', game: 'more', resources: 'more', dict: 'more', gram: 'more', know: 'more', book: 'more', stats: 'more', settings: 'more' };
     var tk = tabMap[key] || key;
     $$('#tabbar a').forEach(function (a) { a.classList.toggle('active', a.dataset.key === tk); });
@@ -803,14 +804,15 @@
 
   function renderQuizSetup() {
     if (!quizSetup.units.length) quizSetup.units = UNITS.map(function (u) { return u.id; });
+    var allUnits = quizSetup.units.length === UNITS.length;
     var bookN = S.wordbookIds(ALL_IDS).length;
     var h = '<div class="quiz"><div class="card" style="padding:18px">';
     h += '<div class="section-head"><h2>练习设置</h2><span>即时反馈，错题自动进生词本</span></div>';
     h += '<div class="field"><label>范围：单元多选</label><div class="picker">' +
-      '<button class="pick' + (quizSetup.units.length === UNITS.length ? ' on' : '') + '" data-act="q-units-all">全部</button>' +
+      '<button class="pick' + (allUnits ? ' on' : '') + '" data-act="q-units-all">全部</button>' +
       '<button class="pick" data-act="q-units-none">清空</button>';
     UNITS.forEach(function (u) {
-      h += '<button class="pick' + (quizSetup.units.indexOf(u.id) >= 0 ? ' on' : '') + '" data-act="q-unit" data-id="' + u.id + '">' +
+      h += '<button class="pick' + (!allUnits && quizSetup.units.indexOf(u.id) >= 0 ? ' on' : '') + '" data-act="q-unit" data-id="' + u.id + '">' +
         u.no + '. ' + esc(u.zh) + ' <span class="cnt">' + wordsOfUnit[u.id].length + '</span></button>';
     });
     h += '</div></div>';
@@ -1648,7 +1650,8 @@
       h += '<p class="wd-note">固定搭配按整体记忆，不拆分词素。</p>';
     }
     h += '<div class="wd-tags">' + tags.map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</div>';
-    h += grammarPanel(w, true) + '</div>';
+    var gp = grammarPanel(w, true);
+    h += (gp || '<p class="wd-note">该词没有变格/变位表，按固定表达记忆。</p>') + '</div>';
 
     if (rel.length) {
       h += '<div class="wd-sec"><h3>' + ico('learn', 15) + ' 同课词汇</h3><div class="wd-rel">' +
@@ -1663,7 +1666,7 @@
     h += '<div class="wd-sec"><h3>' + ico('mic', 15) + ' 发音练习</h3>' +
       '<p class="wd-note">先听标准发音，再录下自己的跟读；录音仅保存在本次会话，不会上传。</p>' +
       '<div class="wd-actions"><button class="btn sm" data-act="record-word" data-id="' + id + '">' + ico('mic', 14) + ' <span id="recLabel">录音跟读</span></button>' +
-      '<button class="btn sm" data-act="play-rec" ' + (recState.url ? '' : 'disabled') + '>' + ico('sound', 14) + ' 播放我的录音</button>' +
+      '<button class="btn sm" data-act="play-rec" ' + (recState.url && recState.id === id ? '' : 'disabled') + '>' + ico('sound', 14) + ' 播放我的录音</button>' +
       '<button class="btn sm" data-act="score-word" data-id="' + id + '">' + ico('spark', 14) + ' 识别评分</button></div>' +
       '<div class="pron-result" id="pronResult"></div></div>';
 
@@ -2401,6 +2404,8 @@
     document.addEventListener('wheel', function (e) {
       var el = e.target.closest('.gram-body, .sheet-body, .palette-results, .vchips');
       if (!el) return;
+      var canScroll = el.scrollHeight > el.clientHeight + 1;
+      if (!canScroll) return;
       var delta = e.deltaY;
       var atTop = el.scrollTop <= 0;
       var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
@@ -2409,6 +2414,7 @@
     document.addEventListener('touchmove', function (e) {
       var el = e.target.closest('.gram-body, .sheet-body, .palette-results');
       if (!el) return;
+      if (el.scrollHeight <= el.clientHeight + 1) return;
       var t = e.touches[0]; if (!t) return;
       var atTop = el.scrollTop <= 0, atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
       if (atTop || atBottom) e.stopPropagation();
@@ -2494,6 +2500,8 @@
       if (!$('#palette').hidden) { closePalette(); return; }
       if (quiz && quiz.running) { quiz = null; go('#/quiz'); return; }      // 答题中 → 退出本次练习
       if (review && !review.done && review.ids.length) { review = null; go('#/review'); return; }
+      var toolsBack = { '#/typing': 1, '#/cursive': 1, '#/speak': 1, '#/notes': 1, '#/game': 1, '#/resources': 1 };
+      if (toolsBack[h]) { go('#/tools'); return; }
       if (h !== '#/units' && h !== '' && h !== '#') { go('#/units'); return; }
       if (App.exitApp) App.exitApp();
     });

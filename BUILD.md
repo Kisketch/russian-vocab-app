@@ -49,7 +49,7 @@ bash tools/pack_win.sh     # 追加生成绿色便携版 zip
 - `win-unpacked/RuVocab.exe` —— 免安装目录，需保留整个 `win-unpacked`
 - `release/keys/ruvocab-codesign.pfx` / `.cer` —— 本机自签名代码证书；安装包与 `RuVocab.exe` 已用该证书签名
 
-> **Windows 签名说明**：该证书是自签名证书，不是公共 CA 证书。签名已写入 EXE，但其他电脑仍会显示“未知发布者”，除非先安装 `ruvocab-codesign.cer` 到“受信任的根证书颁发机构”。要消除 SmartScreen 提示，必须购买/申请受信任的代码签名证书，或使用 Azure Trusted Signing 等服务。证书密码保存在 `release/keys/README.txt`，`release/` 不纳入 Git。
+> **Windows 签名说明**：`win-unpacked/RuVocab.exe` 已用本机自签名证书写入 Authenticode 签名，但该证书不是公共 CA 证书，其他电脑仍会显示“未知发布者”，除非先安装 `ruvocab-codesign.cer` 到“受信任的根证书颁发机构”。**NSIS 安装包本身未签名**：实测用 PowerShell 追加签名后安装器在启动时崩溃（System.dll / 0xc0000005），因此保留未签名安装包以保证可安装；如需签名安装包，请用公共 CA 证书和 signtool 重新构建。证书密码保存在 `release/keys/README.txt`，`release/` 不纳入 Git。
 >
 > `package.json` 中 `signAndEditExecutable: false`：跳过 winCodeSign 环节（其压缩包含 macOS 符号链接，非管理员环境解压会失败）；应用图标与版本信息随后由 `rcedit-x64.exe` 写入，窗口图标在 `electron/main.js` 中指定，不受影响。
 

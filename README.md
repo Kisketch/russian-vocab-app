@@ -144,7 +144,7 @@ russian-vocab/
 cd dist && python -m http.server 8080
 ```
 
-**Windows 桌面端**：运行安装包 `release/RuVocab-2.2.0-x64.exe`（自签名，首次可能出现 SmartScreen 提示），或解压 `release/win-unpacked/` 后双击 `RuVocab.exe`。
+**Windows 桌面端**：运行安装包 `release/RuVocab-2.2.0-x64.exe`（NSIS 安装包；为避免自签名导致安装器崩溃，安装包本身未签名），或解压 `release/win-unpacked/` 后双击 `RuVocab.exe`（该 exe 已做自签名 Authenticode）。
 
 **Android**：安装 `release/走遍俄罗斯词汇卡-2.2.0-release.apk`（正式 release 签名，Android 5.1+，需允许安装未知来源应用）。`-debug.apk` 仅用于对比测试；两者签名不同，不能互相覆盖安装。
 

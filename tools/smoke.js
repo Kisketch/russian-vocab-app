@@ -249,6 +249,33 @@ async function nav(hash) {
   assert(win.location.hash === '#/unit/u01', '点词行跳转到对应课的学习卡');
   await nav('#/list');
 
+  console.log('— 工具箱与词条详情 —');
+  await nav('#/tools');
+  assert($$('.tool-tile').length === 9, '工具箱渲染 9 个工具（实际 ' + $$('.tool-tile').length + '）');
+  await nav('#/typing');
+  assert($('#typeInput') !== null && $('[data-act="typing-check"]') !== null, '打字练习输入与检查按钮渲染');
+  $('#typeInput').value = 'тест';
+  click($('[data-act="typing-check"]'));
+  await tick();
+  assert($('#typeFb').textContent.indexOf('正确答案') >= 0, '打字练习错误反馈含正确答案');
+  await nav('#/game');
+  await tick(120);
+  assert($$('.match-card').length === 10 && $$('.match-card.ru').length === 5, '单词配对渲染 5 组 / 10 张卡');
+  const ruCard = $$('.match-card').find(c => c.dataset.kind === 'ru');
+  const zhCard = $$('.match-card').find(c => c.dataset.kind === 'zh' && c.dataset.id === ruCard.dataset.id);
+  click(ruCard); click(zhCard); await tick();
+  assert($$('.match-card.ok').length === 2 && $('#matchMoves').textContent === '1', '配对正确后标记并计步');
+  await nav('#/dict');
+  await tick(120);
+  click($('[data-act="dict-pick"]'));
+  await tick(80);
+  click($('.dict-row[data-act="open-word-sheet"]'));
+  await tick(120);
+  assert($$('.wd-sec').length >= 6, '词条详情含释义/例句/形态/同课/笔记/发音（实际 ' + $$('.wd-sec').length + '）');
+  assert($('#wordNote') !== null && $('.morph-parts') !== null, '词条详情含笔记与形态学分析');
+  click($('[data-close-sheet]'));
+  await tick(80);
+
   console.log('— 设置与持久化 —');
   await nav('#/settings');
   assert($('[data-act="export-json"]') !== null, '设置页渲染导出/清空控件');

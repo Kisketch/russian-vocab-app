@@ -66,6 +66,11 @@
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/>',
     moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
     spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9z"/>',
+    mic: '<path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3M9 21h6"/>',
+    note: '<path d="M5 3h11l3 3v15H5z"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+    tool: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2z"/>',
+    type: '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M7 14h10"/>',
+    link: '<path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2a5 5 0 0 0 7.1 7.1l1.1-1.1"/>',
     fire: '<path d="M12 22c4 0 7-2.6 7-6.5 0-3.2-2-5.3-3.7-7.2C13.9 6.6 13 4.8 13 2c-2.2 1.3-3.5 3.2-3.5 5.2 0 1.3.5 2.4 1.2 3.3C7.5 11.4 5 13.9 5 16.5 5 20 7.8 22 12 22z"/>'
 
   };
@@ -172,6 +177,13 @@
     know: ['课文知识总结', '发音 · 语法句型 · 词汇 · 文化 · 易错点'],
     alphabet: ['俄语字母表', '33 个字母 · 名称 · 发音 · 例词'],
     phrases: ['情景短语', '问候 · 课堂 · 购物 · 餐厅 · 问路 · 旅行'],
+    tools: ['工具箱', '打字 · 手写 · 朗读 · 笔记 · 学习资源'],
+    typing: ['打字练习', '看中文 · 输入俄语 · 即时校验'],
+    cursive: ['手写转写', '印刷体与手写体对照'],
+    speak: ['文本朗读', '粘贴俄语文本 · 神经语音朗读'],
+    notes: ['我的笔记', '按单词汇总的个人笔记'],
+    game: ['单词配对', '俄语与中文 · 5 组配对'],
+    resources: ['学习资源', '外部词典 · 发音 · 翻译 · 语法'],
     unit: ['单元学习', '单词卡片 · 翻转与例句'],
     quiz: ['练习', '四类题型即时反馈'],
     review: ['复习', '间隔重复 · 到期队列'],
@@ -183,6 +195,9 @@
     units: 'УЧЕБНИК · 01—15', list: 'СЛОВАРЬ · 词表', dict: 'СЛОВАРЬ · 词典',
     gram: 'ГРАММАТИКА · 语法', know: 'КОНСПЕКТ · 知识', alphabet: 'АЛФАВИТ · 字母',
     phrases: 'ФРАЗЫ · 短语', unit: 'КАРТОЧКА · 卡片', quiz: 'ПРАКТИКА · 练习',
+    tools: 'ИНСТРУМЕНТЫ · 工具',
+    typing: 'ПЕЧАТЬ · 打字', cursive: 'ПОЧЕРК · 手写', speak: 'ЧТЕНИЕ · 朗读',
+    notes: 'ЗАМЕТКИ · 笔记', game: 'ИГРА · 配对', resources: 'ССЫЛКИ · 资源',
     review: 'ПОВТОРЕНИЕ · 复习', book: 'ИЗБРАННОЕ · 生词', stats: 'СТАТИСТИКА · 统计',
     settings: 'НАСТРОЙКИ · 设置'
   };
@@ -193,7 +208,7 @@
     $('#pageSub').textContent = sub || t[1];
     var kick = $('#pageKicker'); if (kick) kick.textContent = KICKERS[key] || KICKERS.units;
     $$('#nav a').forEach(function (a) { a.classList.toggle('active', a.dataset.key === key); });
-    var tabMap = { unit: 'units', alphabet: 'more', phrases: 'more', dict: 'more', gram: 'more', know: 'more', book: 'more', stats: 'more', settings: 'more' };
+    var tabMap = { unit: 'units', alphabet: 'more', phrases: 'more', tools: 'more', typing: 'more', cursive: 'more', speak: 'more', notes: 'more', game: 'more', resources: 'more', dict: 'more', gram: 'more', know: 'more', book: 'more', stats: 'more', settings: 'more' };
     var tk = tabMap[key] || key;
     $$('#tabbar a').forEach(function (a) { a.classList.toggle('active', a.dataset.key === tk); });
     var more = $('#tabMore'); if (more) more.classList.toggle('active', tk === 'more');
@@ -320,11 +335,77 @@
   var CASE_LABEL = { nom: '一格', gen: '二格', dat: '三格', acc: '四格', ins: '五格', prep: '六格' };
   var PERSON_LABEL = { '1sg': 'я', '2sg': 'ты', '3sg': 'он/она', '1pl': 'мы', '2pl': 'вы', '3pl': 'они' };
 
-  function grammarPanel(w) {
+  /* 词条详情派生信息：只使用词库、语法表和例句，不虚构释义 */
+  function grammarOf(w) { try { return RVGrammar.get(w.id); } catch (e) { return null; } }
+  function splitSyllables(text) {
+    var parts = String(text || '').split(/([аеёиоуыэюя]+)/i), out = [];
+    for (var i = 0; i < parts.length; i += 2) {
+      var chunk = parts[i] + (parts[i + 1] || '');
+      if (chunk) out.push(chunk);
+    }
+    return out.length > 1 ? out.join(' · ') : text;
+  }
+  function morphParts(w) {
+    var ru = w.ru, m;
+    if (/词组|短语/.test(w.pos)) return [];
+    if (/动词/.test(w.pos)) {
+      m = ru.match(/^(.*?)(ся|сь|ть|ти)$/);
+      if (m) return [{ label: '词干', text: m[1] }, { label: '后缀', text: m[2] }];
+    }
+    if (/名词/.test(w.pos)) {
+      var end = '';
+      if (/(ая|яя)$/.test(ru)) end = ru.slice(-2);
+      else if (/[аяоеиыуюьй]$/.test(ru)) end = ru.slice(-1);
+      var root = ru.slice(0, ru.length - end.length);
+      return [{ label: '词干', text: root || '—' }, { label: '词尾', text: end || '零词尾' }];
+    }
+    return [];
+  }
+  function grammarTags(w) {
+    var g = grammarOf(w), tags = [], t = g && g.grammar && g.grammar.type;
+    if (/动词/.test(w.pos)) {
+      tags.push(/完成体/.test(w.pos) ? '完成体' : (/未完成体/.test(w.pos) ? '未完成体' : '动词'));
+      if (g && g.grammar && g.grammar.conj) tags.push('第 ' + g.grammar.conj + ' 变位法');
+    } else if (/名词/.test(w.pos)) {
+      if (t === 'noun2m') { if (w.pos.indexOf('阳性') < 0) tags.push('阳性'); tags.push('第二变格法'); }
+      else if (t === 'noun1') { if (w.pos.indexOf('阴性') < 0) tags.push('阴性'); tags.push('第一变格法'); }
+      else if (t === 'noun3') { if (w.pos.indexOf('阴性') < 0) tags.push('阴性'); tags.push('第三变格法'); }
+      else if (t === 'noun2n') { if (w.pos.indexOf('中性') < 0) tags.push('中性'); tags.push('第二变格法'); }
+      else if (t === 'noun-pl') { tags.push('复数'); }
+      else if (t === 'noun-invariable') { tags.push('不变格'); }
+    } else if (/词组/.test(w.pos)) tags.push('固定搭配');
+    return tags.slice(0, 4);
+  }
+  function wordExplain(w) {
+    var g = grammarOf(w), gr = g && g.grammar, bits = [];
+    if (/名词/.test(w.pos)) {
+      var gender = gr && gr.type === 'noun2m' ? '阳性' : gr && gr.type === 'noun1' ? '阴性' :
+        gr && gr.type === 'noun3' ? '阴性' : gr && gr.type === 'noun2n' ? '中性' : '';
+      bits.push('名词' + (gender ? '，' + gender : '') + '。');
+      if (gr && gr.sg && gr.pl) bits.push('单数主格 ' + gr.sg.nom + '，复数主格 ' + gr.pl.nom + '。');
+      if (gr && gr.type === 'noun-invariable') bits.push('该词属于不变格名词，各格形式相同。');
+    } else if (/动词/.test(w.pos)) {
+      bits.push('动词' + (/完成体/.test(w.pos) ? '，完成体' : /未完成体/.test(w.pos) ? '，未完成体' : '') + '。');
+      if (gr && gr.conj) bits.push('属于第 ' + gr.conj + ' 变位法。');
+      if (gr && gr.present) bits.push('现在时：я ' + gr.present['1sg'] + '，ты ' + gr.present['2sg'] + '，он/она ' + gr.present['3sg'] + '。');
+    } else if (/词组/.test(w.pos)) {
+      bits.push('固定搭配，建议整体记忆，不要逐词直译。');
+    } else {
+      bits.push(w.pos + '。');
+    }
+    var unit = unitById[w.unit];
+    if (unit) bits.push('本课主题：' + unit.zh + '。');
+    return bits.join('');
+  }
+  function relatedWords(w) {
+    return (wordsOfUnit[w.unit] || []).filter(function (x) { return x.id !== w.id; }).slice(0, 6);
+  }
+
+  function grammarPanel(w, open) {
     var g = window.RVGrammar && RVGrammar.get(w.id);
     if (!g || !g.grammar) return '';
     var gr = g.grammar, h = '';
-    h += '<details class="gram-panel"><summary>' + ico('gram', 14) + ' 语法详解（格变化 / 变位）</summary><div class="gram-body">';
+    h += '<details class="gram-panel"' + (open ? ' open' : '') + '><summary>' + ico('gram', 14) + ' 语法详解（格变化 / 变位）</summary><div class="gram-body">';
     if (gr.type === 'noun-invariable') {
       h += '<p class="hint">' + esc(gr.note || '外来词，不变格') + '</p>';
     } else if (gr.type && gr.type.indexOf('noun') === 0) {
@@ -1360,12 +1441,150 @@
     return h;
   }
 
+  /* ---------------- 工具箱 ---------------- */
+  var typingState = null;
+  var matching = null;
+  function newMatching() {
+    var picks = shuffle(WORDS).slice(0, 5);
+    var cards = [];
+    picks.forEach(function (w) {
+      cards.push({ key: 'ru-' + w.id, id: w.id, kind: 'ru', text: w.ru });
+      cards.push({ key: 'zh-' + w.id, id: w.id, kind: 'zh', text: w.zh });
+    });
+    matching = { cards: shuffle(cards), selected: [], matched: {}, moves: 0 };
+  }
+  function newTypingWord() {
+    var w = WORDS[Math.floor(Math.random() * WORDS.length)];
+    typingState = { id: w.id, answered: false, right: 0, total: 0 };
+    return w;
+  }
+  function renderTools() {
+    var noteCount = Object.keys(S.state.notes || {}).length;
+    var h = '<div class="section">';
+    h += '<div class="card alpha-intro"><div><h2>Инструменты · 工具箱</h2><p>不依赖网络的本地练习与小工具；外部资源会标注「需联网」。</p></div></div>';
+    h += '<div class="tool-grid">';
+    var items = [
+      ['typing', 'type', '打字练习', '看中文，输入俄语单词', '速记'],
+      ['cursive', 'spark', '手写转写', '把印刷体转成手写体对照', '书写'],
+      ['speak', 'sound', '文本朗读', '粘贴俄语文本，逐句朗读', '听说'],
+      ['notes', 'note', '我的笔记', noteCount ? noteCount + ' 条单词笔记' : '给难词写下自己的记忆线索', '笔记'],
+      ['game', 'spark', '单词配对', '俄语与中文配对，记住 5 组词', '游戏'],
+      ['resources', 'link', '学习资源', '词典、发音、翻译与语法站点', '需联网'],
+      ['book', 'book', '生词本', '收藏与错词集中复习', '复习'],
+      ['stats', 'stats', '学习统计', '查看连续天数与掌握度', '数据']
+    ];
+    items.forEach(function (it) {
+      h += '<button class="card tool-tile" data-act="go" data-hash="#/' + it[0] + '">' +
+        '<span class="tool-ico">' + ico(it[1], 22) + '</span>' +
+        '<span class="tool-tag">' + it[4] + '</span>' +
+        '<b>' + it[2] + '</b><small>' + it[3] + '</small></button>';
+    });
+    h += '<button class="card tool-tile" data-act="quick-listen">' +
+      '<span class="tool-ico">' + ico('quiz', 22) + '</span><span class="tool-tag">即时</span>' +
+      '<b>听力拼写</b><small>听音辨词 + 拼写，立即开始 10 题</small></button>';
+    h += '</div>';
+    h += '<div class="card tool-tip"><b>学习建议</b><span>先用「学习」卡片建立画面与发音，再用「打字练习」检验拼写，最后在「复习」里按间隔重复巩固。</span></div>';
+    h += '</div>';
+    return h;
+  }
+  function renderTyping() {
+    if (!typingState) newTypingWord();
+    var w = byId[typingState.id] || newTypingWord();
+    var u = unitById[w.unit];
+    var h = '<div class="section tool-page">';
+    h += '<div class="tool-head"><button class="btn sm ghost" data-act="go" data-hash="#/tools">' + ico('back', 15) + ' 工具箱</button>' +
+      '<span class="hint">看中文与提示，输入完整俄语单词</span></div>';
+    h += '<div class="card typing-card"><div class="typing-kicker">第 ' + u.no + ' 课 · ' + esc(u.zh) + '</div>' +
+      '<h2 style="font-family:var(--serif);font-size:26px;margin:4px 0 0">打字练习</h2>' +
+      '<div class="typing-zh">' + esc(w.zh) + '</div>' +
+      '<div class="typing-hint">' + esc(w.pos) + ' · ' + w.ru.length + ' 个字母 · 首字母 ' + esc(w.ru.charAt(0).toUpperCase()) + '</div>' +
+      '<div class="typing-row"><input id="typeInput" class="typing-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="在这里输入俄语…" aria-label="输入俄语单词">' +
+      '<button class="btn primary" data-act="typing-check">检查</button></div>' +
+      '<div id="typeFb" class="typing-fb" aria-live="polite"></div>' +
+      '<div class="typing-actions"><button class="btn sm" data-act="typing-reveal">看答案</button>' +
+      '<button class="btn sm" data-act="typing-next">换一个 ' + ico('right', 14) + '</button>' +
+      '<span class="hint" id="typeStats">本轮答对 ' + typingState.right + ' / ' + typingState.total + '</span></div></div></div>';
+    return h;
+  }
+  function renderCursive() {
+    return '<div class="section tool-page"><div class="tool-head"><button class="btn sm ghost" data-act="go" data-hash="#/tools">' + ico('back', 15) + ' 工具箱</button>' +
+      '<span class="hint">印刷体 → 手写体</span></div><div class="card tool-card"><h2>手写转写</h2>' +
+      '<p class="hint">输入俄语单词或短句，立即查看手写体对照。手写体仅用于认读练习，不作为书写规范。</p>' +
+      '<input id="cursiveInput" class="typing-input" value="Привет, как дела?" autocomplete="off" aria-label="输入俄语">' +
+      '<div class="cursive-output" id="cursiveOut">Привет, как дела?</div>' +
+      '<div class="sheet-actions"><button class="btn sm" data-act="speak-text">' + ico('sound', 14) + ' 朗读</button>' +
+      '<button class="btn sm" data-act="copy-cursive">' + ico('note', 14) + ' 复制俄语</button></div></div></div>';
+  }
+  function renderSpeak() {
+    return '<div class="section tool-page"><div class="tool-head"><button class="btn sm ghost" data-act="go" data-hash="#/tools">' + ico('back', 15) + ' 工具箱</button>' +
+      '<span class="hint">文本朗读</span></div><div class="card tool-card"><h2>文本朗读</h2>' +
+      '<p class="hint">粘贴任意俄语文本，用内置神经语音朗读；长文本建议分段。</p>' +
+      '<textarea id="speakText" class="wd-note-input" rows="6" placeholder="Вставьте русский текст…">Привет! Меня зовут Анна. Я изучаю русский язык.</textarea>' +
+      '<div class="sheet-actions"><button class="btn sm primary" data-act="speak-text">' + ico('sound', 14) + ' 朗读文本</button>' +
+      '<button class="btn sm" data-act="stop-text">停止</button></div></div></div>';
+  }
+  function renderNotes() {
+    var ids = Object.keys(S.state.notes || {});
+    var h = '<div class="section tool-page"><div class="tool-head"><button class="btn sm ghost" data-act="go" data-hash="#/tools">' + ico('back', 15) + ' 工具箱</button>' +
+      '<span class="hint">' + ids.length + ' 条笔记</span></div>';
+    h += '<div class="card tool-card"><h2>我的笔记</h2>';
+    if (!ids.length) {
+      h += '<div class="empty"><h3>还没有笔记</h3><p>在任意词条详情里写下搭配、易错点或自己的联想，这里会按单词汇总。</p>' +
+        '<button class="btn primary" data-act="go" data-hash="#/units">去学习</button></div></div></div>';
+      return h;
+    }
+    h += '<div class="notes-list">';
+    ids.forEach(function (id) {
+      var w = byId[id]; if (!w) return;
+      var txt = S.note(id);
+      h += '<div class="note-item" data-act="open-word-sheet" data-id="' + id + '" tabindex="0" role="button">' +
+        '<div class="note-word">' + esc(w.ru) + '<small>' + esc(w.zh) + '</small></div>' +
+        '<div class="note-text">' + esc(txt) + '</div></div>';
+    });
+    h += '</div></div></div>';
+    return h;
+  }
+  function renderGame() {
+    if (!matching) newMatching();
+    var h = '<div class="section tool-page"><div class="tool-head"><button class="btn sm ghost" data-act="go" data-hash="#/tools">' + ico('back', 15) + ' 工具箱</button>' +
+      '<span class="hint">先点俄语，再点中文</span></div><div class="card tool-card"><h2>单词配对</h2>' +
+      '<p class="hint">5 组词，找出俄语与中文的对应关系。配对成功会变绿。</p>' +
+      '<div class="match-status"><span>步数 <b id="matchMoves">' + matching.moves + '</b></span>' +
+      '<span>已配对 <b id="matchDone">' + Object.keys(matching.matched).length + ' / 5</b></span>' +
+      '<button class="btn sm" data-act="match-new">换一组</button></div>' +
+      '<div class="match-grid">';
+    matching.cards.forEach(function (c) {
+      var done = matching.matched[c.id];
+      h += '<button class="match-card ' + c.kind + (done ? ' ok' : '') + '" data-act="match-card" data-key="' + c.key + '" data-id="' + c.id + '" data-kind="' + c.kind + '"' + (done ? ' disabled' : '') + '>' + esc(c.text) + '</button>';
+    });
+    h += '</div><div class="match-win" id="matchWin">' + (Object.keys(matching.matched).length === 5 ? '<b>完成！</b> 用了 ' + matching.moves + ' 步。<button class="btn sm primary" data-act="match-new">再来一局</button>' : '') + '</div></div></div>';
+    return h;
+  }
+  function renderResources() {
+    var links = [
+      ['ru.wiktionary.org', '俄语维基词典', '查词义、变格与词源', 'https://ru.wiktionary.org/'],
+      ['forvo.com', 'Forvo 真人发音', '听母语者的单词发音', 'https://forvo.com/languages/ru/'],
+      ['translate.yandex.com', 'Yandex 翻译', '俄中互译与例句', 'https://translate.yandex.com/ru/'],
+      ['masterrussian.com', 'Master Russian', '语法与常用表达参考', 'https://masterrussian.com/']
+    ];
+    var h = '<div class="section tool-page"><div class="tool-head"><button class="btn sm ghost" data-act="go" data-hash="#/tools">' + ico('back', 15) + ' 工具箱</button>' +
+      '<span class="hint">外部网站 · 需联网</span></div><div class="card tool-card"><h2>学习资源</h2>' +
+      '<p class="hint">以下为外部网站，点击后用系统浏览器打开；应用内的词库、发音和练习仍可完全离线使用。</p><div class="res-list">';
+    links.forEach(function (l) {
+      h += '<a class="res-item" href="' + l[3] + '" target="_blank" rel="noopener">' +
+        '<span class="res-icon">' + ico('link', 18) + '</span><span><b>' + l[1] + '</b><small>' + l[2] + '</small><em>' + l[0] + '</em></span><span class="gt-arrow">›</span></a>';
+    });
+    h += '</div></div></div>';
+    return h;
+  }
+
   /* ---------------- 底部抽屉与单词详情 ---------------- */
   var sheetLastFocus = null;
-  function openSheet(html, label) {
+  function openSheet(html, label, mode) {
     var sheet = $('#sheet'), body = $('#sheetBody');
     if (!sheet || !body) return;
     sheetLastFocus = document.activeElement;
+    sheet.classList.toggle('detail', mode === 'detail');
     body.innerHTML = html;
     sheet.hidden = false;
     document.body.classList.add('sheet-open');
@@ -1378,7 +1597,9 @@
   function closeSheet() {
     var sheet = $('#sheet');
     if (!sheet || sheet.hidden) return;
+    try { stopRecord(); } catch (e) { }
     sheet.hidden = true;
+    sheet.classList.remove('detail');
     document.body.classList.remove('sheet-open');
     lockMainScroll(false);
     if (sheetLastFocus && sheetLastFocus.focus) sheetLastFocus.focus();
@@ -1393,24 +1614,134 @@
     var w = byId[id]; if (!w) return;
     var s = S.get(id);
     var u = unitById[w.unit];
-    var h = '<div class="sheet-word"><div class="ru">' + esc(ruText(w)) + '</div>' +
-      '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '">' + ico('sound', 18) + '</button></div>' +
-      '<div class="pos">' + esc(w.pos) + ' · 第 ' + u.no + ' 课 ' + esc(u.zh) + '</div>' +
-      '<div class="sheet-zh">' + esc(w.zh) + '</div>';
-    if (S.state.settings.showCursive !== false) {
-      h += '<div class="cursive-line" style="justify-content:flex-start"><span class="cursive-tag">手写体</span><span class="ru-cursive" style="font-size:28px">' + esc(ruText(w)) + '</span></div>';
-    }
-    h += '<div class="sheet-sec"><h3>例句 · ПРИМЕР</h3><div class="sheet-ex">' + highlight(w.ru, w.ex_ru) +
-      ' <button class="mini" data-act="speak" data-text="' + esc(w.ex_ru) + '">' + ico('sound', 14) + '</button></div>' +
+    var tags = grammarTags(w), parts = morphParts(w), rel = relatedWords(w);
+    var note = S.note(id);
+    var h = '<div class="wd-head">' +
+      '<div class="wd-eyebrow">СЛОВО · 词条详情</div>' +
+      '<div class="wd-title"><div class="wd-ru">' + esc(ruText(w)) + '</div>' +
+      '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '" aria-label="朗读">' + ico('sound', 20) + '</button></div>' +
+      '<div class="wd-syll">读音参考 · ' + esc(splitSyllables(w.ru)) + '</div>' +
+      '<div class="wd-meta"><span class="chip">' + esc(w.pos) + '</span><span class="chip">第 ' + u.no + ' 课 · ' + esc(u.zh) + '</span>' +
+      tags.map(function (t) { return '<span class="chip">' + esc(t) + '</span>'; }).join('') + '</div>' +
+      (S.state.settings.showCursive === false ? '' :
+        '<div class="cursive-line" style="justify-content:flex-start"><span class="cursive-tag">手写体</span><span class="ru-cursive" style="font-size:28px">' + esc(ruText(w)) + '</span></div>') +
+      '</div>';
+
+    if (w.img) h += '<div class="wd-cover">' + sceneImg(w) + '</div>';
+
+    h += '<div class="wd-sec"><h3>' + ico('dict', 15) + ' 释义</h3>' +
+      '<div class="wd-zh">' + esc(w.zh) + '</div>' +
+      '<div class="wd-explain">' + esc(wordExplain(w)) + '</div></div>';
+
+    h += '<div class="wd-sec"><h3>' + ico('phrase', 15) + ' 例句</h3>' +
+      '<div class="wd-ex"><span class="ex-ru">' + highlight(w.ru, w.ex_ru) + '</span>' +
+      '<button class="mini" data-act="speak" data-text="' + esc(w.ex_ru) + '" title="朗读例句">' + ico('sound', 14) + '</button></div>' +
       '<div class="sheet-ex-zh">' + esc(w.ex_zh) + '</div></div>';
-    if (w.img) h += '<div class="sheet-sec"><h3>情景 · СИТУАЦИЯ</h3><div class="q-scene" style="width:100%;margin:0">' + sceneImg(w) + '</div></div>';
-    h += grammarPanel(w);
+
+    h += '<div class="wd-sec"><h3>' + ico('gram', 15) + ' 形态学分析</h3>';
+    if (parts.length) {
+      h += '<div class="morph-parts">' + parts.map(function (p) {
+        return '<span class="morph-part"><b>' + esc(p.text) + '</b><small>' + esc(p.label) + '</small></span>';
+      }).join('<span class="morph-plus">+</span>') + '</div>' +
+        '<p class="wd-note">词形结构为自动拆分，用于帮助记忆词干与词尾；不规则变化以语法表为准。</p>';
+    } else {
+      h += '<p class="wd-note">固定搭配按整体记忆，不拆分词素。</p>';
+    }
+    h += '<div class="wd-tags">' + tags.map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</div>';
+    h += grammarPanel(w, true) + '</div>';
+
+    if (rel.length) {
+      h += '<div class="wd-sec"><h3>' + ico('learn', 15) + ' 同课词汇</h3><div class="wd-rel">' +
+        rel.map(function (x) { return '<button class="chip pick" data-act="open-word-sheet" data-id="' + x.id + '">' + esc(x.ru) + ' <em>' + esc(x.zh) + '</em></button>'; }).join('') +
+        '</div></div>';
+    }
+
+    h += '<div class="wd-sec"><h3>' + ico('note', 15) + ' 我的笔记</h3>' +
+      '<textarea class="wd-note-input" id="wordNote" maxlength="800" placeholder="记下搭配、易错点或自己的联想……">' + esc(note) + '</textarea>' +
+      '<button class="btn sm" data-act="save-note" data-id="' + id + '">保存笔记</button></div>';
+
+    h += '<div class="wd-sec"><h3>' + ico('mic', 15) + ' 发音练习</h3>' +
+      '<p class="wd-note">先听标准发音，再录下自己的跟读；录音仅保存在本次会话，不会上传。</p>' +
+      '<div class="wd-actions"><button class="btn sm" data-act="record-word" data-id="' + id + '">' + ico('mic', 14) + ' <span id="recLabel">录音跟读</span></button>' +
+      '<button class="btn sm" data-act="play-rec" ' + (recState.url ? '' : 'disabled') + '>' + ico('sound', 14) + ' 播放我的录音</button>' +
+      '<button class="btn sm" data-act="score-word" data-id="' + id + '">' + ico('spark', 14) + ' 识别评分</button></div>' +
+      '<div class="pron-result" id="pronResult"></div></div>';
+
     h += '<div class="sheet-actions">' +
       '<button class="btn sm ' + (s.fav ? 'primary' : '') + '" data-act="fav" data-id="' + id + '">' + ico(s.fav ? 'starOn' : 'star', 14) + ' ' + (s.fav ? '已收藏' : '收藏') + '</button>' +
       '<button class="btn sm" data-act="toggle-book" data-id="' + id + '">' + ico('book', 14) + ' ' + (s.book ? '移出生词本' : '加入生词本') + '</button>' +
       '<button class="btn sm" data-act="goto-card-detail" data-unit="' + w.unit + '" data-id="' + id + '">' + ico('learn', 14) + ' 打开学习卡</button>' +
       '</div>';
-    openSheet(h, w.ru);
+    openSheet(h, w.ru, 'detail');
+  }
+
+  /* 跟读录音：MediaRecorder，仅本机会话；失败时给出明确提示 */
+  var recState = { id: null, url: null, recorder: null, chunks: [], stream: null, timer: null };
+  function stopRecord() {
+    if (recState.timer) { clearTimeout(recState.timer); recState.timer = null; }
+    if (recState.recorder && recState.recorder.state !== 'inactive') recState.recorder.stop();
+  }
+  function toggleRecord(id) {
+    if (recState.recorder && recState.recorder.state === 'recording') { stopRecord(); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+      toast('当前设备不支持录音，请用系统 TTS 或手机录音 App');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      recState.id = id; recState.chunks = []; recState.stream = stream;
+      var rec = new MediaRecorder(stream);
+      recState.recorder = rec;
+      var label = $('#recLabel'); if (label) label.textContent = '停止录音';
+      rec.ondataavailable = function (e) { if (e.data && e.data.size) recState.chunks.push(e.data); };
+      rec.onstop = function () {
+        try { stream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) { }
+        var blob = new Blob(recState.chunks, { type: rec.mimeType || 'audio/webm' });
+        if (recState.url) { try { URL.revokeObjectURL(recState.url); } catch (e) { } }
+        recState.url = URL.createObjectURL(blob);
+        recState.recorder = null; recState.stream = null;
+        var l = $('#recLabel'); if (l) l.textContent = '重新录音';
+        var btn = document.querySelector('[data-act="play-rec"]'); if (btn) btn.disabled = false;
+        var box = $('#pronResult'); if (box) box.innerHTML = '<span class="ok-text">已录制 ' + Math.max(1, Math.round(blob.size / 1200)) + ' KB · 可播放或进行识别评分</span>';
+      };
+      rec.start();
+      recState.timer = setTimeout(stopRecord, 8000);
+    }).catch(function () {
+      toast('无法访问麦克风：请检查系统/浏览器的录音权限');
+    });
+  }
+  function playRecording() {
+    if (!recState.url) { toast('还没有录音，先点「录音跟读」'); return; }
+    var a = new Audio(recState.url); a.play().catch(function () { toast('录音播放失败'); });
+  }
+  function scoreWord(id) {
+    var w = byId[id]; if (!w) return;
+    if (!RVGrammar.speechAvailable || !RVGrammar.speechAvailable()) { toast('当前设备没有语音识别，可先练跟读录音'); return; }
+    var box = $('#pronResult'); if (box) box.innerHTML = '<span class="muted">正在听……请读一遍这个词</span>';
+    try {
+      RVGrammar.listen('ru-RU', function (text) {
+        if (!text) { if (box) box.innerHTML = '<span class="bad-text">没有听清，再试一次</span>'; return; }
+        var target = w.ru.toLowerCase(), got = text.toLowerCase();
+        var d = editDistance(target, got), max = Math.max(target.length, got.length, 1);
+        var score = Math.max(0, Math.round((1 - d / max) * 100));
+        if (box) box.innerHTML = '<div class="pron-score"><b>' + score + '</b><span>参考分</span></div>' +
+          '<div class="wd-note">识别到：' + esc(text) + '</div>' +
+          '<div class="wd-note">' + (score >= 80 ? '很接近标准发音。' : score >= 50 ? '再听一遍标准音，注意重音和词尾。' : '慢速跟读，先分音节再连起来。') + '</div>';
+      }, function (err) {
+        if (box) box.innerHTML = '<span class="bad-text">识别失败：' + esc(String(err)) + '</span>';
+      });
+    } catch (e) {
+      if (box) box.innerHTML = '<span class="bad-text">识别失败，请稍后重试</span>';
+    }
+  }
+  function editDistance(a, b) {
+    var m = a.length, n = b.length, prev = [], cur = [], i, j;
+    for (j = 0; j <= n; j++) prev[j] = j;
+    for (i = 1; i <= m; i++) {
+      cur[0] = i;
+      for (j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      var tmp = prev; prev = cur; cur = tmp;
+    }
+    return prev[n];
   }
   function alphaSheet(upper) {
     var a = (D.alphabet || []).filter(function (x) { return x.upper === upper; })[0];
@@ -1537,6 +1868,13 @@
       case 'know': html = renderKnow(); break;
       case 'alphabet': html = renderAlphabet(); break;
       case 'phrases': html = renderPhrases(); break;
+      case 'tools': html = renderTools(); break;
+      case 'typing': html = renderTyping(); break;
+      case 'cursive': html = renderCursive(); break;
+      case 'speak': html = renderSpeak(); break;
+      case 'notes': html = renderNotes(); break;
+      case 'game': html = renderGame(); break;
+      case 'resources': html = renderResources(); break;
       case 'unit': html = renderUnit(seg[1]); key = 'unit'; break;
       case 'quiz': html = renderQuiz(); break;
       case 'review': html = renderReview(); break;
@@ -1578,6 +1916,102 @@
     switch (act) {
       case 'go': go(v.hash); break;
       case 'open-word-sheet': wordSheet(id); break;
+      case 'save-note': {
+        var ta = $('#wordNote');
+        if (!ta) break;
+        S.setNote(id, ta.value);
+        el.textContent = '已保存';
+        setTimeout(function () { if (el) el.textContent = '保存笔记'; }, 1500);
+        toast('笔记已保存');
+        break;
+      }
+      case 'record-word': toggleRecord(id); break;
+      case 'play-rec': playRecording(); break;
+      case 'score-word': scoreWord(id); break;
+      case 'typing-check': {
+        if (!typingState || typingState.answered) break;
+        var ti = $('#typeInput'), fb = $('#typeFb');
+        if (!ti || !fb) break;
+        var tw = byId[typingState.id];
+        var norm = function (x) { return String(x || '').toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ').trim(); };
+        var ok = norm(ti.value) === norm(tw.ru);
+        typingState.answered = true; typingState.total++;
+        if (ok) typingState.right++;
+        ti.classList.toggle('ok', ok); ti.classList.toggle('bad', !ok);
+        fb.innerHTML = ok ? '<span class="ok-text">正确 · ' + esc(tw.ru) + '</span>' :
+          '<span class="bad-text">正确答案：<b>' + esc(tw.ru) + '</b></span>';
+        var stats = $('#typeStats'); if (stats) stats.textContent = '本轮答对 ' + typingState.right + ' / ' + typingState.total;
+        var check = document.querySelector('[data-act="typing-check"]'); if (check) check.disabled = true;
+        break;
+      }
+      case 'typing-reveal': {
+        if (!typingState) break;
+        var rw = byId[typingState.id], rfb = $('#typeFb');
+        if (rfb) rfb.innerHTML = '<span class="muted">答案：<b>' + esc(rw.ru) + '</b> · ' + esc(rw.zh) + '</span>';
+        typingState.answered = true;
+        break;
+      }
+      case 'typing-next': typingState = null; render(); break;
+      case 'match-card': {
+        if (!matching || matching.matched[id]) break;
+        if (matching.selected.some(function (s) { return s.key === v.key; })) break;
+        matching.selected.push({ key: v.key, id: id, kind: v.kind });
+        el.classList.add('sel');
+        if (matching.selected.length < 2) break;
+        matching.moves++;
+        var ma = matching.selected[0], mb = matching.selected[1];
+        if (ma.id === mb.id && ma.kind !== mb.kind) {
+          matching.matched[ma.id] = true;
+          [ma, mb].forEach(function (x) {
+            var n = document.querySelector('[data-key="' + x.key + '"]');
+            if (n) { n.classList.remove('sel'); n.classList.add('ok'); n.disabled = true; }
+          });
+          matching.selected = [];
+          var mv = $('#matchMoves'), md = $('#matchDone');
+          if (mv) mv.textContent = matching.moves;
+          var done = Object.keys(matching.matched).length;
+          if (md) md.textContent = done + ' / 5';
+          if (done === 5) {
+            var mw = $('#matchWin');
+            if (mw) mw.innerHTML = '<b>完成！</b> 用了 ' + matching.moves + ' 步。<button class="btn sm primary" data-act="match-new">再来一局</button>';
+          }
+        } else {
+          [ma, mb].forEach(function (x) {
+            var n = document.querySelector('[data-key="' + x.key + '"]');
+            if (n) n.classList.add('bad');
+          });
+          var wrong = matching.selected;
+          matching.selected = [];
+          setTimeout(function () {
+            wrong.forEach(function (x) {
+              var n = document.querySelector('[data-key="' + x.key + '"]');
+              if (n) n.classList.remove('bad', 'sel');
+            });
+          }, 620);
+        }
+        break;
+      }
+      case 'match-new': matching = null; render(); break;
+      case 'quick-listen': {
+        quizSetup.types = ['listen', 'spell'];
+        startQuiz(shuffle(ALL_IDS).slice(0, 10), ['listen', 'spell'], '听力拼写');
+        go('#/quiz');
+        break;
+      }
+      case 'speak-text': {
+        var stEl = $('#speakText') || $('#cursiveInput') || $('#typeInput');
+        var stTxt = stEl ? (stEl.value || stEl.textContent) : '';
+        if (stTxt.trim()) speak(stTxt.trim()); else toast('先输入要朗读的俄语');
+        break;
+      }
+      case 'stop-text': if (window.RVAudio && RVAudio.stop) RVAudio.stop(); break;
+      case 'copy-cursive': {
+        var ci = $('#cursiveInput');
+        var cv = ci ? ci.value : '';
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(cv).then(function () { toast('已复制俄语原文'); });
+        else toast('当前环境不支持剪贴板');
+        break;
+      }
       case 'dict-pick': {
         var di = $('#dictInput'); if (di) di.value = v.q; dictRender(v.q); break;
       }
@@ -1914,7 +2348,7 @@
   function openMoreSheet() {
     var items = [
       ['dict', '词典', 'dict'], ['gram', '语法', 'gram'], ['know', '知识总结', 'know'],
-      ['alphabet', '字母表', 'alpha'], ['phrases', '情景短语', 'phrase'], ['book', '生词本', 'book'],
+      ['alphabet', '字母表', 'alpha'], ['phrases', '情景短语', 'phrase'], ['tools', '工具箱', 'tool'], ['book', '生词本', 'book'],
       ['stats', '统计', 'stats'], ['settings', '设置', 'settings'], ['units', '学习', 'learn']
     ];
     var h = '<h2 style="margin-bottom:4px">更多</h2><p class="hint" style="margin:0 0 14px">全部学习工具</p><div class="more-grid">' +
@@ -1983,8 +2417,20 @@
   bindWheelContainment();
 
 
+  document.addEventListener('input', function (e) {
+    if (e.target && e.target.id === 'cursiveInput') {
+      var out = $('#cursiveOut'); if (out) out.textContent = e.target.value || '…';
+    }
+  });
+
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); openPalette(); return; }
+    if (e.target && e.target.id === 'typeInput' && e.key === 'Enter') {
+      e.preventDefault();
+      var tb = document.querySelector(typingState && typingState.answered ? '[data-act="typing-next"]' : '[data-act="typing-check"]');
+      if (tb) tb.click();
+      return;
+    }
     if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.matches && e.target.matches('[role="button"][data-act]')) {
       e.preventDefault(); e.target.click(); return;
     }

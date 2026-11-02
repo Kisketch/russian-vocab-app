@@ -17,6 +17,7 @@
 
   var state = {
     words: {},      // id -> { lv, due, seen, right, wrong, streak, book, manual, fav, last }
+    notes: {},      // id -> 用户笔记
     daily: {},      // 'YYYY-MM-DD' -> { learn, views, quiz, correct, wrong, newWords, review, revGood, revHard, revForget }
     views: { date: '', ids: [] },   // 当日接触过的词（去重）
     settings: { rate: 0.85, autoSpeak: true, slow: false, ttsOnly: false, showStress: false, showCursive: true, dailyGoal: 20 },
@@ -35,6 +36,7 @@
       if (raw) {
         var s = JSON.parse(raw);
         state.words = s.words || {};
+        state.notes = s.notes || {};
         state.daily = s.daily || {};
         state.views = s.views || { date: '', ids: [] };
         state.settings = Object.assign(state.settings, s.settings || {});
@@ -143,6 +145,13 @@
   }
 
   function toggleFav(id) { var w = get(id); w.fav = !w.fav; save(); return w.fav; }
+  function note(id) { return state.notes[id] || ''; }
+  function setNote(id, text) {
+    text = (text || '').trim();
+    if (text) state.notes[id] = text; else delete state.notes[id];
+    save();
+    return text;
+  }
   function toggleBook(id) {
     var w = get(id);
     w.book = !w.book;
@@ -205,7 +214,7 @@
   }
 
   function clearAll() {
-    state.words = {}; state.daily = {}; state.views = { date: '', ids: [] }; state.createdAt = Date.now();
+    state.words = {}; state.notes = {}; state.daily = {}; state.views = { date: '', ids: [] }; state.createdAt = Date.now();
     try { localStorage.removeItem(KEY); } catch (e) { }
   }
 
@@ -223,6 +232,8 @@
     setLevel: setLevel,
     toggleFav: toggleFav,
     toggleBook: toggleBook,
+    note: note,
+    setNote: setNote,
     touch: touch,
     dueIds: dueIds,
     wordbookIds: wordbookIds,

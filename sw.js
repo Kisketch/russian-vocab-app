@@ -1,5 +1,5 @@
 /* Service Worker：应用外壳预缓存 + 语音运行时缓存（CacheFirst） */
-var SHELL = 'ruvocab-shell-v7';
+var SHELL = 'ruvocab-shell-v8';
 var AUDIO = 'ruvocab-audio-v1';
 
 var SHELL_FILES = [

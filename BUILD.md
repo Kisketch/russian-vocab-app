@@ -1,4 +1,4 @@
-# 打包构建指南（Windows 桌面端 / Android 移动端）
+﻿# 打包构建指南（Windows 桌面端 / Android 移动端）
 
 本仓库一份代码、三个出口：
 
@@ -80,9 +80,9 @@ npm run dev      # 带开发者菜单（需 cross-env，或手动 set RUVOCAB_DE
 ### 方式 B：打包 APK（Capacitor）—— 本机已验证可出包
 
 **已产出（release/）**：
-- `走遍俄罗斯词汇卡-2.1.0-debug.apk`（约 32MB，调试签名版，可直接安装）
+- `走遍俄罗斯词汇卡-2.2.0-debug.apk`（约 32MB，调试签名版，可直接安装）
 
-工程已就绪：包名 `cn.yuyan.ruvocab`、版本 2.1.0（versionCode 11）、minSdk 22（Android 5.1+）、targetSdk 34、图标与启动图、233 词 / 466 条音频、15 课已打进 APK。
+工程已就绪：包名 `cn.yuyan.ruvocab`、版本 2.2.0（versionCode 12）、minSdk 22（Android 5.1+）、targetSdk 34、图标与启动图、233 词 / 466 条音频、15 课已打进 APK。
 
 #### 1. 安装构建环境（一次性，约 500MB）
 

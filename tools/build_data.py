@@ -61,9 +61,11 @@ def main():
     units = []
     for row in read_tsv(os.path.join(SRC, "units.tsv")):
         uid, no, ru_title, zh_title, desc = row[:5]
+        book = int(row[5]) if len(row) > 5 and row[5].strip().isdigit() else 1
         units.append({
             "id": uid,
             "no": int(no),
+            "book": book,
             "ru": ru_title,
             "zh": zh_title,
             "desc": desc,
@@ -139,13 +141,13 @@ def main():
         "alphabet": alphabet,
         "phrases": phrases,
         "meta": {
-            "book": "走遍俄罗斯（外研社引进《Дорога в Россию》）第 1 册",
+            "book": "走遍俄罗斯（外研社引进《Дорога в Россию》）第 1–4 册主题扩展",
             "unitCount": len(units),
             "wordCount": len(words),
             "alphabetCount": len(alphabet),
             "phraseCount": len(phrases),
             "knowledgeCount": len(knowledge),
-            "note": "单元主题依教材课序编排，词条为该课核心词汇；例句为教学用原创短句。",
+            "note": "第 1 册为教材课序核心词；第 2–4 册为原创主题扩展词，例句为教学模板句，不代表教材原文词表。",
         },
         "units": units,
         "words": words,

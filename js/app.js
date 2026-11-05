@@ -166,7 +166,7 @@
   }
 
   /* ---------------- 界面骨架状态 ---------------- */
-  var ui = { unitMode: 'card', unitId: null, idx: 0, flipped: false, vocabFilter: 'all', knowUnit: 'u01' };
+  var ui = { unitMode: 'card', unitId: null, idx: 0, flipped: false, book: 1, vocabFilter: 'all', knowUnit: 'u01' };
   var quiz = null, review = null;
 
   var TITLES = {
@@ -257,13 +257,16 @@
     var goalPct = clamp(Math.round(todayViews / goal * 100), 0, 100);
     var dayIdx = Math.floor(Date.now() / 86400000) % WORDS.length;
     var daily = WORDS[dayIdx];
+    var book = ui.book || 1;
+    var bookUnits = UNITS.filter(function (u) { return (u.book || 1) === book; });
+    var bookWords = bookUnits.reduce(function (n, u) { return n + wordsOfUnit[u.id].length; }, 0);
 
     var h = '';
     h += '<div class="hero">' +
       '<div class="hero-text">' +
-      '<span class="eyebrow">Дорога в Россию · 第 1 册</span>' +
+      '<span class="eyebrow">Дорога в Россию · 第 ' + book + ' 册</span>' +
       '<h2>' + (dueN ? '今天有 ' + dueN + ' 个词<br>在等你复习' : '今天，和俄语<br>待一会儿') + '</h2>' +
-      '<p>' + esc(D.meta.book) + ' · 共 ' + UNITS.length + ' 课 / ' + WORDS.length + ' 词。看图记词，听音辨义，按记忆曲线复习。</p>' +
+      '<p>' + esc(D.meta.book) + ' · 当前第 ' + book + ' 册：' + bookUnits.length + ' 课 / ' + bookWords + ' 词；全库 ' + WORDS.length + ' 词。看图记词，听音辨义，按记忆曲线复习。</p>' +
       '</div>' +
       '<div class="hero-stats">' +
       '<div class="hero-stat"><b>' + todayViews + '</b><span>今日接触</span></div>' +
@@ -300,14 +303,18 @@
       '</div></div>';
     h += '</div>';
 
-    h += '<div class="section"><div class="section-head"><h2>教材单元</h2><span>' + esc(D.meta.note) + '</span></div>';
+    h += '<div class="section"><div class="section-head"><h2>教材单元</h2><span>第 ' + book + ' 册 · ' + bookUnits.length + ' 课 / ' + bookWords + ' 词</span></div>';
+    h += '<div class="vchips book-tabs">' + [1, 2, 3, 4].map(function (b) {
+      return '<button class="chip pick' + (book === b ? ' on' : '') + '" data-act="book-filter" data-book="' + b + '">第 ' + b + ' 册</button>';
+    }).join('') + '</div>';
     h += '<div class="unit-grid">';
-    UNITS.forEach(function (u, i) {
+    bookUnits.forEach(function (u, i) {
       var st = unitStat(u);
       var cover = wordsOfUnit[u.id][0];
+      var coverArt = cover ? sceneImg(cover) : '';
       h += '<div class="card unit" data-act="open-unit" data-id="' + u.id + '" tabindex="0" role="button" style="--i:' + i + '">' +
-        '<div class="unit-art' + (cover && cover.img ? '' : ' no-photo') + '" data-letter="' + (cover ? esc(cover.initial) : u.no) + '">' +
-        (cover ? sceneImg(cover) : '') +
+        '<div class="unit-art' + (coverArt ? '' : ' no-photo') + '" data-letter="' + (cover ? esc(cover.initial) : u.no) + '">' +
+        coverArt +
         '<span class="unit-no">' + u.no + '</span></div>' +
         '<div class="unit-top">' +
         '<div class="unit-title"><b>' + esc(u.zh) + '</b><span>' + esc(u.ru) + '</span></div>' +
@@ -594,9 +601,10 @@
 
   function renderKnow() {
     var f = ui.knowUnit || 'u01';
+    var knowUnits = UNITS.filter(function (u) { return (D.knowledge || []).some(function (k) { return k.unit === u.id; }); });
     var h = '<div class="section">';
     h += '<div class="vchips">';
-    UNITS.forEach(function (u) {
+    knowUnits.forEach(function (u) {
       h += '<button class="chip pick' + (f === u.id ? ' on' : '') + '" data-act="know-unit" data-id="' + u.id + '">第' + u.no + '课</button>';
     });
     h += '</div>';
@@ -621,22 +629,27 @@
   /* ---------------- 视图：课本词表（按课序的生词表） ---------------- */
   function renderVocab() {
     var f = ui.vocabFilter || 'all';
+    var book = ui.vocabBook || 1;
+    var bookUnits = UNITS.filter(function (u) { return (u.book || 1) === book; });
     var learned = S.learnedIds(ALL_IDS).length;
     var h = '';
 
     h += '<div class="section"><div class="vlist-head">' +
-      '<div><h2>课本单词表</h2><span>按《走遍俄罗斯》第一册课序排列 · 印刷体与手写体对照 · 点击行可打开学习卡</span></div>' +
+      '<div><h2>课本单词表</h2><span>第 ' + book + ' 册 · 印刷体与手写体对照 · 点击行打开词条</span></div>' +
       '<div class="vlist-progress">已标记 <b>' + learned + '</b> / ' + WORDS.length + ' 词</div>' +
       '</div>';
 
+    h += '<div class="vchips book-tabs">' + [1, 2, 3, 4].map(function (b) {
+      return '<button class="chip pick' + (book === b ? ' on' : '') + '" data-act="vocab-book" data-book="' + b + '">第 ' + b + ' 册</button>';
+    }).join('') + '</div>';
     h += '<div class="vchips">' +
-      '<button class="chip pick' + (f === 'all' ? ' on' : '') + '" data-act="vocab-filter" data-id="all">全部课</button>';
-    UNITS.forEach(function (u) {
+      '<button class="chip pick' + (f === 'all' ? ' on' : '') + '" data-act="vocab-filter" data-id="all">本册全部</button>';
+    bookUnits.forEach(function (u) {
       h += '<button class="chip pick' + (f === u.id ? ' on' : '') + '" data-act="vocab-filter" data-id="' + u.id + '">第' + u.no + '课</button>';
     });
     h += '</div>';
 
-    var units = f === 'all' ? UNITS : UNITS.filter(function (u) { return u.id === f; });
+    var units = f === 'all' ? bookUnits : bookUnits.filter(function (u) { return u.id === f; });
     units.forEach(function (u) {
       var st = unitStat(u);
       h += '<div class="card vlesson">' +
@@ -682,7 +695,7 @@
       '</div></div>';
 
     h += '<div class="section-head" style="margin-bottom:8px">' +
-      '<h2>第 ' + u.no + ' 课 · ' + esc(u.zh) + '</h2>' +
+      '<h2>第 ' + u.book + ' 册 · 第 ' + u.no + ' 课 · ' + esc(u.zh) + '</h2>' +
       '<span>' + esc(u.ru) + ' · 共 ' + ws.length + ' 词 · 已学 ' + st.learned + '</span></div>';
     h += '<div class="progress-line"><i style="width:' + st.pct + '%"></i></div>';
 
@@ -707,7 +720,7 @@
         '<div class="flashcard-inner">' +
         // 正面
         '<div class="face front">' +
-        '<div class="scene' + (w.img ? '' : ' no-photo') + '" data-letter="' + esc(w.initial) + '">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
+        '<div class="scene' + (w.img || w.scene ? '' : ' no-photo') + '" data-letter="' + esc(w.initial) + '">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
         '<div class="body-part">' +
         '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
         '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '" aria-label="朗读">' + ico('sound', 19) + '</button></div>' +
@@ -797,7 +810,7 @@
     { key: 'spell', name: '拼写填空' },
     { key: 'listen', name: '听音辨词' }
   ];
-  var quizSetup = { units: [], types: ['zh2ru', 'ru2zh', 'spell', 'listen'], count: 10, bookFirst: true };
+  var quizSetup = { units: [], types: ['zh2ru', 'ru2zh', 'spell', 'listen'], count: 10, bookFirst: true, book: 1 };
 
   function renderQuiz(args) {
     if (args && args.auto && args.ids) return startQuiz(args.ids.slice(), args.types || quizSetup.types, args.title || '专项练习');
@@ -807,15 +820,22 @@
   }
 
   function renderQuizSetup() {
-    if (!quizSetup.units.length) quizSetup.units = UNITS.map(function (u) { return u.id; });
-    var allUnits = quizSetup.units.length === UNITS.length;
+    var quizUnits = UNITS.filter(function (u) { return (u.book || 1) === quizSetup.book; });
+    var valid = quizSetup.units.filter(function (id) { return quizUnits.some(function (u) { return u.id === id; }); });
+    if (!valid.length) quizSetup.units = quizUnits.map(function (u) { return u.id; });
+    else quizSetup.units = valid;
+    var allUnits = quizSetup.units.length === quizUnits.length;
     var bookN = S.wordbookIds(ALL_IDS).length;
     var h = '<div class="quiz"><div class="card" style="padding:18px">';
     h += '<div class="section-head"><h2>练习设置</h2><span>即时反馈，错题自动进生词本</span></div>';
-    h += '<div class="field"><label>范围：单元多选</label><div class="picker">' +
-      '<button class="pick' + (allUnits ? ' on' : '') + '" data-act="q-units-all">全部</button>' +
+    h += '<div class="field"><label>册别</label><div class="picker">' +
+      [1, 2, 3, 4].map(function (b) {
+        return '<button class="pick' + (quizSetup.book === b ? ' on' : '') + '" data-act="q-book-filter" data-book="' + b + '">第 ' + b + ' 册</button>';
+      }).join('') + '</div></div>';
+    h += '<div class="field"><label>范围：本册单元多选</label><div class="picker">' +
+      '<button class="pick' + (allUnits ? ' on' : '') + '" data-act="q-units-all">本册全部</button>' +
       '<button class="pick" data-act="q-units-none">清空</button>';
-    UNITS.forEach(function (u) {
+    quizUnits.forEach(function (u) {
       h += '<button class="pick' + (!allUnits && quizSetup.units.indexOf(u.id) >= 0 ? ' on' : '') + '" data-act="q-unit" data-id="' + u.id + '">' +
         u.no + '. ' + esc(u.zh) + ' <span class="cnt">' + wordsOfUnit[u.id].length + '</span></button>';
     });
@@ -1149,7 +1169,7 @@
     h += '<div class="flashcard' + (review.shown ? ' flipped' : '') + '" data-act="flip">' +
       '<div class="flashcard-inner">' +
       '<div class="face front">' +
-      '<div class="scene' + (w.img ? '' : ' no-photo') + '" data-letter="' + esc(w.initial) + '">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
+      '<div class="scene' + (w.img || w.scene ? '' : ' no-photo') + '" data-letter="' + esc(w.initial) + '">' + sceneImg(w) + '<span class="scene-cap">' + esc(caption(w)) + '</span></div>' +
       '<div class="body-part">' +
       '<div class="word-row"><div class="ru">' + esc(ruText(w)) + '</div>' +
       '<button class="speak" data-act="speak" data-text="' + esc(w.ru) + '">' + ico('sound', 19) + '</button></div>' +
@@ -2035,6 +2055,7 @@
       case 'goto-card': ui.unitMode = 'card'; ui.idx = +v.idx; ui.flipped = false; render(); break;
       case 'goto-word': ui.unitMode = 'card'; ui.idx = +v.idx; ui.flipped = false; render(); break;
       case 'unit-mode': ui.unitMode = v.mode; ui.flipped = false; render(); break;
+      case 'book-filter': ui.book = +v.book; render(); break;
       case 'flip':
         if (quiz && quiz.running) return;
         if (review && review.idx < review.ids.length && review.ids.length) { review.shown = !review.shown; renderReviewPaint(); break; }
@@ -2058,6 +2079,8 @@
         go('#/unit/' + v.unit); break;
       case 'vocab-filter':
         ui.vocabFilter = v.id; render(); break;
+      case 'vocab-book':
+        ui.vocabBook = +v.book; ui.vocabFilter = 'all'; render(); break;
       case 'know-unit':
         ui.knowUnit = v.id; render(); break;
       case 'gram-topic':
@@ -2106,7 +2129,8 @@
         break;
       }
       case 'quiz-start': location.hash = '#/quiz'; RVAudio.prefetch(quizSetup.bookFirst ? poolIds().slice(0, 40) : []); startQuiz(shuffle(poolIds()), quizSetup.types, '单元练习'); render(); break;
-      case 'q-units-all': quizSetup.units = UNITS.map(function (u) { return u.id; }); render(); break;
+      case 'q-units-all': quizSetup.units = UNITS.filter(function (u) { return (u.book || 1) === quizSetup.book; }).map(function (u) { return u.id; }); render(); break;
+      case 'q-book-filter': quizSetup.book = +v.book; quizSetup.units = []; render(); break;
       case 'q-units-none': quizSetup.units = []; render(); break;
       case 'q-unit': {
         var i = quizSetup.units.indexOf(id);

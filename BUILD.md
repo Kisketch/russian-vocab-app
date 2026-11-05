@@ -45,7 +45,7 @@ bash tools/pack_win.sh     # 追加生成绿色便携版 zip
 
 产物（默认输出到 `release/`）：
 
-- `RuVocab-2.2.0-x64.exe` —— NSIS 安装包（可选安装目录、桌面快捷方式、中文卸载项）
+- `RuVocab-2.3.0-x64.exe` —— NSIS 安装包（可选安装目录、桌面快捷方式、中文卸载项）
 - `win-unpacked/RuVocab.exe` —— 免安装目录，需保留整个 `win-unpacked`
 - `release/keys/ruvocab-codesign.pfx` / `.cer` —— 本机自签名代码证书；安装包与 `RuVocab.exe` 已用该证书签名
 
@@ -82,11 +82,11 @@ npm run dev      # 带开发者菜单（需 cross-env，或手动 set RUVOCAB_DE
 ### 方式 B：打包 APK（Capacitor）—— 本机已验证可出包
 
 **已产出（release/）**：
-- `走遍俄罗斯词汇卡-2.2.0-release.apk`（约 31.5MB，**正式 release 签名**，推荐安装）
-- `走遍俄罗斯词汇卡-2.2.0-debug.apk`（约 32.5MB，调试签名，仅测试对比）
+- `走遍俄罗斯词汇卡-2.3.0-release.apk`（约 31.5MB，**正式 release 签名**，推荐安装）
+- `走遍俄罗斯词汇卡-2.3.0-debug.apk`（约 32.5MB，调试签名，仅测试对比）
 - `release/keys/ruvocab-release.jks` + `release/keys/README.txt`（签名密钥与密码，勿提交/勿丢失）
 
-工程已就绪：包名 `cn.yuyan.ruvocab`、版本 2.2.0（versionCode 12）、minSdk 22（Android 5.1+）、targetSdk 34、图标与启动图、233 词 / 466 条音频、15 课已打进 APK。
+工程已就绪：包名 `cn.yuyan.ruvocab`、版本 2.3.0（versionCode 13）、minSdk 22（Android 5.1+）、targetSdk 34、图标与启动图、233 词 / 466 条音频、15 课已打进 APK。
 
 #### 1. 安装构建环境（一次性，约 500MB）
 
@@ -136,7 +136,7 @@ export ANDROID_HOME="C:/Users/Lgnatius/AndroidBuild/android-sdk"
 
 #### 5. 发布签名（已生成正式 release APK）
 
-`release/走遍俄罗斯词汇卡-2.2.0-release.apk` 已用项目自带的 release keystore 签名：
+`release/走遍俄罗斯词汇卡-2.3.0-release.apk` 已用项目自带的 release keystore 签名：
 
 - 密钥：`release/keys/ruvocab-release.jks`
 - 别名：`ruvocab`
@@ -152,8 +152,8 @@ cd android
 
 zipalign -p -f 4 app-release-unsigned.apk aligned.apk
 apksigner sign --ks ../release/keys/ruvocab-release.jks \
-  --ks-key-alias ruvocab --out ../release/走遍俄罗斯词汇卡-2.2.0-release.apk aligned.apk
-apksigner verify --print-certs ../release/走遍俄罗斯词汇卡-2.2.0-release.apk
+  --ks-key-alias ruvocab --out ../release/走遍俄罗斯词汇卡-2.3.0-release.apk aligned.apk
+apksigner verify --print-certs ../release/走遍俄罗斯词汇卡-2.3.0-release.apk
 ```
 
 > **同一密钥才能覆盖升级**已安装的 release 版；丢失 keystore 后只能换包名或让用户卸载重装。debug 版与 release 版签名不同，不能互相覆盖安装。

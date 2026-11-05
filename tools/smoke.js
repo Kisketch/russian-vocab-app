@@ -1,4 +1,4 @@
-/* 冒烟测试：用 jsdom 加载应用并模拟主要交互流程
+﻿/* 冒烟测试：用 jsdom 加载应用并模拟主要交互流程
    运行： NODE_PATH=<node workspace>/node_modules node tools/smoke.js   */
 const fs = require('fs');
 const path = require('path');
@@ -45,8 +45,8 @@ async function nav(hash) {
 
 (async function run() {
   console.log('— 数据 —');
-  assert(win.RV_DATA.words.length === 233, '词条数 233（实际 ' + win.RV_DATA.words.length + '）');
-  assert(win.RV_DATA.units.length === 15, '单元数 15（实际 ' + win.RV_DATA.units.length + '）');
+  assert(win.RV_DATA.words.length === 594, '词条数 594（实际 ' + win.RV_DATA.words.length + '）');
+  assert(win.RV_DATA.units.length === 60, '单元数 60（实际 ' + win.RV_DATA.units.length + '）');
   assert(win.RVScenes.keys().length >= 20, '情景插画 ' + win.RVScenes.keys().length + ' 幅');
   assert(win.RV_DATA.words.every(w => w.ru && w.pos && w.zh && w.ex_ru && w.ex_zh && w.scene), '词条字段完整（俄/词性/汉/例句俄/例句汉/配图）');
   assert(win.RV_DATA.units.every(u => win.RVDataSafe(u)), '单元字段完整');
@@ -280,7 +280,7 @@ async function nav(hash) {
   await nav('#/settings');
   assert($('[data-act="export-json"]') !== null, '设置页渲染导出/清空控件');
   assert($('[data-act="set-slow"]') !== null && $('[data-act="set-tts"]') !== null, '语速/音源开关渲染');
-  assert(win.RVAudio && win.RVAudio.counts().words === 233, '音频索引覆盖 233 词');
+  assert(win.RVAudio && win.RVAudio.counts().words === 594, '音频索引覆盖 594 词');
   const hit = win.RVAudio.resolveId('университет');
   assert(hit && hit.kind === 'word' && hit.id === 'w023', '文本反查词条 id 正确');
   assert(win.localStorage.getItem('ruvocab.state.v1') !== null, '学习进度已写入 localStorage');
